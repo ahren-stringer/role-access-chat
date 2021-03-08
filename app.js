@@ -2,26 +2,32 @@ import expess from 'express'
 import mongoose from 'mongoose'
 import Cors from "cors"
 import auth from './routes/auth.routes.js'
-import profile from './routes/profile.routes.js'
+import messages from './routes/messages.routes.js'
 import users from './routes/users.routes.js'
+import dialogs from './routes/dialogs.routes.js'
+import updateLastSeen from './middlewares/updateLastSeen.js'
+import checkAuth from './middlewares/checkAuth.js'
 // import category from './routes/category.routes.js'
 
 //API Config
 const app = expess();
 const port = process.env.PORT || 8001;
-const connection_url = 'mongodb+srv://Pavel:4xSzHb2SeAdAydKR@cluster0.xwykf.mongodb.net/role_access_chat?retryWrites=true&w=majority'
-//'4xSzHb2SeAdAydKR'
+const connection_url =  'mongodb://localhost:27017/role_acces_chat'
+'mongodb+srv://Pavel:4xSzHb2SeAdAydKR@cluster0.xwykf.mongodb.net/role_access_chat?retryWrites=true&w=majority'
+
 //Middlewares
 app.use(expess.json())
 app.use(Cors())
+app.use(updateLastSeen)
+app.use(checkAuth)
 // Авторизация
 app.use('', auth)
-//     //Пользовательские данные
-app.use('', profile)
+//     Сообщения
+app.use('', messages)
 // Пользователи
 app.use('', users)
-//     // Категории
-// app.use('', category)
+//     Диалоги
+app.use('', dialogs)
 
 //DB Config
 mongoose.connect(connection_url, {
