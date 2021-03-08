@@ -1,0 +1,16 @@
+.header {
+    max-width: 1010px;
+    margin: 0 auto;
+    height: 48px;
+    background: #5682a3;
+    color: #fff;
+}
+.header__logo {
+    float: left;
+    width: 31%;
+}
+.header_main {
+    float: left;
+    width: 69%;
+    white-space: nowrap;
+}
