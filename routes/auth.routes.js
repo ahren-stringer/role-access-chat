@@ -1,10 +1,10 @@
 import express from 'express';
-const { Router } = express;
+let { Router } = express;
 import bcrypt from 'bcryptjs'
 import User from '../models/User.js'
-import jwt from 'jsonwebtoken'
+import jwt from  'jsonwebtoken'
 import expressValidator from 'express-validator';
-const { check, validationResult } = expressValidator;
+let { check, validationResult } = expressValidator;
 
 const router = Router()
 
@@ -94,5 +94,4 @@ router.post(
             res.status(500).json({ message: 'Ошибка авторизации' })
         }
     })
-
-export default router
+    export default router

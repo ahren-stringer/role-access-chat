@@ -9,7 +9,7 @@
     user-select: none;
 }
 .im_history_empty, .im_history_not_selected {
-    visibility: hidden;
+    /* visibility: hidden; */
     text-align: center;
     color: #999;
     font-size: 16px;

@@ -11,6 +11,29 @@ router.get('/users/:id', async (req, res) => {
         res.status(500).json({ message: 'Пользователь не найден' })
     }
 })
+router.get('/users', async (req, res) => {
+  try {
+      const users = await User.find();
+      res.json(users)
+  } catch (e) {
+      res.status(500).json({ message: 'Пользовательи не найдены' })
+  }
+})
+// router.get('/users/me', async (req, res) => {
+//     try {
+//         const id: string = req.user && req.user._id;
+//     UserModel.findById(id, (err: any, user: IUser) => {
+//       if (err || !user) {
+//         return res.status(404).json({
+//           message: "User not found",
+//         });
+//       }
+//       res.json(user);
+//     });
+//     } catch (e) {
+//         res.status(500).json({ message: 'Пользователь не найден' })
+//     }
+// })
 router.delete('/users/:id', async (req, res) => {
     try {
         const user = await User.findOneAndRemove({_id:req.params.id});
@@ -102,4 +125,4 @@ router.post('/users/register', (req, res) => {
           res.status(500).json({ message: 'Пользователь не найден' })
       }
   })
-export default router
+  export default router

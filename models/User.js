@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose' 
 import pkg from 'validator';
 const { isEmail } = pkg;
 

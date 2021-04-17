@@ -1,15 +1,22 @@
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, Router, withRouter } from 'react-router-dom';
 import './App.css';
-import Auth from './Components/Auth/Auth';
-import Register from './Components/Auth/Register';
-import Main from './Components/Main/Main';
-import Preloader from './Components/Preloader/Preloader';
 import { useRotes } from './HOC/routes';
 import { setProfile, setLogin, setLoaded, setToken } from './redux/authReduser'
-
+import { io } from "socket.io-client";
+export const socket = io('http://localhost:8001', { autoConnect: false });
+export let socketGroup = io('http://localhost:8001/607a010120bf033ef4d57be1', { autoConnect: false });
+// const socketG=io('http://localhost:8001/ppp');
+socket.on('test comand', data => {
+  console.log("connected: " + JSON.stringify(data))
+})
+socket.auth = { username:'User1' };
+socket.connect();
+// socketG.on('test comand', data => {
+//   console.log("connected: " + JSON.stringify(data))
+// })
 function App(props) {
 
   let [token, setToken] = useState(props.token)
@@ -17,16 +24,19 @@ function App(props) {
   useEffect(async () => {
     const data = JSON.parse(localStorage.getItem('userData'))
     if (data && data.token) {
-      let req = await axios.get('http://localhost:8001/profile/' + data.id)
+      let req = await axios.get('http://localhost:8001/users/' + data.id)
       props.setProfile(data.token, data.id,
         req.data.name,
         req.data.email,
-        req.data.contacts,
-        req.data.messages,
-        req.data.invites,
-        req.data.groups
       )
     }
+    socket.emit('userId',data.id)
+    socket.on('groups', data => {
+      console.log(data)
+    })
+    socket.on('users', data => {
+      console.log(data)
+    })
   }, []);
 
   // useEffect(()=>{
@@ -49,12 +59,6 @@ let mapStateToProps = (state) => {
     loaded: state.auth.loaded,
     token: state.auth.token,
     userId: state.auth.userId,
-    // name: state.auth.name,
-    // email: state.auth.email,
-    // contacts: state.auth.contacts,
-    // messages: state.auth.messages,
-    // invites: state.auth.invites,
-    // groups: state.auth.groups
   }
 }
 

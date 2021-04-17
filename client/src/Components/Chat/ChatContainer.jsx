@@ -1,10 +1,9 @@
-import Chats from './Chats';
-import './Chats.css';
+import Chat from './Chat';
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
 import axios from 'axios';
 
-function ChatsContainer(props) {
+function ChatContainer(props) {
 
     // let groups=null;
 
@@ -13,7 +12,7 @@ function ChatsContainer(props) {
     //     groups=req.data
     // },[])
 
-    return <Chats {...props} />
+    return <Chat {...props} />
 }
 let mapStateToProps = (state) => {
     return {
@@ -21,4 +20,4 @@ let mapStateToProps = (state) => {
         name: state.auth.name,
     }
 }
-export default connect(mapStateToProps, {})(ChatsContainer);
+export default connect(mapStateToProps, {})(ChatContainer);

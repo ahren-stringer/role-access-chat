@@ -1,8 +1,18 @@
 import './Chat.css';
-
-function Chat() {
+import { io } from "socket.io-client";
+import { socket } from '../../App';
+import {socketGroup} from '../../App';
+function Chat(props) {
     let chosen = true;
-    
+    let sendMessage=async()=>{
+        let mess='aaaaaa';
+        await socket.emit("FIND:GROUP", '607a010120bf033ef4d57be1')
+        // socketGroup = io('http://localhost:8001/607a010120bf033ef4d57be1');
+        await socketGroup.emit("NEW:MESSAGE",mess)
+        await socketGroup.on("MESSAGE",mess=>{
+            console.log(mess)
+        })
+    };
     return <div className='im_history_col_wrap noselect im_history_loaded'>
         {!chosen ? <div className='im_history_not_selected_wrap'>
             <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
@@ -10,7 +20,7 @@ function Chat() {
             </div>
         </div>
             : <div className='im_history_selected_wrap'>
-                <div className="im_history_wrap nano has-scrollbar active-scrollbar" style={{ height: '481px' }}>
+                <div className="im_history_wrap nano has-scrollbar active-scrollbar" style={{ height: '370px' }}>
                     <div className='im_history_scrollable_wrap nano-content' style={{ marginRight: '-17px' }}>
                         <div className=''>
                             <div className='im_history im_history_selectable'>
@@ -70,7 +80,9 @@ function Chat() {
 
                     </div>
                 </div>
-                <div>
+                <div className=''>
+                <button onClick={sendMessage}>Отправить</button>
+                    <textarea name="" id="" cols="30" rows="10"></textarea>
                 </div>
             </div>
         }
