@@ -1,3 +1,6 @@
+.active_chat li{
+    border: 1px solid #6490b1;
+}
 .im_dialogs_col_wrap {
     float: left;
     width: 31%;

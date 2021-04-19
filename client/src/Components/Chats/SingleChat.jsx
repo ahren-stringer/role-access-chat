@@ -1,13 +1,14 @@
 import { socket } from '../../App';
 import { io } from "socket.io-client";
 import './Chats.css';
+import { NavLink } from 'react-router-dom';
 
 function SingleChat(props) {
     let selectCat = () => {
-        // const socket = io('http://localhost:8001/'+props.group._id);
-
+        socket.emit('create', props.group._id);
     }
-    return <li className='im_dialog_wrap' onClick={selectCat}>
+    return <NavLink to={"/chat/"+props.group._id} activeClassName='active_chat'>
+         <li className='im_dialog_wrap' onClick={selectCat}>
         <a className='im_dialog'>
             <div className='im_dialog_meta pull-right text-right'>
                 <div className='im_dialog_date'>
@@ -52,6 +53,7 @@ function SingleChat(props) {
             </div>
         </a>
     </li>
+    </NavLink>
 }
 
 export default SingleChat;

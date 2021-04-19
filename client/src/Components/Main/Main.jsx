@@ -1,4 +1,4 @@
-import Chat from '../Chat/Chat';
+import ChatContainer from '../Chat/ChatContainer';
 import Chats from '../Chats/ChatsContainer';
 import Header from '../Header/Header';
 import './Main.css';
@@ -15,7 +15,7 @@ function Main() {
                     <Chats />
                 {/* </div> */}
                 {/* <div className='Chat'> */}
-                    <Chat />
+                    <ChatContainer />
                 {/* </div> */}
             </div>
         </div>

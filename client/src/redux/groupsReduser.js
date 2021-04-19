@@ -1,28 +1,28 @@
-const SET_SG = 'groupsReuser/SET_SG';
+const SET_GROUPS = 'groupsReuser/SET_GROUPS';
+const SET_SELECTED = 'groupsReuser/SET_SELECTED';
+const SET_SELECTED_GROUP = 'groupsReuser/SET_SELECTED_GROUP';
 
 let init = {
-    socketGroup: null,
+    selected: false,
+    groups: null,
+    selectedGroup: null,
 };
 
-const profileReduser = (state = init, action) => {
+const groupsReuser = (state = init, action) => {
     switch (action.type) {
-        case SET_SG:
-            return {
-                ...state,
-                name: action.name,
-                email: action.email,
-                contacts: action.contacts,
-                messages: action.messages,
-                invites: action.invites,
-                groups: action.groups
-            }
+        case SET_GROUPS:
+            return { ...state, groups: action.groups }
+        case SET_SELECTED:
+            return { ...state, selected: action.selected }
+        case SET_SELECTED_GROUP:
+            return { ...state, selectedGroup: action.selectedGroup }
         default:
             return state
     }
 }
 
-export const setProfile = (name, email, contacts, messages, invites, groups) => (
-    { type: SET_PROFILE_DATA, name, email, contacts, messages, invites, groups }
-);
+export const setGroups = (groups) => ({ type: SET_GROUPS, groups });
+export const setSelected = (selected) => ({ type: SET_SELECTED, selected });
+export const setSelectedGroup = (selectedGroup) => ({ type: SET_SELECTED_GROUP, selectedGroup });
 
-export default profileReduser
+export default groupsReuser

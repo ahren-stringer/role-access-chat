@@ -7,36 +7,71 @@ import { useRotes } from './HOC/routes';
 import { setProfile, setLogin, setLoaded, setToken } from './redux/authReduser'
 import { io } from "socket.io-client";
 export const socket = io('http://localhost:8001', { autoConnect: false });
-export let socketGroup = io('http://localhost:8001/607a010120bf033ef4d57be1', { autoConnect: false });
-// const socketG=io('http://localhost:8001/ppp');
-socket.on('test comand', data => {
-  console.log("connected: " + JSON.stringify(data))
-})
-socket.auth = { username:'User1' };
-socket.connect();
-// socketG.on('test comand', data => {
-//   console.log("connected: " + JSON.stringify(data))
-// })
+
+
+
 function App(props) {
-
+  socket.on('test comand', data => {
+    console.log("connected: " + JSON.stringify(data))
+  })
   let [token, setToken] = useState(props.token)
-
+  let [users, setUsers]=useState([])
+  let usersArr=['User1','User2','User3'];
   useEffect(async () => {
     const data = JSON.parse(localStorage.getItem('userData'))
+    let req;
     if (data && data.token) {
-      let req = await axios.get('http://localhost:8001/users/' + data.id)
+      req = await axios.get('http://localhost:8001/users/' + data.id)
       props.setProfile(data.token, data.id,
         req.data.name,
         req.data.email,
       )
-    }
-    socket.emit('userId',data.id)
+      socket.auth = { username: req.data.name };
+    socket.connect();
+    // socket.on('updatechat', function (username, data) {
+    //   console.log(username, data)
+    // });
+    await socket.emit('userId',data.id)
+    // socket.emit("adduser", req.data.name);
     socket.on('groups', data => {
-      console.log(data)
+      // console.log(data)
     })
-    socket.on('users', data => {
-      console.log(data)
-    })
+    socket.on("users", (users) => {
+      users.forEach((user) => {
+        user.self = user.userID === socket.id;
+        console.log(user);
+      });
+      // put the current user first, and then sort by username
+      users=users.sort((a, b) => {
+        if (a.username < b.username) return -1;
+        return a.username > b.username ? 1 : 0;
+      })
+      console.log(users)
+      for (let user of usersArr){
+        for(let socketUser of users){
+          if (user==socketUser.username){
+            socket.emit("private message", {
+              content:'aaaaaaaaaaaaa',
+              to: socketUser.userID,
+            });
+            console.log('сообщение отправлено к ',socketUser.username)
+            socket.on("private message", ({ content, from }) => {
+              console.log(content,' от ', from)
+            });
+          }
+        }
+      }
+      
+    });
+    socket.on("user connected", (user) => {
+      console.log(user,'conected');
+      setUsers(users.push(user))
+    });
+    
+    // socket.on('users', data => {
+    //   console.log(data)
+    // })
+    }
   }, []);
 
   // useEffect(()=>{

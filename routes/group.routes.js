@@ -30,11 +30,8 @@ router.post('/groups', async (req, res) => {
 router.get('/groups/:id', async(req, res) => {
 
     let groups=await Group.find();
-    console.log(groups)
     let arr=[];
     for (let group of groups){
-        console.log(group.author)
-        console.log(req.params.id)
         if (group.author==req.params.id ) arr.push(group)
         for (let partner of group.partners){
             if (partner.id===req.params.id) arr.push(group)
@@ -57,6 +54,11 @@ router.get('/groups/:id', async(req, res) => {
         //     return res.json(group)
         // });
 
+})
+router.get('/single_group/:id', async(req, res) => {
+
+    let group=await Group.findById(req.params.id);
+    res.json(group)
 })
 
 router.delete('/dialogs/:id', async (req, res) => {
