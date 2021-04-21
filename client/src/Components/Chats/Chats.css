@@ -5,7 +5,12 @@
     float: left;
     width: 31%;
     border-right: 2px solid #E9EBED;
+    border-left: 2px solid #E9EBED;
     padding-bottom: 10px;
+}
+.im_groups_col_wrap{
+    float: left;
+    width: 10%;
 }
 .im_dialogs_panel {
     padding: 12px;

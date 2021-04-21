@@ -2,11 +2,31 @@ import './Chat.css';
 import { io } from "socket.io-client";
 import { socket } from '../../App';
 import Preloader from '../Preloader/Preloader';
+import { useState } from 'react';
+import axios from 'axios';
 function Chat(props) {
+    console.log(props.onlineGroupUsers)
+    let [text, setText] = useState('');
+
     let sendMessage = async () => {
-        
+        let message=await axios.post('http://localhost:8001/messages', {
+            text,
+            user: props.author,
+            chat: props.selectedGroup,
+            // onlineGroupUsers: props.onlineGroupUsers
+        })
+        for (let user of props.onlineGroupUsers) {
+
+            socket.emit("chat message", {
+                content: message,
+                to: user.userID,
+            });
+        }
+        socket.on("chat message", ({ content, from }) => {
+            console.log(content,from)
+        });
+
     };
-    debugger
     return <div className='im_history_col_wrap noselect im_history_loaded'>
         {!props.selected ? <div className='im_history_not_selected_wrap'>
             <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
@@ -49,11 +69,11 @@ function Chat(props) {
                                                         {props.messages.map(item => <div class="im_message_body">
 
                                                             <span class="im_message_author_wrap">
-                                                                <span class="copyonly">[<span>7:08:03 PM</span>] </span><a class="im_message_author user_color_5">Viacheslav Barkov</a><span class="copyonly">:</span><span class="im_message_author_admin" style={{ display: 'none' }}></span>
+                                                                <span class="copyonly">[<span>{item.createdAt}</span>] </span><a class="im_message_author user_color_5">{item.user.name}</a><span class="copyonly">:</span><span class="im_message_author_admin" style={{ display: 'none' }}></span>
                                                             </span>
 
                                                             <div my-message-body="historyMessage">
-                                                                <div class="im_message_text" dir="auto">Всем добрый вечер. Немного спама.</div>
+                                                                <div class="im_message_text" dir="auto">{item.text}</div>
                                                                 {/* <div class="im_message_media" style="display: none;"></div>
                                                                 <div class="im_message_sign" style="display: none;"></div>
                                                                 <div class="im_message_keyboard" style="display: none;"></div> */}
@@ -81,7 +101,9 @@ function Chat(props) {
                 </div>
                 <div className=''>
                     <button onClick={sendMessage}>Отправить</button>
-                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                    <textarea name="" id="" cols="30" rows="10"
+                        value={text}
+                        onChange={(e) => { setText(e.target.value) }}></textarea>
                 </div>
             </div>
         }

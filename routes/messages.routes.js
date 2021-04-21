@@ -14,6 +14,10 @@ router.post('/messages', async (req, res) => {
         };
         let message= new Message(postData);
         await message.save()
+        // for (let oUser of req.body.onlineGroupUsers){
+        //     io.to(oUser.userId).emit("chat message",message)
+        // }
+        res.json(message)
         // .then((obj) => {
         //   obj.populate(
         //     "dialog",

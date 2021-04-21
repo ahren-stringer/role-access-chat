@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Preloader from '../Preloader/Preloader';
 import './Chats.css';
+import CreateChanel from './CreateChanel';
 import CreateGroup from './CreateGroup';
 import Search from './Search';
 import SingleChat from './SingleChat';
@@ -29,7 +30,8 @@ function Chats(props) {
                         <span>
                             Группы
                         </span>
-                        <CreateGroup/>
+                        <CreateGroup author={props.author}/>
+                       <CreateChanel selectedGroup={props.selectedGroup}/>
                     </div>
                     </div>
                     <ul className='nav nav-pills nav-stacked'>

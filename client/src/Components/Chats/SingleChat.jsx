@@ -4,11 +4,10 @@ import './Chats.css';
 import { NavLink } from 'react-router-dom';
 
 function SingleChat(props) {
-    let selectCat = () => {
-        socket.emit('create', props.group._id);
+    let selectChat = () => {
     }
-    return <NavLink to={"/chat/"+props.group._id} activeClassName='active_chat'>
-         <li className='im_dialog_wrap' onClick={selectCat}>
+    return <NavLink to={"/chat/"+props.group._id} activeClassName='active_chat' onClick={selectChat}>
+         <li className='im_dialog_wrap'>
         <a className='im_dialog'>
             <div className='im_dialog_meta pull-right text-right'>
                 <div className='im_dialog_date'>

@@ -19,6 +19,8 @@ let mapStateToProps = (state) => {
         author: state.auth.id,
         name: state.auth.name,
         groups: state.groups.groups,
+        rights:state.groups.rights,
+        selectedGroup: state.groups.selectedGroup,
     }
 }
 export default connect(mapStateToProps, {setGroups})(ChatsContainer);

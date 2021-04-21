@@ -57,7 +57,7 @@ router.get('/groups/:id', async(req, res) => {
 })
 router.get('/single_group/:id', async(req, res) => {
 
-    let group=await Group.findById(req.params.id);
+    let group=await Group.findById(req.params.id).populate(['author']);
     res.json(group)
 })
 

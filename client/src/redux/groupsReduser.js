@@ -1,11 +1,23 @@
 const SET_GROUPS = 'groupsReuser/SET_GROUPS';
 const SET_SELECTED = 'groupsReuser/SET_SELECTED';
 const SET_SELECTED_GROUP = 'groupsReuser/SET_SELECTED_GROUP';
+const SET_ONLINE_GROUP_USERS = 'groupsReuser/SET_ONLINE_GROUP_USERS';
+const DELETE_ONLINE_GROUP_USER = 'groupsReuser/DELETE_ONLINE_GROUP_USER';
 
 let init = {
     selected: false,
     groups: null,
     selectedGroup: null,
+    onlineGroupUsers: [],
+    rightsSetingForm: false,
+    rights:{
+        whitelist:[],
+        canWrite:[],
+        canSeeHistory:[],
+        canSendFile:[],
+        canAddUsers:[],
+        canDeleteUsers:[],
+    },
 };
 
 const groupsReuser = (state = init, action) => {
@@ -15,7 +27,34 @@ const groupsReuser = (state = init, action) => {
         case SET_SELECTED:
             return { ...state, selected: action.selected }
         case SET_SELECTED_GROUP:
+            window.selectedGroup=action.selectedGroup
             return { ...state, selectedGroup: action.selectedGroup }
+        case SET_ONLINE_GROUP_USERS:
+            // let prev = state.onlineGroupUsers;
+            // let act = action.onlineGroupUsers;
+            // if (act.length == 1) {
+            //     for (let user of prev) {
+            //         debugger
+            //         if (user.username == act.username) return {
+            //             ...state,
+            //             onlineGroupUsers: [...prev]
+            //         }
+            //     }
+            // }
+            return {
+                ...state,
+                onlineGroupUsers: [...state.onlineGroupUsers, ...action.onlineGroupUsers]
+            }
+        case DELETE_ONLINE_GROUP_USER:
+            let arr = [...state.onlineGroupUsers];
+            let index = arr.find(item => item.username == action.disconnectedGroupUser.username);
+            if (index) arr
+                .splice(arr
+                    .indexOf(index), 1)
+            return {
+                ...state,
+                onlineGroupUsers: arr
+            }
         default:
             return state
     }
@@ -24,5 +63,7 @@ const groupsReuser = (state = init, action) => {
 export const setGroups = (groups) => ({ type: SET_GROUPS, groups });
 export const setSelected = (selected) => ({ type: SET_SELECTED, selected });
 export const setSelectedGroup = (selectedGroup) => ({ type: SET_SELECTED_GROUP, selectedGroup });
+export const setOnlineGroupUsers = (onlineGroupUsers) => ({ type: SET_ONLINE_GROUP_USERS, onlineGroupUsers });
+export const deleteOnlineGroupUsers = (disconnectedGroupUser) => ({ type: DELETE_ONLINE_GROUP_USER, disconnectedGroupUser });
 
 export default groupsReuser
