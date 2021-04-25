@@ -29,10 +29,10 @@ router.post('/groups', async (req, res) => {
 
 router.get('/groups/:id', async(req, res) => {
 
-    let groups=await Group.find();
+    let groups=await Group.find().populate(['author']);
     let arr=[];
     for (let group of groups){
-        if (group.author==req.params.id ) arr.push(group)
+        if (group.author.id==req.params.id ) arr.push(group)
         for (let partner of group.partners){
             if (partner.id===req.params.id) arr.push(group)
         }

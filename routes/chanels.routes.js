@@ -7,7 +7,7 @@ import Chanel from '../models/Chanel.js'
 import Message from '../models/Message.js'
 import { io } from '../app.js'
 
-router.post('/chanel', async (req, res) => {
+router.post('/chanels', async (req, res) => {
     try {
         const postData = {
             name: req.body.name,
@@ -29,10 +29,10 @@ router.post('/chanel', async (req, res) => {
     }
 })
 
-router.get('/chanel/:id', async (req, res) => {
+router.get('/chanels/:id', async (req, res) => {
 
-    let chanels = await Group
-    .find({group: req.params.group})
+    let chanels = await Chanel
+    .find({group: req.params.id})
     .populate(['author','group']);
     res.json(chanels)
     // .or([{ author: req.params.id }, { partner: req.params.id }])
@@ -52,9 +52,9 @@ router.get('/chanel/:id', async (req, res) => {
     // });
 
 })
-router.get('/single_group/:id', async (req, res) => {
+router.get('/single_chanel/:id', async (req, res) => {
 
-    let group = await Group.findById(req.params.id).populate(['author']);
+    let group = await Chanel.findById(req.params.id).populate(['author','group']);
     res.json(group)
 })
 

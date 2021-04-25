@@ -10,42 +10,55 @@ import SingleChat from './SingleChat';
 
 function Chats(props) {
 
+    useEffect(async () => {
+        let req = await axios.get('http://localhost:8001/chanels/' + props.match.params.groupId);
+        props.setChanels(req.data)
+    }, [props.match.params.groupId])
     // let [groups,setGroups]=useState(null);
     return (
-    <div className='im_dialogs_col_wrap noselect'>
+        <div className='im_dialogs_col_wrap noselect'>
 
-        <Search/>
+            <Search />
 
-        <div className='im_dialogs_col' style={{height:'100vh'}}>
-            <div className='im_dialogs_wrap nano has-scrollbar active-scrollbar'>
-                
-                <div className='im_dialogs_scrollable_wrap nano-content' style={{right:'-17px'}}>
+            <div className='im_dialogs_col' style={{ height: '100vh' }}>
+                <div className='im_dialogs_wrap nano has-scrollbar active-scrollbar'>
 
-                    <div>
-                    <NavLink to='/users'>Написать</NavLink>
-                    <div>
-                        {/* <span>
+                    <div className='im_dialogs_scrollable_wrap nano-content' style={{ right: '-17px' }}>
+
+                        <div>
+                            <NavLink to='/users'>Написать</NavLink>
+                            <div>
+                                {/* <span>
                             Диалоги
                         </span> */}
-                        <span>
-                            Группы
+                                <span>
+                                    Группы
                         </span>
-                        <CreateGroup author={props.author}/>
-                       <CreateChanel selectedGroup={props.selectedGroup}/>
-                    </div>
-                    </div>
-                    <ul className='nav nav-pills nav-stacked'>
-                        {!props.groups ? <Preloader/>
-                        :props.groups.map(item=><SingleChat group={item} name={props.name}/>)}
-                    </ul>
+                                <CreateGroup author={props.author} />
+                                {!props.selectedGroup ? <Preloader /> : <CreateChanel selectedGroup={props.selectedGroup}
+                                    SetRightsForm={props.SetRightsForm}
+                                    author={props.author}
+                                //    rightsSetingForm={props.rightsSetingForm}
+                                />}
+                            </div>
+                        </div>
+                        <ul className='nav nav-pills nav-stacked'>
+                            {!props.chanels ? <Preloader />
+                                : props.chanels.map(item => 
+                                <SingleChat
+                                    groupId={props.match.params.groupId}
+                                    chanel={item}
+                                    name={item.name}
+                                />)}
+                        </ul>
 
-                </div>
-                <div className='nano-pane' style={{display: 'block'}}>
+                    </div>
+                    <div className='nano-pane' style={{ display: 'block' }}>
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     )
 }
 

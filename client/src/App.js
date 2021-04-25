@@ -45,15 +45,14 @@ function App(props) {
       })
       socket.on("private message", ({ content, from }) => {
         console.log(from, ' connected')
-        let selectedGroup= window.selectedGroup
-        debugger
-        if (selectedGroup){
-          if (selectedGroup.author.name===from.username){
+        let selectedChanel= window.selectedChanel
+        if (selectedChanel){
+          if (selectedChanel.author.name===from.username){
             props.setOnlineGroupUsers([from])
             console.log(props.onlineGroupUsers)
           }
-          for (let partner of selectedGroup.partners){
-            if (partner.name===from.username){
+          for (let partner of selectedChanel.rights.whitelist){
+            if (partner===from.username){
               props.setOnlineGroupUsers([from])
               console.log(props.onlineGroupUsers)
             }

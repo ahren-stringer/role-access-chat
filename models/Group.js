@@ -5,10 +5,10 @@ const dialogSchema = mongoose.Schema({
     author: {type:mongoose.Schema.Types.ObjectId,ref:"User"},
     partners: {type:Array},
     //[{type:mongoose.Schema.Types.ObjectId,ref:"User"}],
-    chanels:{
-        type: Array,
-        default: [],
-    },
+    // chanels:{
+    //     type: Array,
+    //     default: [],
+    // },
 },{
     timestamps:true
 });

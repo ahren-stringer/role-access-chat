@@ -6,6 +6,7 @@ import messages from './routes/messages.routes.js'
 import users from './routes/users.routes.js'
 import dialogs from './routes/dialogs.routes.js'
 import groups from './routes/group.routes.js'
+import chanels from './routes/chanels.routes.js'
 import httpServer from "http"
 import * as socket from "socket.io"
 import Group from './models/Group.js'
@@ -43,6 +44,8 @@ app.use('', users)
 app.use('', dialogs)
 //     Диалоги
 app.use('', groups)
+//     Каналы
+app.use('', chanels)
 
 // usernames which are currently connected to the chat
 var usernames = {};
@@ -94,13 +97,18 @@ io.on('connection', async (socket) => {
     socket.emit("users in groups", users);
     // socket.emit("groups", arr);
   })
-  socket.on('selectChat', (group) => {
-    let groupNames = [group.author.name,
-    ...group.partners.map(item => item.name)];
-    console.log(groupNames)
+  socket.on('selectChat', (list) => {
+    let WLusers;
+    if (list.type == 'whitelist') {
+      WLusers = list.users
+    } else {
+      let WLusers = [list.group.author.name,
+      ...list.group.partners.map(item => item.name)];
+    }
+    // console.log('whitelist', whitelist)
     const users = [];
     for (let [id, socket] of io.of("/").sockets) {
-      for (let name of groupNames) {
+      for (let name of WLusers) {
         if (socket.username === name) {
           users.push({
             userID: id,
@@ -135,7 +143,7 @@ io.on('connection', async (socket) => {
     });
   });
   socket.on('disconnect', function () {
-    socket.broadcast.emit('dis',{
+    socket.broadcast.emit('dis', {
       username: socket.username,
       userId: socket.id
     })

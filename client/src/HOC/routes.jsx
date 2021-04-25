@@ -9,13 +9,13 @@ import Preloader from '../Components/Preloader/Preloader';
 export const useRotes=(isAuth)=>{
  if (isAuth){
     return (<Switch>
-        <Route path='/chat/:chatId?' exact>
+        <Route path='/chat/:groupId?/:chanelId?' exact>
             <Main/>
         </Route>
         <Route path='/users' exact>
             <Users/>
         </Route>
-        <Redirect to='/chat'/>
+        <Redirect to='/chat/:groupId?/:chanelId?'/>
     </Switch>)
  }
 

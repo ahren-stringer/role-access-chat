@@ -5,6 +5,7 @@ import Chats from '../Chats/ChatsContainer';
 import Groups from '../Chats/Groups';
 import Header from '../Header/Header';
 import './Main.css';
+import {SetRightsForm} from '../../redux/groupsReduser'
 
 function Main(props) {
 
@@ -13,7 +14,7 @@ function Main(props) {
             <Header />
         </div>
         <div className='im_page_wrap clearfix'>
-            {!props.rightsSetingForm ? <RightsSetingForm/>
+            {props.rightsSetingForm ? <RightsSetingForm SetRightsForm={props.SetRightsForm}/>
             :<div className='im_page_split clearfix'>
                 <Groups/>
                 {/* <div className='im_dialogs_col_wrap noselect'> */}
@@ -32,4 +33,4 @@ let mapStateToProps = (state) => {
         rightsSetingForm: state.groups.rightsSetingForm,
     }
 }
-export default connect(mapStateToProps, {})(Main);
+export default connect(mapStateToProps, {SetRightsForm})(Main);

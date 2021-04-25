@@ -7,12 +7,26 @@ import axios from 'axios';
 function Chat(props) {
     console.log(props.onlineGroupUsers)
     let [text, setText] = useState('');
+    let rights = props.selectedChanel.rights;
+
+    let Acces = (right) => {
+        let inList, listType;
+        for (let list in right) {
+            if (right[list]) {
+                debugger
+                inList = right[list].some(item => item == props.name)
+                listType = list
+            }
+        }
+        if ((listType == 'blacklist' && inList) || (listType == 'whitelist' && !inList)) return false
+        if ((listType == 'whitelist' && inList) || (listType == 'blacklist' && !inList)) return true
+    }
 
     let sendMessage = async () => {
-        let message=await axios.post('http://localhost:8001/messages', {
+        let message = await axios.post('http://localhost:8001/messages', {
             text,
             user: props.author,
-            chat: props.selectedGroup,
+            chat: props.selectedChanel,
             // onlineGroupUsers: props.onlineGroupUsers
         })
         for (let user of props.onlineGroupUsers) {
@@ -23,7 +37,7 @@ function Chat(props) {
             });
         }
         socket.on("chat message", ({ content, from }) => {
-            console.log(content,from)
+            console.log(content, from)
         });
 
     };
@@ -61,9 +75,9 @@ function Chat(props) {
                                                             </span>
                                                         </div>
                                                         <div>
-                                                            {!props.selectedGroup
+                                                            {!props.selectedChanel
                                                                 ? <Preloader />
-                                                                : props.selectedGroup.name
+                                                                : props.selectedChanel.name
                                                             }
                                                         </div>
                                                         {props.messages.map(item => <div class="im_message_body">
@@ -100,10 +114,13 @@ function Chat(props) {
                     </div>
                 </div>
                 <div className=''>
-                    <button onClick={sendMessage}>Отправить</button>
-                    <textarea name="" id="" cols="30" rows="10"
-                        value={text}
-                        onChange={(e) => { setText(e.target.value) }}></textarea>
+                    {Acces(rights.canWrite) ? <div>
+                        <button onClick={sendMessage}>Отправить</button>
+                        <textarea name="" id="" cols="30" rows="10"
+                            value={text}
+                            onChange={(e) => { setText(e.target.value) }}></textarea>
+                    </div>
+                    :<div>У вас отключена возможность писать в этом чате</div>}
                 </div>
             </div>
         }

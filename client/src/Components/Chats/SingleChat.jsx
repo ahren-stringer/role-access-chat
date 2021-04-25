@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 function SingleChat(props) {
     let selectChat = () => {
     }
-    return <NavLink to={"/chat/"+props.group._id} activeClassName='active_chat' onClick={selectChat}>
+    return <NavLink to={'/chat/'+props.groupId+'/'+props.chanel._id} activeClassName='active_chat' onClick={selectChat}>
          <li className='im_dialog_wrap'>
         <a className='im_dialog'>
             <div className='im_dialog_meta pull-right text-right'>
@@ -25,7 +25,7 @@ function SingleChat(props) {
             <div className='im_dialog_message_wrap'>
                 <div className='im_dialog_peer'>
                     <span className=''>
-                        {props.group.name}
+                        {props.chanel.name}
                     </span>
                 </div>
                 <div>
