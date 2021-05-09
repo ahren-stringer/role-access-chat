@@ -49,6 +49,8 @@ function Chats(props) {
                                     groupId={props.match.params.groupId}
                                     chanel={item}
                                     name={item.name}
+                                    SetRightsForm={props.SetRightsForm}
+                                    setSelectedChanel={props.setSelectedChanel}
                                 />)}
                         </ul>
 

@@ -62,7 +62,7 @@ function CreateChanel(props) {
                 <input value={text}
                         onChange={(e) => { setText(e.target.value) }}></input>
                         <button onClick={Chanel}>Создать</button>
-                <div onClick={() => { props.SetRightsForm(true) }}>Настроить права доступа</div>
+                <div onClick={() => { props.SetRightsForm('new_chanel') }}>Настроить права доступа</div>
             </div>}
         </div>
     )

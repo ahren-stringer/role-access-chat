@@ -3,7 +3,7 @@ import './Chats.css';
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
 import axios from 'axios';
-import {setGroups,SetRightsForm,setChanels} from '../../redux/groupsReduser'
+import {setGroups,SetRightsForm,setChanels,setSelectedChanel} from '../../redux/groupsReduser'
 import Preloader from '../Preloader/Preloader';
 import { withRouter } from 'react-router';
 
@@ -25,4 +25,4 @@ let mapStateToProps = (state) => {
         // rightsSetingForm: state.groups.rightsSetingForm
     }
 }
-export default connect(mapStateToProps, {setGroups,SetRightsForm,setChanels})(withRouter(ChatsContainer));
+export default connect(mapStateToProps, {setGroups,SetRightsForm,setChanels,setSelectedChanel})(withRouter(ChatsContainer));

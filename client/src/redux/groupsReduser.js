@@ -14,7 +14,7 @@ let init = {
     selectedChanel: null,
     onlineGroupUsers: [],
     chanels: null,
-    rightsSetingForm: false,
+    rightsSetingForm: null,
     rights: {
         whitelist: [],
         canWrite: [],

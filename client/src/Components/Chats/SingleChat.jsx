@@ -28,6 +28,12 @@ function SingleChat(props) {
                         {props.chanel.name}
                     </span>
                 </div>
+                <div onClick={() => {
+                    props.setSelectedChanel(props.chanel)
+                    props.SetRightsForm('existing_chanel') 
+                    }}>
+                    Настроить права доступа
+                </div>
                 <div>
                     <div className="im_dialog_message">
                         {/* <span>
