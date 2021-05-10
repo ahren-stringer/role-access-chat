@@ -8,40 +8,25 @@ function CreateChanel(props) {
     for (let partner of props.selectedGroup.partners) {
         namesInGroups.push(partner.name)
     }
-    let rights={
-        users: {
-            witelist:[...namesInGroups],
-            blacklist: null
-        },
-        canWrite: {
-            witelist:[...namesInGroups],
-            blacklist: null
-        },
-        canSeeHistory: {
-            witelist:[...namesInGroups],
-            blacklist: null
-        },
-        canSendFile: {
-            witelist:[...namesInGroups],
-            blacklist: null
-        },
-        canAddUsers: {
-            witelist:[namesInGroups[0]],
-            blacklist: null
-        },
-        canDeleteUsers: {
-            witelist:[namesInGroups[0]],
-            blacklist: null
-        },
+    function Right(type,list) {
+        this.type=type;
+        this.prevelegion = false;
+        this.listType = null;
+        this.list = list
     }
-    let [createForm, setCreateForm]=useState(false)
+    let [createForm, setCreateForm] = useState(false)
     let [text, setText] = useState('');
     let Chanel = async () => {
-        let chanel=await axios.post('http://localhost:8001/chanels', {
-            name:text,
+        let chanel = await axios.post('http://localhost:8001/chanels', {
+            name: text,
             author: props.author,
-            group:props.selectedGroup._id,
-            rights,
+            group: props.selectedGroup._id,
+            canSee: new Right('canSee',[...namesInGroups]),
+            canWrite: new Right('canWrite',[...namesInGroups]),
+            canSeeHistory: new Right('canSeeHistory',[...namesInGroups]),
+            canSendFile: new Right('canSendFile',[...namesInGroups]),
+            canAddUsers: new Right('canAddUsers',[]),
+            canDeleteUsers: new Right('canDeleteUsers',[]),
         })
         // for (let user of props.onlineGroupUsers) {
 
@@ -57,11 +42,11 @@ function CreateChanel(props) {
     };
     return (
         <div>
-            <div onClick={()=>{setCreateForm(!createForm)}}>Создать Канал</div>
+            <div onClick={() => { setCreateForm(!createForm) }}>Создать Канал</div>
             {!createForm ? null : <div>
                 <input value={text}
-                        onChange={(e) => { setText(e.target.value) }}></input>
-                        <button onClick={Chanel}>Создать</button>
+                    onChange={(e) => { setText(e.target.value) }}></input>
+                <button onClick={Chanel}>Создать</button>
                 <div onClick={() => { props.SetRightsForm('new_chanel') }}>Настроить права доступа</div>
             </div>}
         </div>

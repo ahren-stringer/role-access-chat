@@ -241,3 +241,6 @@ a.im_dialog .im_short_message_text {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+.right_item{
+    margin-bottom: 12px;
+}

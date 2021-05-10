@@ -16,10 +16,6 @@ router.post('/groups', async (req, res) => {
         let group = new Group(postData);
         group.save().then(() => {
             res.json(group);
-            // io.emit('SERVER:NEW_GROUP_CREATED', {
-            //   ...postData,
-            //   dialog: dialogObj,
-            // });
           });
     } catch (e) {
         console.log(e)

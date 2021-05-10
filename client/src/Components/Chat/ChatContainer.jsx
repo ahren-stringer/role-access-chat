@@ -29,7 +29,7 @@ function ChatContainer(props) {
             let ChatReq = await axios.get('http://localhost:8001/single_chanel/' + chanelId);
             props.setSelectedChanel(ChatReq.data)
             console.log('ChatReq.data', ChatReq.data)
-            setAccesed(Acces(ChatReq.data.rights.users))
+            // setAccesed(Acces(ChatReq.data.rights.users))
             debugger
             if (accesed) {
 
@@ -65,12 +65,12 @@ function ChatContainer(props) {
             </div>
         )
     }
-    debugger
-    if (props.selectedChanel&&!accesed) return (
-        <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
-            Вы не можете посещать данный канал
-        </div>
-    )
+    // debugger
+    // if (props.selectedChanel&&!accesed) return (
+    //     <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
+    //         Вы не можете посещать данный канал
+    //     </div>
+    // )
     return <Chat {...props} />
 }
 let mapStateToProps = (state) => {

@@ -9,49 +9,78 @@ import { connect } from 'react-redux';
 import SingleRightSettings from "./SingleRightSettings";
 function RightsSetingForm(props) {
 
-    let rights;
-    if (props.rightsSetingForm==='new_chanel'){
-    let namesInGroups = [];
-    namesInGroups.push(props.selectedGroup.author.name)
-    for (let partner of props.selectedGroup.partners) {
-        namesInGroups.push(partner.name)
+    let chanel;
+    //     if (props.rightsSetingForm==='new_chanel'){
+    //     let namesInGroups = [];
+    //     namesInGroups.push(props.selectedGroup.author.name)
+    //     for (let partner of props.selectedGroup.partners) {
+    //         namesInGroups.push(partner.name)
+    //     }
+    //     rights={
+    //         users: {
+    //             witelist:[...namesInGroups],
+    //             blacklist: null
+    //         },
+    //         canWrite: {
+    //             witelist:[...namesInGroups],
+    //             blacklist: null
+    //         },
+    //         canSeeHistory: {
+    //             witelist:[...namesInGroups],
+    //             blacklist: null
+    //         },
+    //         canSendFile: {
+    //             witelist:[...namesInGroups],
+    //             blacklist: null
+    //         },
+    //         canAddUsers: {
+    //             witelist:[namesInGroups[0]],
+    //             blacklist: null
+    //         },
+    //         canDeleteUsers: {
+    //             witelist:[namesInGroups[0]],
+    //             blacklist: null
+    //         },
+    //     }
+    // }
+    if (props.rightsSetingForm === 'existing_chanel') {
+        debugger
+        chanel = props.selectedChanel
     }
-    rights={
-        users: {
-            witelist:[...namesInGroups],
-            blacklist: null
-        },
-        canWrite: {
-            witelist:[...namesInGroups],
-            blacklist: null
-        },
-        canSeeHistory: {
-            witelist:[...namesInGroups],
-            blacklist: null
-        },
-        canSendFile: {
-            witelist:[...namesInGroups],
-            blacklist: null
-        },
-        canAddUsers: {
-            witelist:[namesInGroups[0]],
-            blacklist: null
-        },
-        canDeleteUsers: {
-            witelist:[namesInGroups[0]],
-            blacklist: null
-        },
-    }
-}
-if (props.rightsSetingForm==='existing_chanel'){
-    rights=props.selectedChanel.rights
-}
-    return <div style={{height:'100vh'}}>
-        <span onClick={()=>{props.SetRightsForm(false)}}>Закрыть</span>
+    return <div style={{ height: '100vh' }}>
+        <span onClick={() => { props.SetRightsForm(false) }}>Закрыть</span>
         <h3>Права достуа</h3>
         <ul>
-           <SingleRightSettings
-           title/>
+            <SingleRightSettings
+                title='Участники, которым разрешено посещать канал'
+                right={chanel.canSee}
+                group={props.selectedGroup}
+            />
+            <SingleRightSettings
+                title='Участники, которым отпровлять сообщения'
+                right={chanel.canWrite}
+                group={props.selectedGroup}
+            />
+            <SingleRightSettings
+                title='Участники, которым разрешено смотреть историю'
+                right={chanel.canSeeHistory}
+                group={props.selectedGroup}
+            />
+            <SingleRightSettings
+                title='Участники, которым разрешено отправлять файлы'
+                right={chanel.canSendFile}
+                group={props.selectedGroup}
+            />
+            <SingleRightSettings
+                title='Участники, которым разрешено добавлять пользователей'
+                right={chanel.canAddUsers}
+                group={props.selectedGroup}
+            />
+            <SingleRightSettings
+                title='Участники, которым разрешено удалять пользователей'
+                right={chanel.canDeleteUsers}
+                group={props.selectedGroup}
+            />
         </ul>
     </div>
 }

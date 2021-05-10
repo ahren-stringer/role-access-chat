@@ -114,13 +114,13 @@ function Chat(props) {
                     </div>
                 </div>
                 <div className=''>
-                    {Acces(rights.canWrite) ? <div>
+                    {/* {Acces(rights.canWrite) ? */}<div> 
                         <button onClick={sendMessage}>Отправить</button>
                         <textarea name="" id="" cols="30" rows="10"
                             value={text}
                             onChange={(e) => { setText(e.target.value) }}></textarea>
                     </div>
-                    :<div>У вас отключена возможность писать в этом чате</div>}
+                    {/* :<div>У вас отключена возможность писать в этом чате</div>} */}
                 </div>
             </div>
         }
