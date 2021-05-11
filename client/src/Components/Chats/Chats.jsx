@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Preloader from '../Preloader/Preloader';
+import AddUsersForm from './AddUsersForm';
 import './Chats.css';
 import CreateChanel from './CreateChanel';
 import CreateGroup from './CreateGroup';
@@ -34,7 +35,8 @@ function Chats(props) {
                                 <span>
                                     Группы
                         </span>
-                                <CreateGroup author={props.author} />
+                                <div onClick={() => { props.setGroupSettingsForm(true) }}>Настроить должности</div>
+                                <CreateGroup author={props.author} name={props.name} />
                                 {!props.selectedGroup ? <Preloader /> : <CreateChanel selectedGroup={props.selectedGroup}
                                     SetRightsForm={props.SetRightsForm}
                                     author={props.author}
@@ -44,16 +46,18 @@ function Chats(props) {
                         </div>
                         <ul className='nav nav-pills nav-stacked'>
                             {!props.chanels ? <Preloader />
-                                : props.chanels.map(item => 
-                                <SingleChat
-                                    groupId={props.match.params.groupId}
-                                    chanel={item}
-                                    name={item.name}
-                                    SetRightsForm={props.SetRightsForm}
-                                    setSelectedChanel={props.setSelectedChanel}
-                                />)}
+                                : props.chanels.map(item =>
+                                    <SingleChat
+                                        groupId={props.match.params.groupId}
+                                        chanel={item}
+                                        name={item.name}
+                                        SetRightsForm={props.SetRightsForm}
+                                        setSelectedChanel={props.setSelectedChanel}
+                                    />)}
                         </ul>
-
+                        {props.role === 'admins'
+                            ? <AddUsersForm selectedGroup={props.selectedGroup}/>
+                            : null}
                     </div>
                     <div className='nano-pane' style={{ display: 'block' }}>
 

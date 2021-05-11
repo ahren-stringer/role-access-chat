@@ -7,13 +7,13 @@ import './Chats.css';
 import CreateGroup from './CreateGroup';
 import Search from './Search';
 import SingleChat from './SingleChat';
-import {setGroups,SetRightsForm,setSelectedGroup} from '../../redux/groupsReduser'
+import {setGroups,SetRightsForm,setSelectedGroup,defineRole} from '../../redux/groupsReduser'
 
 
 function Groups(props) {
     debugger
     useEffect(async()=>{
-        let req = await axios.get('http://localhost:8001/groups/'+props.author);
+        let req = await axios.get('http://localhost:8001/groups/'+props.name);
         props.setGroups(req.data)
     },[])
     // let [groups,setGroups]=useState(null);
@@ -23,7 +23,9 @@ function Groups(props) {
         <ul className='nav nav-pills nav-stacked'>
                         {!props.groups ? <Preloader/>
                         :props.groups.map(item=><NavLink to={"/chat/"+item._id} activeClassName='active_chat'>
-                            <li onClick={()=>{props.setSelectedGroup(item)}}>
+                            <li onClick={()=>{
+                                props.setSelectedGroup(item)
+                                props.defineRole(item,props.name)}}>
                                 {item.name}
                                 </li>
                                 </NavLink>)}
@@ -42,4 +44,4 @@ let mapStateToProps = (state) => {
         // rightsSetingForm: state.groups.rightsSetingForm
     }
 }
-export default connect(mapStateToProps, {setGroups,SetRightsForm,setSelectedGroup})(Groups);
+export default connect(mapStateToProps, {setGroups,SetRightsForm,setSelectedGroup,defineRole})(Groups);

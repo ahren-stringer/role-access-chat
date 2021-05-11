@@ -8,19 +8,13 @@ import { withRouter } from 'react-router';
 import { socket } from '../../App';
 function ChatContainer(props) {
     let Acces = (right) => {
-        let inList, listType;
-        for (let list in right) {
-            if (right[list]) {
-                debugger
-                inList = right[list].some(item => item == props.name)
-                listType = list
-            }
-        }
+        let inList;
+        inList = right.list.some(item => item == props.name) || props.selectedGroup.author.name==props.name
         debugger
-        if ((listType == 'blacklist' && inList) || (listType == 'whitelist' && !inList)) return false
-        if ((listType == 'whitelist' && inList) || (listType == 'blacklist' && !inList)) return true
+        if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
+        return true
     }
-    let [accesed,setAccesed]=useState(false);
+    let [accesed, setAccesed] = useState(false);
     useEffect(async () => {
         let chanelId = props.match.params.chanelId;
         if (chanelId) {
@@ -29,13 +23,14 @@ function ChatContainer(props) {
             let ChatReq = await axios.get('http://localhost:8001/single_chanel/' + chanelId);
             props.setSelectedChanel(ChatReq.data)
             console.log('ChatReq.data', ChatReq.data)
-            // setAccesed(Acces(ChatReq.data.rights.users))
+            let a = Acces(ChatReq.data.canSee)
+            setAccesed(Acces(ChatReq.data.canSee))
             debugger
             if (accesed) {
 
-                ChatReq.data.rights.users.whitelist 
-                ? socket.emit('selectChat', {users:ChatReq.data.rights.users.whitelist,type:'whitelist'})                
-                : socket.emit('selectChat', {users:ChatReq.data.rights.users.blacklist,type:'blacklistlist',group:props.selectedGroup})
+                ChatReq.data.canSee.whitelisted
+                    ? socket.emit('selectChat', { users: ChatReq.data.rights.users.whitelist, type: 'whitelist' })
+                    : socket.emit('selectChat', { users: ChatReq.data.rights.users.blacklist, type: 'blacklist', group: props.selectedGroup })
 
                 socket.on("users", (users) => {
                     users.forEach((user) => {
@@ -65,12 +60,12 @@ function ChatContainer(props) {
             </div>
         )
     }
-    // debugger
-    // if (props.selectedChanel&&!accesed) return (
-    //     <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
-    //         Вы не можете посещать данный канал
-    //     </div>
-    // )
+    debugger
+    if (props.selectedChanel && !accesed) return (
+        <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
+            Вы не можете посещать данный канал
+        </div>
+    )
     return <Chat {...props} />
 }
 let mapStateToProps = (state) => {

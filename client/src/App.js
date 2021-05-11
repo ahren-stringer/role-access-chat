@@ -51,12 +51,19 @@ function App(props) {
             props.setOnlineGroupUsers([from])
             console.log(props.onlineGroupUsers)
           }
-          for (let partner of selectedChanel.rights.whitelist){
+
+          if(
+            !selectedChanel.canSee.prevelegion
+            ||selectedChanel.canSee.whitelisted
+            ){
+            for (let partner of selectedChanel.canSee.list){
             if (partner===from.username){
               props.setOnlineGroupUsers([from])
               console.log(props.onlineGroupUsers)
             }
           }
+        }
+
         }
       });
       socket.on('chat message', message=>{

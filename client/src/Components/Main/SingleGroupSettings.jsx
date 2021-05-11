@@ -1,0 +1,67 @@
+import axios from 'axios';
+
+function SingleGroupSettings(props) {
+    // let [list, setList] = useState([])
+    let arr = []
+
+    let popup = (e) => {
+        if (e.target.className == 'button') e.target.parentNode.nextElementSibling.classList.add('overlay_target')
+        if (e.target.classList[0] == 'overlay' || e.target.className == 'close') e.target.closest('.overlay').classList.toggle('overlay_target')
+    }
+    let createList = (e, name) => {
+        if (arr.some(item => item === name)) {
+            arr.splice(arr.indexOf(name), 1)
+            e.target.style.backgroundColor = ''
+        } else {
+            // outer:for (let key in props.group){
+            //     if(typeof props.group[key]==='object'){
+            //         for(let i=0;i<props.group[key].length;i++){
+            //             if (props.group[key][i]==props.name){
+            //                 debugger
+            //                 arr.push(name)
+            //                 break outer
+            //             }
+            //         }
+            //     }
+            // }
+            arr.push(name)
+            e.target.style.backgroundColor = 'blueviolet'
+        }
+        console.log(arr)
+    }
+    let sendList = (groupId) => {
+        debugger
+        axios.put('http://localhost:8001/group/update/' + props.role+'/'+ groupId, { list:arr })
+    }
+    return <li className='right_item'>
+        <div>{props.title}</div>
+        <div className=''>
+            <div className='popup_wrapper' onClick={(e) => { popup(e) }}>
+                <div class="box">
+                    <a class="button">Назначить пользователей</a>
+                </div>
+
+                <div class="overlay" >
+                    <div class="popup">
+                        <h2>Назначить пользователей</h2>
+                        <a class="close">&times;</a>
+                        <div class="content">
+                            <ul className='user_list'>
+                                {props.group.partners.map(item =>
+                                    <li onClick={(e) => { createList(e, item) }}
+                                        className='user_item'>
+                                        {item}
+                                    </li>)}
+                            </ul>
+                            <button onClick={() => {
+                                sendList(props.group._id, true)
+                            }}>ОК</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+}
+
+export default SingleGroupSettings;

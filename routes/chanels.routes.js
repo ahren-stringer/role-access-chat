@@ -69,7 +69,7 @@ router.get('/chanels/:id', async (req, res) => {
 })
 router.get('/single_chanel/:id', async (req, res) => {
 
-    let group = await Chanel.findById(req.params.id).populate(['author', 'group']);
+    let group = await Chanel.findById(req.params.id).populate(['author', 'group',"canSee",'canWrite','canSeeHistory','canSendFile','canAddUsers','canDeleteUsers']);
     res.json(group)
 })
 

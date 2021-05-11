@@ -26,13 +26,14 @@ function CreateGroup(props) {
             id: partnerId,
             name: partnerName
         }
-        setPartner(Array.from(new Set([...partnerArr, partner])))
+        setPartner(Array.from(new Set([...partnerArr, partnerName])))
     }
     let createNewGroup = async () => {
         await axios.post('http://localhost:8001/groups', {
             name: groupName,
             author: props.author,
-            partners: partnerArr
+            partners: partnerArr,
+            admins:[props.name]
         })
         setCreateGroupPooup(false)
     }
@@ -56,7 +57,8 @@ function CreateGroup(props) {
                                 <div>
                                     {partnerArr.length===0 ? null
                                     : partnerArr.map(item=><span>
-                                        {item.name}
+                                        {/* {item.name} */}
+                                        {item}
                                     </span>)}
                                 </div>
 

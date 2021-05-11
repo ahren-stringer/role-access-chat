@@ -7,6 +7,7 @@ import users from './routes/users.routes.js'
 import dialogs from './routes/dialogs.routes.js'
 import groups from './routes/group.routes.js'
 import chanels from './routes/chanels.routes.js'
+import rights from './routes/rights.rotes.js'
 import httpServer from "http"
 import * as socket from "socket.io"
 import Group from './models/Group.js'
@@ -46,6 +47,8 @@ app.use('', dialogs)
 app.use('', groups)
 //     Каналы
 app.use('', chanels)
+//     Каналы
+app.use('', rights)
 
 // usernames which are currently connected to the chat
 var usernames = {};
@@ -102,7 +105,7 @@ io.on('connection', async (socket) => {
     if (list.type == 'whitelist') {
       WLusers = list.users
     } else {
-      let WLusers = [list.group.author.name,
+      WLusers = [list.group.author.name,
       ...list.group.partners.map(item => item.name)];
     }
     // console.log('whitelist', whitelist)
@@ -202,7 +205,6 @@ mongoose.connect(connection_url, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true
-
 })
 
 mongoose.connection.on('error', err => {

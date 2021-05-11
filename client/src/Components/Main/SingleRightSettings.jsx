@@ -1,28 +1,33 @@
-import { io } from "socket.io-client";
-import { socket } from '../../App';
-import Preloader from '../Preloader/Preloader';
-import { useState } from 'react';
 import axios from 'axios';
 
 function SingleRightSettings(props) {
-    let [list, setList] = useState([])
+    // let [list, setList] = useState([])
+    let arr=[]
+
     let popup = (e) => {
-        debugger
         if (e.target.className == 'button') e.target.parentNode.nextElementSibling.classList.add('overlay_target')
         if (e.target.classList[0] == 'overlay' || e.target.className == 'close') e.target.closest('.overlay').classList.toggle('overlay_target')
     }
-    let createList=(name)=>{
-        if(list.some(item=>item===name)){
-            setList(list.splice(list.indexOf(name),1))
+    let createList=(e,name)=>{
+        if(arr.some(item=>item===name)){
+            arr.splice(arr.indexOf(name),1)
+            // setList(list.splice(list.indexOf(name),1))
+            e.target.style.backgroundColor=''
+            // e.target.classList.toggle('.chosen_item')
         }else{
-            setList([...list,name])
+            arr.push(name)
+            // setList([...list,name])
+            // e.target.classList.toggle('.chosen_item')
+            e.target.style.backgroundColor='blueviolet'
         }
+        console.log(arr)
     }
     let sendList=(rightId,whitelisted)=>{
         if(!props.right.prevelegion){
-            axios.put('http://localhost:8001/right/update/'+rightId,{list,prevelegion:true,whitelisted})
+            debugger
+            axios.put('http://localhost:8001/right/update/'+rightId,{list:arr,prevelegion:true,whitelisted})
         }else{
-            axios.put('http://localhost:8001/right/update/'+rightId,{list})
+            axios.put('http://localhost:8001/right/update/'+rightId,{list:arr})
         }
     }
     return <li className='right_item'>
@@ -40,13 +45,16 @@ function SingleRightSettings(props) {
                                 <h2>Назначить пользователей</h2>
                                 <a class="close">&times;</a>
                                 <div class="content">
-                                    <ul>
+                                    <ul className='user_list'>
                                         {props.group.partners.map(item =>
-                                            <li onClick={()=>{createList(item.name,true)}}>
+                                            <li onClick={(e)=>{createList(e,item.name)}}
+                                            className='user_item'>
                                                 {item.name}
                                             </li>)}
                                     </ul>
-                                    <button onClick={()=>{sendList(props.right.id)}}>ОК</button>
+                                    <button onClick={()=>{
+                                        sendList(props.right._id,true)
+                                        }}>ОК</button>
                                 </div>
                             </div>
                         </div>
