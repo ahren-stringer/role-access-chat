@@ -11,7 +11,15 @@ function CreateGroup(props) {
     let [createGroupPooup, setCreateGroupPooup] = useState(false);
     let [usersList, setUsersList] = useState(null);
     let [partnerArr, setPartner] = useState([]);
+    let arr=[];
+    let roleArr=[];
     let [groupName, setGroupName] = useState('');
+    let [roles, setRoles] = useState([
+        {
+            role: 'admin',
+            user_name:props.name
+        }
+    ]);
 
     let createGroup = async () => {
         if (createGroupPooup) { setCreateGroupPooup(false) }
@@ -22,18 +30,29 @@ function CreateGroup(props) {
         }
     }
     let addPartner = (partnerId, partnerName) => {
-        let partner = {
-            id: partnerId,
-            name: partnerName
+        let role = {
+            role: 'partner',
+            user_name:partnerName
         }
-        setPartner(Array.from(new Set([...partnerArr, partnerName])))
+        if(arr.some(item=>item===partnerName)){
+            let index=arr.indexOf(partnerName);
+            setPartner(partnerArr.splice(index,1))
+            setRoles(roles.splice(index,1))
+        }else{
+            setPartner([...partnerArr,partnerName])
+            setRoles([...roles,role])
+        }
+        console.log(partnerArr)
+        console.log(roles)
+        // setPartner(Array.from(new Set([...partnerArr, partnerName])))
     }
     let createNewGroup = async () => {
+        debugger
         await axios.post('http://localhost:8001/groups', {
             name: groupName,
             author: props.author,
             partners: partnerArr,
-            admins:[props.name]
+            roles
         })
         setCreateGroupPooup(false)
     }
@@ -63,7 +82,9 @@ function CreateGroup(props) {
                                 </div>
 
                                 <button disabled={partnerArr.length===0? true :false}
-                                onClick={createNewGroup}>
+                                onClick={()=>{
+                                    debugger
+                                    createNewGroup()}}>
                                     Создать группу
                                 </button>
 

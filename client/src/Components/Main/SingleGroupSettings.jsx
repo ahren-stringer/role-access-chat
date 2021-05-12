@@ -1,9 +1,13 @@
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 function SingleGroupSettings(props) {
-    // let [list, setList] = useState([])
+    let [roled, setRoled] = useState(null)
     let arr = []
-
+    useEffect(async () => {
+        let res = await axios.get('http://localhost:8001/roles/' + props.role + '/' + props.group._id)
+        setRoled(res.data)
+    }, [])
     let popup = (e) => {
         if (e.target.className == 'button') e.target.parentNode.nextElementSibling.classList.add('overlay_target')
         if (e.target.classList[0] == 'overlay' || e.target.className == 'close') e.target.closest('.overlay').classList.toggle('overlay_target')
@@ -31,7 +35,7 @@ function SingleGroupSettings(props) {
     }
     let sendList = (groupId) => {
         debugger
-        axios.put('http://localhost:8001/group/update/' + props.role+'/'+ groupId, { list:arr })
+        axios.put('http://localhost:8001/group/update/' + props.role + '/' + groupId, { list: arr })
     }
     return <li className='right_item'>
         <div>{props.title}</div>
@@ -47,11 +51,14 @@ function SingleGroupSettings(props) {
                         <a class="close">&times;</a>
                         <div class="content">
                             <ul className='user_list'>
-                                {props.group.partners.map(item =>
-                                    <li onClick={(e) => { createList(e, item) }}
-                                        className='user_item'>
-                                        {item}
-                                    </li>)}
+                                
+                                {!roled ? null :
+                                    roled.map(item =>
+                                        <li onClick={(e) => { createList(e, item) }}
+                                            className='user_item'>
+                                            {item.user_name}
+                                        </li>)
+                                }
                             </ul>
                             <button onClick={() => {
                                 sendList(props.group._id, true)

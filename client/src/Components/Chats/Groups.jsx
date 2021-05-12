@@ -4,9 +4,6 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Preloader from '../Preloader/Preloader';
 import './Chats.css';
-import CreateGroup from './CreateGroup';
-import Search from './Search';
-import SingleChat from './SingleChat';
 import {setGroups,SetRightsForm,setSelectedGroup,defineRole} from '../../redux/groupsReduser'
 
 
@@ -24,8 +21,7 @@ function Groups(props) {
                         {!props.groups ? <Preloader/>
                         :props.groups.map(item=><NavLink to={"/chat/"+item._id} activeClassName='active_chat'>
                             <li onClick={()=>{
-                                props.setSelectedGroup(item)
-                                props.defineRole(item,props.name)}}>
+                                props.setSelectedGroup(item)}}>
                                 {item.name}
                                 </li>
                                 </NavLink>)}

@@ -3,21 +3,24 @@ const { Router } = express;
 const router = Router()
 import Dialog from '../models/Dialog.js'
 import Group from '../models/Group.js'
-import Message from '../models/Message.js'
-import { io } from '../app.js'
+import Users_GroupRole from '../models/Users_GroupRoles.js'
 
 router.post('/groups', async (req, res) => {
     try {
+        console.log(req.body)
         const postData = {
             name: req.body.name,
             author: req.body.author,
             partners: req.body.partners,
-            admins: req.body.admins
         };
         let group = new Group(postData);
-        group.save().then(() => {
-            res.json(group);
-        });
+        let savedGroup= await group.save()
+        let arr=[]
+        for (let role of req.body.roles){
+            arr.push({...role,group_id:savedGroup._id})
+        }
+        console.log(arr)
+        await Users_GroupRole.insertMany(arr)
     } catch (e) {
         console.log(e)
         res.status(500).json({ message: 'Пользователь не найден' })
@@ -33,9 +36,9 @@ router.get('/groups/:id', async (req, res) => {
         for (let partner of group.partners) {
             if (partner === req.params.id) arr.push(group)
         }
-        for (let moderator of group.moderators) {
-            if ( moderator=== req.params.id) arr.push(group)
-        }
+        // for (let moderator of group.moderators) {
+        //     if ( moderator=== req.params.id) arr.push(group)
+        // }
     }
     res.json(arr)
     // .or([{ author: req.params.id }, { partner: req.params.id }])

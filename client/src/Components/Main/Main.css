@@ -155,6 +155,29 @@
   .chosen_item{
     background-color: blueviolet;
   }
+  .role_list{
+    list-style: none;
+    max-width: 212px;
+    position: relative;
+  }
+  .role_item{
+    border-bottom: 1px solid lightgray;
+  }
+  .react-contextmenu{
+    background: #fff;
+    border: 1px solid lightgray;
+    padding: 13px;
+    border-radius: 3px;
+    /* position: absolute;
+    right: -240px; */
+  }
+  .react-contextmenu-item{
+    margin-bottom: 7px;
+    cursor: pointer;
+  }
+  /* .open_menu{
+    display: block !important;
+  } */
   @media screen and (max-width: 700px){
     .box{
       width: 70%;

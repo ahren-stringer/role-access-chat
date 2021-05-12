@@ -10,8 +10,11 @@ import Search from './Search';
 import SingleChat from './SingleChat';
 
 function Chats(props) {
-
+debugger
     useEffect(async () => {
+        let role = await axios.get('http://localhost:8001/role_define/'+ props.name +'/' + props.match.params.groupId);
+        props.defineRole(role.data.role)
+        debugger
         let req = await axios.get('http://localhost:8001/chanels/' + props.match.params.groupId);
         props.setChanels(req.data)
     }, [props.match.params.groupId])
@@ -42,6 +45,9 @@ function Chats(props) {
                                     author={props.author}
                                 //    rightsSetingForm={props.rightsSetingForm}
                                 />}
+                                {props.role === 'admin'
+                                    ? <AddUsersForm selectedGroup={props.selectedGroup} />
+                                    : null}
                             </div>
                         </div>
                         <ul className='nav nav-pills nav-stacked'>
@@ -55,9 +61,7 @@ function Chats(props) {
                                         setSelectedChanel={props.setSelectedChanel}
                                     />)}
                         </ul>
-                        {props.role === 'admins'
-                            ? <AddUsersForm selectedGroup={props.selectedGroup}/>
-                            : null}
+
                     </div>
                     <div className='nano-pane' style={{ display: 'block' }}>
 

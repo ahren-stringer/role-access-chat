@@ -8,6 +8,7 @@ import dialogs from './routes/dialogs.routes.js'
 import groups from './routes/group.routes.js'
 import chanels from './routes/chanels.routes.js'
 import rights from './routes/rights.rotes.js'
+import roles from './routes/roles.routes.js'
 import httpServer from "http"
 import * as socket from "socket.io"
 import Group from './models/Group.js'
@@ -49,6 +50,8 @@ app.use('', groups)
 app.use('', chanels)
 //     Каналы
 app.use('', rights)
+//     Роли
+app.use('', roles)
 
 // usernames which are currently connected to the chat
 var usernames = {};

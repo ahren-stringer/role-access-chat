@@ -74,22 +74,19 @@ const groupsReuser = (state = init, action) => {
                 onlineGroupUsers: arr
             }
         case ROLE:
-            let role;
-            outer:for (let key in action.group){
-                if(typeof action.group[key]==='object'){
-                    for(let i=0;i<action.group[key].length;i++){
-                        if (action.group[key][i]==action.name){
-                            debugger
-                            role=key
-                            break outer
-                        }
-                    }
-                }
-            }
-            return {
-                ...state,
-                role
-            }
+            // let role;
+            // outer:for (let key in action.group){
+            //     if(typeof action.group[key]==='object'){
+            //         for(let i=0;i<action.group[key].length;i++){
+            //             if (action.group[key][i]==action.name){
+            //                 debugger
+            //                 role=key
+            //                 break outer
+            //             }
+            //         }
+            //     }
+            // }
+            return {...state,role:action.role}
         default:
             return state
     }
@@ -104,5 +101,5 @@ export const SetRightsForm = (rightsSetingForm) => ({ type: SET_RIGHTS_FORM, rig
 export const setChanels = (chanels) => ({ type: SET_CHANELS, chanels });
 export const setSelectedChanel = (selectedChanel) => ({ type: SET_SELECTED_CHANEL, selectedChanel });
 export const setGroupSettingsForm = (groupForm) => ({ type: GROUP_FORM, groupForm });
-export const defineRole = (group, name) => ({ type: ROLE, group, name });
+export const defineRole = (role) => ({ type: ROLE, role });
 export default groupsReuser
