@@ -6,13 +6,14 @@ function CreateChanel(props) {
     let namesInGroups = [];
     namesInGroups.push(props.selectedGroup.author.name)
     for (let partner of props.selectedGroup.partners) {
-        namesInGroups.push(partner.name)
+        namesInGroups.push(partner)
     }
     function Right(type,list) {
         this.type=type;
         this.prevelegion = false;
         this.listType = null;
-        this.list = list
+        this.list = list;
+        this.group_id=props.selectedGroup._id
     }
     let [createForm, setCreateForm] = useState(false)
     let [text, setText] = useState('');
@@ -25,8 +26,6 @@ function CreateChanel(props) {
             canWrite: new Right('canWrite',[...namesInGroups]),
             canSeeHistory: new Right('canSeeHistory',[...namesInGroups]),
             canSendFile: new Right('canSendFile',[...namesInGroups]),
-            canAddUsers: new Right('canAddUsers',[]),
-            canDeleteUsers: new Right('canDeleteUsers',[]),
         })
         // for (let user of props.onlineGroupUsers) {
 

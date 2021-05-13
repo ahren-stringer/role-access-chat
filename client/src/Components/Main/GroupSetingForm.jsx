@@ -26,6 +26,12 @@ function GroupSetingForm(props) {
         let res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
         setRoled(res.data)
     }
+    let deleteUser = async (name) => {
+        debugger
+        await axios.delete('http://localhost:8001/group_delete_user/' + name + '/' + props.selectedGroup._id)
+        let res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
+        setRoled(res.data)
+    }
     return <div style={{ height: '100vh' }}>
         <span onClick={() => { props.SetRightsForm(false) }}>Закрыть</span>
         <h3>Роли</h3>
@@ -33,10 +39,10 @@ function GroupSetingForm(props) {
             <h4>Администраторы</h4>
             <ul className='role_list'>
                 {roled
-                    .filter(item => item.role === 'admin')
+                    .filter(item => item.role === 'admin' || item.role === 'owner')
                     .map(item => <li className='role_item'>
                         <ContextMenuTrigger holdToDisplay={1} id="same_unique_identifier">
-                            {item.user_name}
+                            {item.user_name} - {item.role}
                         </ContextMenuTrigger>
 
                         <ContextMenu id="same_unique_identifier">
@@ -81,7 +87,7 @@ function GroupSetingForm(props) {
             <h4>Пользователи</h4>
             <ul className='role_list'>
                 {roled
-                    .filter(item => item.role !== 'admin' && item.role !== 'moderator' && item.role !== 'invited')
+                    .filter(item => item.role === 'partner' )
                     .map(item => <li>
                         <div className='role_item' 
                         // onClick={(e)=>{toggleMenu(e)}}
@@ -92,17 +98,15 @@ function GroupSetingForm(props) {
 
                         <div className='react-contextmenu'>
                             <div className='react-contextmenu-item'
-                            onClick={() => {
-                                debugger
-                                changeRole(item.user_name, 'moderator')
-                            }}>
+                            onClick={() => {changeRole(item.user_name, 'moderator')}}>
                                 Назначить модератором
                                 </div>
 
                             <div className='react-contextmenu-item'>
                                 Назначить обычным пользователем
                                 </div>
-                            <div className='react-contextmenu-item'>
+                            <div className='react-contextmenu-item'
+                            onClick={() => {deleteUser(item.user_name)}}>
                                 Удалить из Группы
                                 </div>
                         </div>

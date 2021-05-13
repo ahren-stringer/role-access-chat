@@ -3,6 +3,7 @@ const { Router } = express;
 const router = Router()
 import Right from '../models/Right.js'
 import Users_GroupRole from '../models/Users_GroupRoles.js'
+import jwt from  'jsonwebtoken'
 
 router.get('/roles/:role/:groupId', async (req, res) => {
     try {
@@ -21,7 +22,10 @@ router.get('/role_define/:user_name/:groupId', async (req, res) => {
             user_name: req.params.user_name,
             group_id: req.params.groupId
         })
-        res.json(role)
+        const role_key = jwt.sign({ user_name: req.params.user_name, role:role.role},
+            'RoleSecret'
+        )
+        res.json({role:role.role, role_key})
     } catch (e) {
         res.status(500).json({ message: 'Пользователь не найден' })
     }

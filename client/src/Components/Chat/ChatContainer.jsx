@@ -11,8 +11,8 @@ function ChatContainer(props) {
         let inList;
         inList = right.list.some(item => item == props.name) || props.selectedGroup.author.name==props.name
         debugger
-        if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
-        return true
+        if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return true
+        return false
     }
     let [accesed, setAccesed] = useState(false);
     useEffect(async () => {

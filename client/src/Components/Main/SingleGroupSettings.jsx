@@ -17,17 +17,7 @@ function SingleGroupSettings(props) {
             arr.splice(arr.indexOf(name), 1)
             e.target.style.backgroundColor = ''
         } else {
-            // outer:for (let key in props.group){
-            //     if(typeof props.group[key]==='object'){
-            //         for(let i=0;i<props.group[key].length;i++){
-            //             if (props.group[key][i]==props.name){
-            //                 debugger
-            //                 arr.push(name)
-            //                 break outer
-            //             }
-            //         }
-            //     }
-            // }
+
             arr.push(name)
             e.target.style.backgroundColor = 'blueviolet'
         }

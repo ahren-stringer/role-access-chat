@@ -49,7 +49,7 @@ function SingleRightSettings(props) {
                                         {props.group.partners.map(item =>
                                             <li onClick={(e)=>{createList(e,item.name)}}
                                             className='user_item'>
-                                                {item.name}
+                                                {item}
                                             </li>)}
                                     </ul>
                                     <button onClick={()=>{
@@ -73,7 +73,7 @@ function SingleRightSettings(props) {
                                 <a class="close">&times;</a>
                                 <div class="content">
                                     <ul>
-                                        {props.group.partners.map(item => <li>{item.name}</li>)}
+                                        {props.group.partners.map(item => <li>{item}</li>)}
                                     </ul>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@ function SingleRightSettings(props) {
                                     <a class="close">&times;</a>
                                     <div class="content">
                                         <ul>
-                                            {props.group.partners.map(item => <li>{item.name}</li>)}
+                                            {props.group.partners.map(item => <li>{item}</li>)}
                                         </ul>
                                     </div>
                                 </div>
@@ -115,7 +115,7 @@ function SingleRightSettings(props) {
                                     <a class="close">&times;</a>
                                     <div class="content">
                                         <ul>
-                                            {props.group.partners.map(item => <li>{item.name}</li>)}
+                                            {props.group.partners.map(item => <li>{item}</li>)}
                                         </ul>
                                     </div>
                                 </div>
@@ -136,7 +136,7 @@ function SingleRightSettings(props) {
                                     <a class="close">&times;</a>
                                     <div class="content">
                                         <ul>
-                                            {props.group.partners.map(item => <li>{item.name}</li>)}
+                                            {props.group.partners.map(item => <li>{item}</li>)}
                                         </ul>
                                     </div>
                                 </div>
@@ -156,7 +156,7 @@ function SingleRightSettings(props) {
                                     <a class="close">&times;</a>
                                     <div class="content">
                                         <ul>
-                                            {props.group.partners.map(item => <li>{item.name}</li>)}
+                                            {props.group.partners.map(item => <li>{item}</li>)}
                                         </ul>
                                     </div>
                                 </div>

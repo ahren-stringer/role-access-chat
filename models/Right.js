@@ -6,9 +6,8 @@ const schema = new mongoose.Schema({
         required: false,
         unique: false
     },
-    chanel_id: {
-        type: { type: mongoose.Schema.Types.ObjectId, ref: 'Chanel' },
-    },
+    chanel_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Chanel' },
+    group_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Group' },
     prevelegion: {
         type: Boolean,
         default: false
@@ -17,7 +16,7 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: null
     },
-    list:{type:Array},
+    list:{type:Array,default:[]},
 }, {
     timestamps: true
 });

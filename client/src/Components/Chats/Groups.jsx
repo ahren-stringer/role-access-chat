@@ -8,7 +8,6 @@ import {setGroups,SetRightsForm,setSelectedGroup,defineRole} from '../../redux/g
 
 
 function Groups(props) {
-    debugger
     useEffect(async()=>{
         let req = await axios.get('http://localhost:8001/groups/'+props.name);
         props.setGroups(req.data)

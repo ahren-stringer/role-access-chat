@@ -32,7 +32,7 @@ function SingleChat(props) {
                     props.setSelectedChanel(props.chanel)
                     props.SetRightsForm('existing_chanel') 
                     }}>
-                    Настроить права доступа
+                    Настроить
                 </div>
                 <div>
                     <div className="im_dialog_message">

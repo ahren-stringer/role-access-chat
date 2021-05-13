@@ -9,9 +9,7 @@ const chanelSchema = mongoose.Schema({
     canWrite: { type: mongoose.Schema.Types.ObjectId, ref: "Right" },
     canSeeHistory: { type: mongoose.Schema.Types.ObjectId, ref: "Right" },
     canSendFile: { type: mongoose.Schema.Types.ObjectId, ref: "Right" },
-    canAddUsers: { type: mongoose.Schema.Types.ObjectId, ref: "Right" },
-    canDeleteUsers: { type: mongoose.Schema.Types.ObjectId, ref: "Right" },
-    
+
     lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
 }, {
     timestamps: true

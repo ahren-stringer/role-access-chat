@@ -10,13 +10,24 @@ import Search from './Search';
 import SingleChat from './SingleChat';
 
 function Chats(props) {
-debugger
-    useEffect(async () => {
-        let role = await axios.get('http://localhost:8001/role_define/'+ props.name +'/' + props.match.params.groupId);
-        props.defineRole(role.data.role)
+    debugger
+    let [group,setGroup]=useState(props.selectedGroup)
+    useEffect(async()=>{
+        // setGroup(props.selectedGroup)
         debugger
-        let req = await axios.get('http://localhost:8001/chanels/' + props.match.params.groupId);
-        props.setChanels(req.data)
+        if (props.selectedGroup){
+            let req = await axios.get('http://localhost:8001/chanels/' +props.name+'/'+props.selectedGroup.name+'/'+ props.match.params.groupId);
+            props.setChanels(req.data.chanels)
+            localStorage.setItem('right_keys',JSON.stringify(req.data[props.selectedGroup.name]))
+        }
+    },[props.selectedGroup])
+    useEffect(async () => {
+        let role = await axios.get('http://localhost:8001/role_define/' + props.name + '/' + props.match.params.groupId);
+        // props.defineRole(role.data.role)
+        localStorage.setItem('role', JSON.stringify(role.data))
+        debugger
+        // let req = await axios.get('http://localhost:8001/chanels/' +props.name+'/'+group.name+'/'+ props.match.params.groupId);
+        // props.setChanels(req.data.chanels)
     }, [props.match.params.groupId])
     // let [groups,setGroups]=useState(null);
     return (
@@ -38,16 +49,40 @@ debugger
                                 <span>
                                     Группы
                         </span>
-                                <div onClick={() => { props.setGroupSettingsForm(true) }}>Настроить должности</div>
+                                {!JSON.parse(localStorage.getItem('role')) ? null :
+                                    JSON.parse(localStorage.getItem('role')).role === 'admin'
+                                    ||JSON.parse(localStorage.getItem('role')).role === 'owner'
+                                        ? <div onClick={() => { props.setGroupSettingsForm(true) }}>Настроить должности</div>
+                                        : null}
+
                                 <CreateGroup author={props.author} name={props.name} />
-                                {!props.selectedGroup ? <Preloader /> : <CreateChanel selectedGroup={props.selectedGroup}
-                                    SetRightsForm={props.SetRightsForm}
-                                    author={props.author}
-                                //    rightsSetingForm={props.rightsSetingForm}
-                                />}
-                                {props.role === 'admin'
-                                    ? <AddUsersForm selectedGroup={props.selectedGroup} />
-                                    : null}
+
+                                {!props.selectedGroup ? <Preloader /> :
+                                    !JSON.parse(localStorage.getItem('role')) ? null :
+                                        JSON.parse(localStorage.getItem('role')).role === 'admin'
+                                        ||JSON.parse(localStorage.getItem('role')).role === 'owner'
+                                            ? <CreateChanel selectedGroup={props.selectedGroup}
+                                                SetRightsForm={props.SetRightsForm}
+                                                author={props.author}
+                                            //    rightsSetingForm={props.rightsSetingForm}
+                                            />
+                                            : null}
+
+                                {!JSON.parse(localStorage.getItem('role')) ? null :
+                                    JSON.parse(localStorage.getItem('role')).role === 'admin'
+                                    ||JSON.parse(localStorage.getItem('role')).role === 'owner'
+                                        ? <AddUsersForm
+                                            title='Пригласить пользователей'
+                                            selectedGroup={props.selectedGroup}
+                                            role={"admin"}
+                                            chanels={props.chanels} />
+                                        : JSON.parse(localStorage.getItem('role')).role === 'moderator'
+                                            ? <AddUsersForm
+                                                title='Пригласить визитеров'
+                                                selectedGroup={props.selectedGroup}
+                                                role={"moderator"}
+                                                chanels={props.chanels} />
+                                            : null}
                             </div>
                         </div>
                         <ul className='nav nav-pills nav-stacked'>

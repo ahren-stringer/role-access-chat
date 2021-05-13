@@ -71,16 +71,6 @@ function RightsSetingForm(props) {
                 right={chanel.canSendFile}
                 group={props.selectedGroup}
             />
-            <SingleRightSettings
-                title='Участники, которым разрешено добавлять пользователей'
-                right={chanel.canAddUsers}
-                group={props.selectedGroup}
-            />
-            <SingleRightSettings
-                title='Участники, которым разрешено удалять пользователей'
-                right={chanel.canDeleteUsers}
-                group={props.selectedGroup}
-            />
         </ul>
     </div>
 }

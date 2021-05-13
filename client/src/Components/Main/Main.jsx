@@ -9,7 +9,6 @@ import { SetRightsForm } from '../../redux/groupsReduser'
 import GroupSetingForm from './GroupSetingForm';
 
 function Main(props) {
-    debugger
     return <div>
         <div className='Header'>
             <Header />
