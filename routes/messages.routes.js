@@ -1,9 +1,8 @@
 import express from 'express';
 const { Router } = express;
 const router = Router()
-import Dialog from '../models/Dialog.js'
 import Message from '../models/Message.js'
-import {io} from '../app.js'
+import access from '../middlewares/right_access.middleware.js'
 
 router.post('/messages', async (req, res) => {
     try {
@@ -55,7 +54,7 @@ router.post('/messages', async (req, res) => {
     }
 })
 
-router.get('/messages/:chat',  (req, res) => {
+router.get('/messages/:chat', access, (req, res) => {
 
     Message.find({ chat: req.params.chat })
         .populate(['chat','user'])

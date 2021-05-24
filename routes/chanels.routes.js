@@ -27,12 +27,10 @@ router.post('/chanels', async (req, res) => {
             let right = await r.save()
             savedArr.push(right)
         }
-
         chanel.canSee = savedArr[0]._id
         chanel.canWrite = savedArr[1]._id
         chanel.canSeeHistory = savedArr[2]._id
         chanel.canSendFile = savedArr[3]._id
-
         chanel.save().then(() => {
             res.json({ chanel, rights: savedArr });
         });
@@ -57,7 +55,8 @@ router.get('/chanels/:user/:groupName/:id', async (req, res) => {
 
             let inList = right.list.some(item => item == req.params.user)
             if ((!right.prevelegion && inList)
-                || (right.whitelisted && inList)) {
+                || (right.whitelisted && inList)
+                || (!right.whitelisted && !inList)) {
                 right_keys_obj[right.chanel_id.name] = {
                     ...right_keys_obj[right.chanel_id.name],
                     [right.type]: jwt.sign(
@@ -73,6 +72,10 @@ router.get('/chanels/:user/:groupName/:id', async (req, res) => {
         }
         console.log({ [req.params.groupName]: right_keys_obj })
         res.json({ chanels, [req.params.groupName]: right_keys_obj })
+    } catch (e) {
+        console.log(e)
+    }
+})
         // .or([{ author: req.params.id }, { partner: req.params.id }])
         // await arr.populate(['author'])
         // .populate({
@@ -88,10 +91,6 @@ router.get('/chanels/:user/:groupName/:id', async (req, res) => {
         //     }
         //     return res.json(group)
         // });
-    } catch (e) {
-        console.log(e)
-    }
-})
 router.get('/single_chanel/:id', async (req, res) => {
 
     let group = await Chanel.findById(req.params.id).populate(['author', 'group', "canSee", 'canWrite', 'canSeeHistory', 'canSendFile', 'canAddUsers', 'canDeleteUsers']);

@@ -42,7 +42,8 @@ function AddUsersForm(props) {
     }
     let sendUsers = async () => {
         let body;
-        if (props.role='admin'){
+        if (JSON.parse(localStorage.getItem('role')).role === 'admin'
+        ||JSON.parse(localStorage.getItem('role')).role === 'owner'){
             body= {
                 new_parters: partnerArr,
                 roles,
@@ -58,7 +59,7 @@ function AddUsersForm(props) {
         await axios.put('http://localhost:8001/group_add_user/' + props.selectedGroup._id, body ,
                 {
                     headers: {
-                        'Role-Access': 'Access '+ allow
+                        'Role-Access': 'Access '+ JSON.parse(localStorage.getItem('role')).role_key
                     }
                 })
         setOpenList(false)

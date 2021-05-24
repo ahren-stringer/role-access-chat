@@ -38,6 +38,7 @@ router.get('/groups/:id', async (req, res) => {
             if (partner === req.params.id) arr.push(group)
         }
     }
+    res.setHeader('Access-Control-Allow-Origin', '*')
     res.json(arr)
 })
 router.get('/single_group/:id', async (req, res) => {
@@ -66,14 +67,18 @@ router.put('/group_add_user/:groupId',access, async (req, res) => {
         res.status(500).json({ message: 'Пользователь не найден' })
     }
 })
-router.delete('/group_delete_user/:groupId',access, async (req, res) => {
+router.delete('/group_delete_user/:userName/:groupId',access, async (req, res) => {
     try {
+        if(req.user.role!=='admin' || req.user.role!=='owner'){
+            res.json({ message: 'Недостаточно прав' })
+            return
+        }
         await Group.updateOne({ _id: req.params.groupId },
             {
-                $pullAll: { partners: [req.body.deleter] },
+                $pullAll: { partners: [req.params.userName] },
             });
-        await Users_GroupRole.remove({
-            user_name:req.body.deleter,
+        await Users_GroupRole.deleteOne({
+            user_name:req.params.userName,
             group_id:req.params.groupId
         })
         await Right.updateMany({
@@ -81,10 +86,12 @@ router.delete('/group_delete_user/:groupId',access, async (req, res) => {
             prevelegion:true
         },
         {
-            $pullAll: { list: req.body.deleter },
+            $pullAll: { list: [req.params.userName] },
         })
         res.json({ message: "Пользователь Удален" })
+
     } catch (e) {
+        console.log(e)
         res.status(500).json({ message: 'Пользователь не найден' })
     }
 })

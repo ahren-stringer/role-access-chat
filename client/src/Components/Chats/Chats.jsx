@@ -10,11 +10,11 @@ import Search from './Search';
 import SingleChat from './SingleChat';
 
 function Chats(props) {
-    debugger
+
     let [group,setGroup]=useState(props.selectedGroup)
     useEffect(async()=>{
         // setGroup(props.selectedGroup)
-        debugger
+
         if (props.selectedGroup){
             let req = await axios.get('http://localhost:8001/chanels/' +props.name+'/'+props.selectedGroup.name+'/'+ props.match.params.groupId);
             props.setChanels(req.data.chanels)
@@ -25,7 +25,7 @@ function Chats(props) {
         let role = await axios.get('http://localhost:8001/role_define/' + props.name + '/' + props.match.params.groupId);
         // props.defineRole(role.data.role)
         localStorage.setItem('role', JSON.stringify(role.data))
-        debugger
+
         // let req = await axios.get('http://localhost:8001/chanels/' +props.name+'/'+group.name+'/'+ props.match.params.groupId);
         // props.setChanels(req.data.chanels)
     }, [props.match.params.groupId])

@@ -47,7 +47,7 @@ function SingleRightSettings(props) {
                                 <div class="content">
                                     <ul className='user_list'>
                                         {props.group.partners.map(item =>
-                                            <li onClick={(e)=>{createList(e,item.name)}}
+                                            <li onClick={(e)=>{createList(e,item)}}
                                             className='user_item'>
                                                 {item}
                                             </li>)}
@@ -72,9 +72,16 @@ function SingleRightSettings(props) {
                                 <h2>Запретить пользователей</h2>
                                 <a class="close">&times;</a>
                                 <div class="content">
-                                    <ul>
-                                        {props.group.partners.map(item => <li>{item}</li>)}
+                                    <ul className='user_list'>
+                                        {props.group.partners.map(item =>
+                                            <li onClick={(e)=>{createList(e,item)}}
+                                            className='user_item'>
+                                                {item}
+                                            </li>)}
                                     </ul>
+                                    <button onClick={()=>{
+                                        sendList(props.right._id,false)
+                                        }}>ОК</button>
                                 </div>
                             </div>
                         </div>

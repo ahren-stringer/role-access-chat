@@ -104,17 +104,17 @@ io.on('connection', async (socket) => {
     // socket.emit("groups", arr);
   })
   socket.on('selectChat', (list) => {
-    let WLusers;
-    if (list.type == 'whitelist') {
-      WLusers = list.users
-    } else {
-      WLusers = [list.group.author.name,
-      ...list.group.partners.map(item => item.name)];
-    }
+    // let WLusers;
+    // if (list.type == 'whitelist') {
+    //   WLusers = list.users
+    // } else {
+    //   WLusers = [list.group.author.name,
+    //   ...list.group.partners.map(item => item.name)];
+    // }
     // console.log('whitelist', whitelist)
     const users = [];
     for (let [id, socket] of io.of("/").sockets) {
-      for (let name of WLusers) {
+      for (let name of list.users) {
         if (socket.username === name) {
           users.push({
             userID: id,

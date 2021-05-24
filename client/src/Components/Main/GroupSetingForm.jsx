@@ -27,10 +27,18 @@ function GroupSetingForm(props) {
         setRoled(res.data)
     }
     let deleteUser = async (name) => {
-        debugger
-        await axios.delete('http://localhost:8001/group_delete_user/' + name + '/' + props.selectedGroup._id)
+        if(JSON.parse(localStorage.getItem('role')).role === 'admin'
+        ||JSON.parse(localStorage.getItem('role')).role === 'owner'){
+        await axios.delete('http://localhost:8001/group_delete_user/' + name + '/' + props.selectedGroup._id,
+        {
+            headers: {
+                'Role-Access': 'Access '+ JSON.parse(localStorage.getItem('role')).role_key
+            }
+        }
+        )
         let res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
         setRoled(res.data)
+        }
     }
     return <div style={{ height: '100vh' }}>
         <span onClick={() => { props.SetRightsForm(false) }}>Закрыть</span>

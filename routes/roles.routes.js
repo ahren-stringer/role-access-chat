@@ -22,8 +22,9 @@ router.get('/role_define/:user_name/:groupId', async (req, res) => {
             user_name: req.params.user_name,
             group_id: req.params.groupId
         })
-        const role_key = jwt.sign({ user_name: req.params.user_name, role:role.role},
-            'RoleSecret'
+        const role_key = jwt.sign(
+            { user_name: req.params.user_name, role:role.role},
+            'RightSecret'
         )
         res.json({role:role.role, role_key})
     } catch (e) {

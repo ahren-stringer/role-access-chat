@@ -109,7 +109,7 @@ function Register(props) {
         <Card className={classes.root}>
             <CardContent>
                 <Typography variant="h5" component="h2">
-                    Вход
+                   Регистрация
                 </Typography>
             </CardContent>
 

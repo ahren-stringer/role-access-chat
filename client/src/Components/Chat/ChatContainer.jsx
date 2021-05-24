@@ -7,14 +7,15 @@ import { setSelectedGroup, setSelected, setOnlineGroupUsers, setSelectedChanel }
 import { withRouter } from 'react-router';
 import { socket } from '../../App';
 function ChatContainer(props) {
-    let Acces = (right) => {
-        let inList;
-        inList = right.list.some(item => item == props.name) || props.selectedGroup.author.name==props.name
-        debugger
-        if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return true
-        return false
-    }
-    let [accesed, setAccesed] = useState(false);
+    debugger
+    // let Acces = (right) => {
+    //     let inList;
+    //     inList = right.list.some(item => item == props.name) || props.selectedGroup.author.name==props.name
+    //     debugger
+    //     if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return true
+    //     return false
+    // }
+    let [accesed, setAccesed] = useState(null);
     useEffect(async () => {
         let chanelId = props.match.params.chanelId;
         if (chanelId) {
@@ -23,14 +24,21 @@ function ChatContainer(props) {
             let ChatReq = await axios.get('http://localhost:8001/single_chanel/' + chanelId);
             props.setSelectedChanel(ChatReq.data)
             console.log('ChatReq.data', ChatReq.data)
-            let a = Acces(ChatReq.data.canSee)
-            setAccesed(Acces(ChatReq.data.canSee))
+            // let a = Acces(ChatReq.data.canSee)
+            // setAccesed(Acces(ChatReq.data.canSee))
+            setAccesed(JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee)
             debugger
-            if (accesed) {
+            if (JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee) {
 
-                ChatReq.data.canSee.whitelisted
-                    ? socket.emit('selectChat', { users: ChatReq.data.rights.users.whitelist, type: 'whitelist' })
-                    : socket.emit('selectChat', { users: ChatReq.data.rights.users.blacklist, type: 'blacklist', group: props.selectedGroup })
+                !ChatReq.data.canSee.prevelegion
+                    ? socket.emit('selectChat', { users: ChatReq.data.canSee.list})
+                    : ChatReq.data.canSee.whitelisted
+                        ? socket.emit('selectChat', { users: ChatReq.data.canSee.list})
+                        : socket.emit('selectChat', {
+                            users: props.selectedGroup.partners.filter(
+                                item => !ChatReq.data.canSee.list.some(list_item => list_item === item)
+                            )
+                        })
 
                 socket.on("users", (users) => {
                     users.forEach((user) => {
@@ -42,12 +50,17 @@ function ChatContainer(props) {
                     console.log('Пользователи получены')
 
                 });
-                socket.on("user connected", (user) => {
-                    console.log(user, 'conected');
-                    props.setOnlineGroupUsers([user])
-                    console.log(props.onlineGroupUsers)
+                // socket.on("user connected", (user) => {
+                //     console.log(user, 'conected');
+                //     props.setOnlineGroupUsers([user])
+                //     console.log(props.onlineGroupUsers)
+                // });
+                let MesReq = await axios.get('http://localhost:8001/messages/' + chanelId,
+                {
+                    headers: {
+                        'Right-Access': 'Access '+ JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee
+                    }
                 });
-                let MesReq = await axios.get('http://localhost:8001/messages/' + chanelId);
                 props.setMessages(MesReq.data)
             }
         }
