@@ -93,7 +93,7 @@
     background: #06D85F;
   } */
   
-  .overlay {
+  .add_users_form, .overlay {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -168,16 +168,20 @@
     border: 1px solid lightgray;
     padding: 13px;
     border-radius: 3px;
-    /* position: absolute;
-    right: -240px; */
+    
+    position: absolute;
+    top: 2px;
+    left: 217px;
+    width: 100%;
+    display: none;
   }
   .react-contextmenu-item{
     margin-bottom: 7px;
     cursor: pointer;
   }
-  /* .open_menu{
+  .open_menu{
     display: block !important;
-  } */
+  }
   @media screen and (max-width: 700px){
     .box{
       width: 70%;

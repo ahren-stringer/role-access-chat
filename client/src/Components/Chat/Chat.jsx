@@ -2,26 +2,17 @@ import './Chat.css';
 import { io } from "socket.io-client";
 import { socket } from '../../App';
 import Preloader from '../Preloader/Preloader';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 function Chat(props) {
+    debugger
     console.log(props.onlineGroupUsers)
     let [text, setText] = useState('');
     let rights = props.selectedChanel.rights;
-
-    let Acces = (right) => {
-        let inList, listType;
-        for (let list in right) {
-            if (right[list]) {
-                debugger
-                inList = right[list].some(item => item == props.name)
-                listType = list
-            }
-        }
-        if ((listType == 'blacklist' && inList) || (listType == 'whitelist' && !inList)) return false
-        if ((listType == 'whitelist' && inList) || (listType == 'blacklist' && !inList)) return true
-    }
-
+    // let  [messages, setMessages]=useState(props.messages);
+    // useEffect(()=>{
+    //     setMessages(props.messages)
+    // },[props.messages])
     let sendMessage = async () => {
         let message = await axios.post('http://localhost:8001/messages', {
             text,
@@ -29,16 +20,21 @@ function Chat(props) {
             chat: props.selectedChanel,
             // onlineGroupUsers: props.onlineGroupUsers
         })
+        props.pushMessage(message.data)
         for (let user of props.onlineGroupUsers) {
 
-            socket.emit("chat message", {
-                content: message,
+            socket.emit("send message", {
+                content: {
+                    chanel:props.selectedChanel,
+                    group:props.selectedGroup,
+                    message:message.data
+                },
                 to: user.userID,
             });
         }
-        socket.on("chat message", ({ content, from }) => {
-            console.log(content, from)
-        });
+        // socket.on("chat message", ({ content, from }) => {
+        //     console.log(content, from)
+        // });
 
     };
     return <div className='im_history_col_wrap noselect im_history_loaded'>

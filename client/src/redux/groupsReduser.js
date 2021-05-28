@@ -8,6 +8,7 @@ const SET_CHANELS = 'groupsReuser/SET_CHANELS';
 const SET_SELECTED_CHANEL = 'groupsReuser/SET_SELECTED_CHANEL';
 const GROUP_FORM = 'groupsReuser/GROUP_FORM';
 const ROLE = 'groupsReuser/ROLE';
+const ADD_USERS_FORM = 'groupsReuser/ADD_USERS_FORM';
 
 let init = {
     selected: false,
@@ -19,14 +20,7 @@ let init = {
     rightsSetingForm: null,
     groupForm: null,
     role: null,
-    rights: {
-        whitelist: [],
-        canWrite: [],
-        canSeeHistory: [],
-        canSendFile: [],
-        canAddUsers: [],
-        canDeleteUsers: [],
-    },
+    addUsersForm: false
 };
 
 const groupsReuser = (state = init, action) => {
@@ -47,6 +41,8 @@ const groupsReuser = (state = init, action) => {
             return { ...state, chanels: action.chanels }
         case GROUP_FORM:
             return { ...state, groupForm: action.groupForm }
+        case ADD_USERS_FORM:
+            return { ...state, addUsersForm: action.addUsersForm }
         case SET_ONLINE_GROUP_USERS:
             // let prev = state.onlineGroupUsers;
             // let act = action.onlineGroupUsers;
@@ -86,7 +82,7 @@ const groupsReuser = (state = init, action) => {
             //         }
             //     }
             // }
-            return {...state,role:action.role}
+            return { ...state, role: action.role }
         default:
             return state
     }
@@ -102,4 +98,6 @@ export const setChanels = (chanels) => ({ type: SET_CHANELS, chanels });
 export const setSelectedChanel = (selectedChanel) => ({ type: SET_SELECTED_CHANEL, selectedChanel });
 export const setGroupSettingsForm = (groupForm) => ({ type: GROUP_FORM, groupForm });
 export const defineRole = (role) => ({ type: ROLE, role });
+export const toggleAddUsersForm = (addUsersForm) => ({ type: ADD_USERS_FORM, addUsersForm });
+
 export default groupsReuser

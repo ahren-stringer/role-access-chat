@@ -1,7 +1,5 @@
 import { SetRightsForm } from '../../redux/groupsReduser'
 import { connect } from 'react-redux';
-import SingleRightSettings from "./SingleRightSettings";
-import SingleGroupSettings from './SingleGroupSettings';
 import Preloader from '../Preloader/Preloader';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -15,10 +13,10 @@ function GroupSetingForm(props) {
         setRoled(res.data)
     }, [])
 
-    // let toggleMenu=(e)=>{
-    //     debugger
-    //     e.target.nextElementSibling.classList.toggle('.open_menu')
-    // }
+    let toggleMenu=(e)=>{
+        debugger
+        e.target.nextElementSibling.classList.toggle('open_menu')
+    }
 
     let changeRole = async (name, role) => {
         debugger
@@ -98,7 +96,7 @@ function GroupSetingForm(props) {
                     .filter(item => item.role === 'partner' )
                     .map(item => <li>
                         <div className='role_item' 
-                        // onClick={(e)=>{toggleMenu(e)}}
+                        onClick={(e)=>{toggleMenu(e)}}
                         >
                             {item.user_name}
                         </div>

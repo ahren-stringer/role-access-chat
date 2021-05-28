@@ -22,10 +22,10 @@ function CreateChanel(props) {
             name: text,
             author: props.author,
             group: props.selectedGroup._id,
-            canSee: new Right('canSee',[...namesInGroups]),
-            canWrite: new Right('canWrite',[...namesInGroups]),
-            canSeeHistory: new Right('canSeeHistory',[...namesInGroups]),
-            canSendFile: new Right('canSendFile',[...namesInGroups]),
+            canSee: new Right('canSee',[]),
+            canWrite: new Right('canWrite',[]),
+            canSeeHistory: new Right('canSeeHistory',[]),
+            canSendFile: new Right('canSendFile',[]),
         })
         // for (let user of props.onlineGroupUsers) {
 
@@ -40,14 +40,15 @@ function CreateChanel(props) {
 
     };
     return (
+        
         <div>
-            <div onClick={() => { setCreateForm(!createForm) }}>Создать Канал</div>
+            {/* <div onClick={() => { setCreateForm(!createForm) }}>Создать Канал</div>
             {!createForm ? null : <div>
                 <input value={text}
                     onChange={(e) => { setText(e.target.value) }}></input>
                 <button onClick={Chanel}>Создать</button>
                 <div onClick={() => { props.SetRightsForm('new_chanel') }}>Настроить права доступа</div>
-            </div>}
+            </div>} */}
         </div>
     )
 }

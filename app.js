@@ -9,6 +9,7 @@ import groups from './routes/group.routes.js'
 import chanels from './routes/chanels.routes.js'
 import rights from './routes/rights.rotes.js'
 import roles from './routes/roles.routes.js'
+import frendship from './routes/frendship.routes.js'
 import httpServer from "http"
 import * as socket from "socket.io"
 import Group from './models/Group.js'
@@ -52,6 +53,8 @@ app.use('', chanels)
 app.use('', rights)
 //     Роли
 app.use('', roles)
+//     Дружба
+app.use('', frendship)
 
 // usernames which are currently connected to the chat
 var usernames = {};
@@ -62,14 +65,14 @@ var rooms = ['first', 'room2', 'room3'];
 io.on('connection', async (socket) => {
   socket.emit("test comand", '1111111111111');
   console.log('jjjjjjjjj')
-  await socket.on('userId', async (Id) => {
-    console.log(Id)
+  await socket.on('userId', async (name) => {
+    console.log(name)
     let groups = await Group.find().populate(['author']);
     let arr = [];
     for (let group of groups) {
-      if (group.author._id == Id) arr.push(group)
+      if (group.author.name == name) arr.push(group)
       for (let partner of group.partners) {
-        if (partner.id === Id) arr.push(group)
+        if (partner === name) arr.push(group)
       }
     }
     // let groupsNames=arr.map(item=>item.name);
@@ -77,7 +80,7 @@ io.on('connection', async (socket) => {
     for (let group of arr) {
       namesInGroups.push(group.author.name)
       for (let partner of group.partners) {
-        namesInGroups.push(partner.name)
+        namesInGroups.push(partner)
       }
     }
     console.log(Array.from(new Set(namesInGroups)))
@@ -139,13 +142,15 @@ io.on('connection', async (socket) => {
       },
     });
   });
-  socket.on("chat message", ({ content, to }) => {
-    socket.to(to).emit("chat message", {
+  socket.on("send message", ({ content, to }) => {
+    console.log(content)
+    socket.to(to).emit("send message to all", {
       content,
-      from: {
-        username: socket.username,
-        userId: socket.id
-      },
+      from: 'ssssss'
+      // {
+      //   username: socket.username,
+      //   userId: socket.id
+      // },
     });
   });
   socket.on('disconnect', function () {

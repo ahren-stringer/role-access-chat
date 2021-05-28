@@ -7,7 +7,7 @@ function AddUsersForm(props) {
     let arr = []
     let [partnerArr, setPartner] = useState([]);
     let [roles, setRoles] = useState([]);
-    let [allow,setAllow]=useState(props.role)
+    let [allow, setAllow] = useState(props.role)
     // if (JSON.parse(localStorage.getItem('role')).role==='admin'
     // ||JSON.parse(localStorage.getItem('role')).role==='moderator'){
     //     setAllow(JSON.parse(localStorage.getItem('role')).role_key)
@@ -43,29 +43,31 @@ function AddUsersForm(props) {
     let sendUsers = async () => {
         let body;
         if (JSON.parse(localStorage.getItem('role')).role === 'admin'
-        ||JSON.parse(localStorage.getItem('role')).role === 'owner'){
-            body= {
+            || JSON.parse(localStorage.getItem('role')).role === 'owner') {
+            body = {
                 new_parters: partnerArr,
                 roles,
                 role: "partner"
             };
-        }else{
-            body= {
+        } else {
+            body = {
                 new_parters: partnerArr,
                 roles,
                 role: 'invited'
             };
         }
-        await axios.put('http://localhost:8001/group_add_user/' + props.selectedGroup._id, body ,
-                {
-                    headers: {
-                        'Role-Access': 'Access '+ JSON.parse(localStorage.getItem('role')).role_key
-                    }
-                })
+        await axios.put('http://localhost:8001/group_add_user/' + props.selectedGroup._id, body,
+            {
+                headers: {
+                    'Role-Access': 'Access ' + JSON.parse(localStorage.getItem('role')).role_key
+                }
+            })
         setOpenList(false)
     }
     return <div>
-        <div onClick={seeUserslist}>{props.title}</div>
+        <div class="box" onClick={() => { props.toggleAddUsersForm(!props.addUsersForm) }}>
+            <a class="button">{props.title}</a>
+        </div>
         {
             !openList
                 ? null

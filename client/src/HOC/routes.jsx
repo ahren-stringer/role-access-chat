@@ -5,6 +5,7 @@ import Register from '../Components/Auth/Register'
 import Main from '../Components/Main/Main'
 import Users from '../Components/Users/Users'
 import Preloader from '../Components/Preloader/Preloader';
+// import CreateGroup from '../Components/Create/CreateGroup'
 
 export const useRotes=(isAuth)=>{
  if (isAuth){
@@ -14,6 +15,12 @@ export const useRotes=(isAuth)=>{
         </Route>
         <Route path='/users' exact>
             <Users/>
+        </Route>
+        <Route path='/create_group' exact>
+        <Main/>
+        </Route>
+        <Route path='/create_chanel' exact>
+        <Main/>
         </Route>
         <Redirect to='/chat/:groupId?/:chanelId?'/>
     </Switch>)

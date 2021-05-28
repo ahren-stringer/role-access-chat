@@ -67,12 +67,14 @@ router.put('/group_add_user/:groupId',access, async (req, res) => {
         res.status(500).json({ message: 'Пользователь не найден' })
     }
 })
-router.delete('/group_delete_user/:userName/:groupId',access, async (req, res) => {
+router.delete('/group_delete_user/:userName/:groupId',
+// access,
+ async (req, res) => {
     try {
-        if(req.user.role!=='admin' || req.user.role!=='owner'){
-            res.json({ message: 'Недостаточно прав' })
-            return
-        }
+        // if(req.user.role!=='admin' || req.user.role!=='owner'){
+        //     res.json({ message: 'Недостаточно прав' })
+        //     return
+        // }
         await Group.updateOne({ _id: req.params.groupId },
             {
                 $pullAll: { partners: [req.params.userName] },

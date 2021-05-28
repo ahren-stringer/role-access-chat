@@ -10,7 +10,7 @@ import {
     CloseListThunk
   } from '../../redux/searchReduser';
 
-function Users(props) {
+function CreateGroupContainer(props) {
 
     return <div>
     <div className='Header'>
@@ -19,6 +19,7 @@ function Users(props) {
     <div className='im_page_wrap clearfix'>
         <div className='im_page_split clearfix'>
             {/* <Chats/> */}
+            
             <UsersList {...props}/>
         </div>
     </div>
@@ -42,4 +43,4 @@ let mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
     setSearched, toggleList, loadList, setReqNumber, setSearchedArr, SearchChange,
     searchThunk,
-    CloseListThunk  })(withRouter(Users));
+    CloseListThunk  })(withRouter(CreateGroupContainer));

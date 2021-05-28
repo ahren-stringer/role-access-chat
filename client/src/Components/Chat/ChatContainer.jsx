@@ -2,12 +2,12 @@ import Chat from './Chat';
 import { connect } from 'react-redux';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { setMessages } from '../../redux/messagesReduser'
+import { setMessages,pushMessage } from '../../redux/messagesReduser'
 import { setSelectedGroup, setSelected, setOnlineGroupUsers, setSelectedChanel } from '../../redux/groupsReduser'
 import { withRouter } from 'react-router';
 import { socket } from '../../App';
 function ChatContainer(props) {
-    debugger
+
     // let Acces = (right) => {
     //     let inList;
     //     inList = right.list.some(item => item == props.name) || props.selectedGroup.author.name==props.name
@@ -27,7 +27,7 @@ function ChatContainer(props) {
             // let a = Acces(ChatReq.data.canSee)
             // setAccesed(Acces(ChatReq.data.canSee))
             setAccesed(JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee)
-            debugger
+
             if (JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee) {
 
                 !ChatReq.data.canSee.prevelegion
@@ -35,9 +35,9 @@ function ChatContainer(props) {
                     : ChatReq.data.canSee.whitelisted
                         ? socket.emit('selectChat', { users: ChatReq.data.canSee.list})
                         : socket.emit('selectChat', {
-                            users: props.selectedGroup.partners.filter(
+                            users: [props.selectedGroup.author.name,...props.selectedGroup.partners.filter(
                                 item => !ChatReq.data.canSee.list.some(list_item => list_item === item)
-                            )
+                            )]
                         })
 
                 socket.on("users", (users) => {
@@ -73,7 +73,7 @@ function ChatContainer(props) {
             </div>
         )
     }
-    debugger
+
     if (props.selectedChanel && !accesed) return (
         <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
             Вы не можете посещать данный канал
@@ -92,4 +92,4 @@ let mapStateToProps = (state) => {
         selectedChanel: state.groups.selectedChanel,
     }
 }
-export default connect(mapStateToProps, { setMessages, setSelectedGroup, setSelected, setOnlineGroupUsers, setSelectedChanel })(withRouter(ChatContainer));
+export default connect(mapStateToProps, { setMessages, setSelectedGroup, setSelected, setOnlineGroupUsers, setSelectedChanel,pushMessage })(withRouter(ChatContainer));

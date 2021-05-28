@@ -5,10 +5,66 @@ import Chats from '../Chats/ChatsContainer';
 import Groups from '../Chats/Groups';
 import Header from '../Header/Header';
 import './Main.css';
-import { SetRightsForm } from '../../redux/groupsReduser'
+import { SetRightsForm,toggleAddUsersForm } from '../../redux/groupsReduser'
 import GroupSetingForm from './GroupSetingForm';
+import { withRouter } from 'react-router';
+import CreateGroup from '../Chats/CreateGroup';
+import CreateChanel from '../Chats/CreateChanel';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import Preloader from '../Preloader/Preloader';
 
 function Main(props) {
+    let [usersList, setUsersList] = useState(null);
+    let [partnerArr, setPartner] = useState([]);
+    let [roles, setRoles] = useState([]);
+    useEffect(async () => {
+        let req = await axios.get('http://localhost:8001/friends/' + props.author);
+        setUsersList(req.data)
+    }, [])
+    let addUser = (e, name) => {
+        let role = {
+            role: 'partner',
+            user_name: name,
+            group_id: props.selectedGroup._id
+        }
+        if (partnerArr.some(item => item === name)) {
+            let index = partnerArr.indexOf(name);
+            setPartner(name.splice(index, 1))
+            setRoles(roles.splice(index, 1))
+            e.target.style.backgroundColor = ''
+        } else {
+            setPartner([...partnerArr, name])
+            setRoles([...roles, role])
+            e.target.style.backgroundColor = 'blueviolet'
+        }
+        console.log(partnerArr)
+        console.log(roles)
+    }
+    let sendUsers = async () => {
+        let body;
+        if (JSON.parse(localStorage.getItem('role')).role === 'admin'
+            || JSON.parse(localStorage.getItem('role')).role === 'owner') {
+            body = {
+                new_parters: partnerArr,
+                roles,
+                role: "partner"
+            };
+        } else {
+            body = {
+                new_parters: partnerArr,
+                roles,
+                role: 'invited'
+            };
+        }
+        await axios.put('http://localhost:8001/group_add_user/' + props.selectedGroup._id, body,
+            {
+                headers: {
+                    'Role-Access': 'Access ' + JSON.parse(localStorage.getItem('role')).role_key
+                }
+            })
+            props.toggleAddUsersForm(!props.addUsersForm)
+    }
     return <div>
         <div className='Header'>
             <Header />
@@ -18,13 +74,63 @@ function Main(props) {
                 : props.groupForm ? <GroupSetingForm />
                     : <div className='im_page_split clearfix'>
                         <Groups />
-                        {/* <div className='im_dialogs_col_wrap noselect'> */}
-                        <Chats />
-                        {/* </div> */}
-                        {/* <div className='Chat'> */}
-                        <ChatContainer />
-                        {/* </div> */}
+
+                        {props.location.pathname == '/create_group'
+                            ? <CreateGroup {...props} />
+                            : props.location.pathname == '/create_chanel'
+                                ? <CreateChanel {...props} />
+                                : <>
+                                    <Chats />
+                                    <ChatContainer />
+                                </>}
+
                     </div>}
+        </div>
+        <div className='popups'>
+
+            <div className={"add_users_form" + " " + (props.addUsersForm ? 'overlay_target' : '')} >
+                <div className="popup">
+                    <h2>Пригласить пользователей в группу</h2>
+                    <a className="close">&times;</a>
+                    <div className="content">
+                        {!usersList?<Preloader/>
+                        :<ul className='user_list'>
+                            {usersList.friends.map(item => {
+                                if (item.initiator._id === props.author) {
+                                    return <li className='user_item'
+                                        onClick={(e) => { addUser(e, item.name) }}>
+                                        {item.partner.name}
+                                    </li>
+                                }
+                                if (item.partner._id === props.author) {
+                                    return <li className='user_item'
+                                        onClick={(e) => { addUser(e, item.name) }}>
+                                        {item.initiator.name}
+                                    </li>
+                                }
+                            }
+                            )}
+                        </ul>}
+                        <button disabled={partnerArr.length === 0 ? true : false}
+                            onClick={sendUsers}
+                        >ОК</button>
+                    </div>
+                </div>
+            </div>
+
+            {/* <div className={"create_chanel" + " " + (props.createChanelForm ? 'overlay_target' : '')} >
+                <div className="popup">
+                    <h2>Создатьчат</h2>
+                    <a className="close">&times;</a>
+                    <div className="content">
+                        
+                        <button disabled={partnerArr.length === 0 ? true : false}
+                            onClick={sendUsers}
+                        >ОК</button>
+                    </div>
+                </div>
+            </div> */}
+            
         </div>
     </div>
 }
@@ -34,7 +140,8 @@ let mapStateToProps = (state) => {
         rightsSetingForm: state.groups.rightsSetingForm,
         selectedGroup: state.groups.selectedGroup,
         selectedChanel: state.groups.selectedChanel,
-        groupForm: state.groups.groupForm
+        groupForm: state.groups.groupForm,
+        addUsersForm: state.groups.addUsersForm
     }
 }
-export default connect(mapStateToProps, { SetRightsForm })(Main);
+export default connect(mapStateToProps, { SetRightsForm,toggleAddUsersForm })(withRouter(Main));

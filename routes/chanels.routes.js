@@ -70,7 +70,7 @@ router.get('/chanels/:user/:groupName/:id', async (req, res) => {
             }
             
         }
-        console.log({ [req.params.groupName]: right_keys_obj })
+        // console.log({ [req.params.groupName]: right_keys_obj })
         res.json({ chanels, [req.params.groupName]: right_keys_obj })
     } catch (e) {
         console.log(e)

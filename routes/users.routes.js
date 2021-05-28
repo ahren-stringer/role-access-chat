@@ -125,4 +125,32 @@ router.post('/users/register', (req, res) => {
           res.status(500).json({ message: 'Пользователь не найден' })
       }
   })
+  // Поиск
+router.get('/search/:search/:userId', async (req, res) => {
+  try {
+      const posts = await User.find()
+      // console.log(req.params)
+      // if (req.params.search==='') res.send([])
+      res.json(posts.filter(item => item.name.toLowerCase().includes(req.params.search) && item._id!=req.params.userId).slice(0, 8))
+  } catch (e) {
+    console.log(e)
+      res.status(500).json({ message: 'Что-то пошло не так' })
+  }
+})
+
+router.get('/search_all/:search/:limit/:skip', async (req, res) => {
+  try {
+      let posts = await User.find()
+      posts = posts.filter(item => item.title.toLowerCase().includes(req.params.search))
+          .slice(+req.params.skip, +req.params.skip + +req.params.limit + 1)
+      //.limit(+req.params.limit).skip(+req.params.skip)
+      res.json({
+          "posts": posts,
+          "totalCount": posts.length
+      })
+  } catch (e) {
+      console.log(e)
+      res.status(500).json({ message: 'Что-то пошло не так' })
+  }
+})
   export default router

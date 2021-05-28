@@ -16,7 +16,8 @@ router.post('/messages', async (req, res) => {
         // for (let oUser of req.body.onlineGroupUsers){
         //     io.to(oUser.userId).emit("chat message",message)
         // }
-        res.json(message)
+        let m=await Message.findById(message._id).populate(['chat', 'user'])
+        res.json( m)
         // .then((obj) => {
         //   obj.populate(
         //     "dialog",

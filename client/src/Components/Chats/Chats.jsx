@@ -5,12 +5,11 @@ import Preloader from '../Preloader/Preloader';
 import AddUsersForm from './AddUsersForm';
 import './Chats.css';
 import CreateChanel from './CreateChanel';
-import CreateGroup from './CreateGroup';
 import Search from './Search';
 import SingleChat from './SingleChat';
 
 function Chats(props) {
-
+debugger
     let [group,setGroup]=useState(props.selectedGroup)
     useEffect(async()=>{
         // setGroup(props.selectedGroup)
@@ -41,31 +40,26 @@ function Chats(props) {
                     <div className='im_dialogs_scrollable_wrap nano-content' style={{ right: '-17px' }}>
 
                         <div>
-                            <NavLink to='/users'>Написать</NavLink>
                             <div>
-                                {/* <span>
-                            Диалоги
-                        </span> */}
-                                <span>
-                                    Группы
-                        </span>
+
                                 {!JSON.parse(localStorage.getItem('role')) ? null :
                                     JSON.parse(localStorage.getItem('role')).role === 'admin'
                                     ||JSON.parse(localStorage.getItem('role')).role === 'owner'
                                         ? <div onClick={() => { props.setGroupSettingsForm(true) }}>Настроить должности</div>
                                         : null}
 
-                                <CreateGroup author={props.author} name={props.name} />
+                                {/* <CreateGroup author={props.author} name={props.name} /> */}
 
                                 {!props.selectedGroup ? <Preloader /> :
                                     !JSON.parse(localStorage.getItem('role')) ? null :
                                         JSON.parse(localStorage.getItem('role')).role === 'admin'
                                         ||JSON.parse(localStorage.getItem('role')).role === 'owner'
-                                            ? <CreateChanel selectedGroup={props.selectedGroup}
-                                                SetRightsForm={props.SetRightsForm}
-                                                author={props.author}
-                                            //    rightsSetingForm={props.rightsSetingForm}
-                                            />
+                                            ? <NavLink to='/create_chanel'>Создать чат</NavLink>
+                                            // <CreateChanel selectedGroup={props.selectedGroup}
+                                            //     SetRightsForm={props.SetRightsForm}
+                                            //     author={props.author}
+                                            // //    rightsSetingForm={props.rightsSetingForm}
+                                            // />
                                             : null}
 
                                 {!JSON.parse(localStorage.getItem('role')) ? null :
@@ -75,7 +69,9 @@ function Chats(props) {
                                             title='Пригласить пользователей'
                                             selectedGroup={props.selectedGroup}
                                             role={"admin"}
-                                            chanels={props.chanels} />
+                                            chanels={props.chanels}
+                                            addUsersForm={props.addUsersForm}
+                                            toggleAddUsersForm={props.toggleAddUsersForm} />
                                         : JSON.parse(localStorage.getItem('role')).role === 'moderator'
                                             ? <AddUsersForm
                                                 title='Пригласить визитеров'
