@@ -1,8 +1,11 @@
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 function SingleRightPopup(props) {
+    debugger
     // let [list, setList] = useState([])
     let arr = props.right.list;
+    let [simpleRoles, setSimpleRoles] = useState(null)
 
     let popup = (e) => {
         if (e.target.className == 'button') e.target.parentNode.nextElementSibling.classList.add('overlay_target')
@@ -42,8 +45,12 @@ function SingleRightPopup(props) {
                         <h2>{props.WLtitle}</h2>
                         <a class="close">&times;</a>
                         <div class="content">
-                            <ul className='user_list'>
-                                {props.group.partners.map(item => {
+                            {!props.SimpleRoles
+                            ? null
+                            :<ul className='user_list'>
+                                {props.SimpleRoles
+                                .filter(item=>item.user_name)
+                                .map(item => {
                                     if (props.right.list.some(list_item => list_item == item)) {
                                         return <li
                                             style={props.right.whitelisted
@@ -62,7 +69,7 @@ function SingleRightPopup(props) {
                                     }
                                 }
                                 )}
-                            </ul>
+                            </ul>}
                             <button onClick={() => {
                                 sendList(props.right._id, true)
                             }}>ОК</button>

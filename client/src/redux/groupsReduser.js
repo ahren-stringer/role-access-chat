@@ -20,7 +20,8 @@ let init = {
     rightsSetingForm: null,
     groupForm: null,
     role: null,
-    addUsersForm: false
+    addUsersForm: false,
+    SimpleRoles: null
 };
 
 const groupsReuser = (state = init, action) => {
@@ -43,6 +44,8 @@ const groupsReuser = (state = init, action) => {
             return { ...state, groupForm: action.groupForm }
         case ADD_USERS_FORM:
             return { ...state, addUsersForm: action.addUsersForm }
+        case "lll":
+            return { ...state, SimpleRoles: action.SimpleRoles }
         case SET_ONLINE_GROUP_USERS:
             // let prev = state.onlineGroupUsers;
             // let act = action.onlineGroupUsers;
@@ -99,5 +102,5 @@ export const setSelectedChanel = (selectedChanel) => ({ type: SET_SELECTED_CHANE
 export const setGroupSettingsForm = (groupForm) => ({ type: GROUP_FORM, groupForm });
 export const defineRole = (role) => ({ type: ROLE, role });
 export const toggleAddUsersForm = (addUsersForm) => ({ type: ADD_USERS_FORM, addUsersForm });
-
+export const setSimpleRoles = (SimpleRoles) => ({ type: "lll", SimpleRoles });
 export default groupsReuser

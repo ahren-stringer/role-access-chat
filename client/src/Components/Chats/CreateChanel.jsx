@@ -13,9 +13,10 @@ function CreateChanel(props) {
         this.prevelegion = false;
         this.listType = null;
         this.list = list;
-        this.group_id=props.selectedGroup._id
+        this.group_id=props.selectedGroup._id;
+        // this.hightRoleList:{type:Array,default:[]},
     }
-    let [createForm, setCreateForm] = useState(false)
+    // let [createForm, setCreateForm] = useState(false)
     let [text, setText] = useState('');
     let Chanel = async () => {
         let chanel = await axios.post('http://localhost:8001/chanels', {
@@ -42,13 +43,17 @@ function CreateChanel(props) {
     return (
         
         <div>
-            {/* <div onClick={() => { setCreateForm(!createForm) }}>Создать Канал</div>
-            {!createForm ? null : <div>
+            <div 
+            // onClick={() => { setCreateForm(!createForm) }}
+            >Создать Канал</div>
+            {/* {!createForm ? null :  */}
+            <div>
                 <input value={text}
                     onChange={(e) => { setText(e.target.value) }}></input>
                 <button onClick={Chanel}>Создать</button>
                 <div onClick={() => { props.SetRightsForm('new_chanel') }}>Настроить права доступа</div>
-            </div>} */}
+            </div>
+            {/* } */}
         </div>
     )
 }

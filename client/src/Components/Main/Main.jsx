@@ -5,7 +5,7 @@ import Chats from '../Chats/ChatsContainer';
 import Groups from '../Chats/Groups';
 import Header from '../Header/Header';
 import './Main.css';
-import { SetRightsForm,toggleAddUsersForm } from '../../redux/groupsReduser'
+import { SetRightsForm,toggleAddUsersForm,setGroupSettingsForm,setSimpleRoles } from '../../redux/groupsReduser'
 import GroupSetingForm from './GroupSetingForm';
 import { withRouter } from 'react-router';
 import CreateGroup from '../Chats/CreateGroup';
@@ -22,18 +22,29 @@ function Main(props) {
         let req = await axios.get('http://localhost:8001/friends/' + props.author);
         setUsersList(req.data)
     }, [])
+    // useEffect(async () => {
+    //     let res=[];
+    //     if (props.selectedGroup) res = await axios.get('http://localhost:8001/roles_simple/' + props.selectedGroup._id)
+    //     debugger
+    //     props.setSimpleRoles(res.data)
+    // }, [props.location])
     let addUser = (e, name) => {
         let role = {
-            role: 'partner',
+            role: JSON.parse(localStorage.getItem('role')).role === 'admin'
+            || JSON.parse(localStorage.getItem('role')).role === 'owner'?'partner':'invited',
             user_name: name,
             group_id: props.selectedGroup._id
         }
         if (partnerArr.some(item => item === name)) {
+            debugger
             let index = partnerArr.indexOf(name);
-            setPartner(name.splice(index, 1))
+            partnerArr.splice(index, 1);
+            debugger
+            setPartner(partnerArr)
             setRoles(roles.splice(index, 1))
             e.target.style.backgroundColor = ''
         } else {
+            debugger
             setPartner([...partnerArr, name])
             setRoles([...roles, role])
             e.target.style.backgroundColor = 'blueviolet'
@@ -70,8 +81,10 @@ function Main(props) {
             <Header />
         </div>
         <div className='im_page_wrap clearfix'>
-            {props.rightsSetingForm ? <RightsSetingForm />
-                : props.groupForm ? <GroupSetingForm />
+            {props.rightsSetingForm ? 
+            <RightsSetingForm />
+            // <GroupSetingForm {...props} />
+                : props.groupForm ? <GroupSetingForm {...props} />
                     : <div className='im_page_split clearfix'>
                         <Groups />
 
@@ -98,13 +111,13 @@ function Main(props) {
                             {usersList.friends.map(item => {
                                 if (item.initiator._id === props.author) {
                                     return <li className='user_item'
-                                        onClick={(e) => { addUser(e, item.name) }}>
+                                        onClick={(e) => { addUser(e, item.partner.name) }}>
                                         {item.partner.name}
                                     </li>
                                 }
                                 if (item.partner._id === props.author) {
                                     return <li className='user_item'
-                                        onClick={(e) => { addUser(e, item.name) }}>
+                                        onClick={(e) => { addUser(e, item.initiator.name) }}>
                                         {item.initiator.name}
                                     </li>
                                 }
@@ -141,7 +154,8 @@ let mapStateToProps = (state) => {
         selectedGroup: state.groups.selectedGroup,
         selectedChanel: state.groups.selectedChanel,
         groupForm: state.groups.groupForm,
-        addUsersForm: state.groups.addUsersForm
+        addUsersForm: state.groups.addUsersForm,
+        SimpleRoles: state.groups.SimpleRoles
     }
 }
-export default connect(mapStateToProps, { SetRightsForm,toggleAddUsersForm })(withRouter(Main));
+export default connect(mapStateToProps, { SetRightsForm,toggleAddUsersForm,setGroupSettingsForm,setSimpleRoles })(withRouter(Main));

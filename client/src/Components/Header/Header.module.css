@@ -1,9 +1,8 @@
 .header {
-    max-width: 1010px;
+    max-width: 1200px;
     margin: 0 auto;
     height: 48px;
     background: #5682a3;
-    color: #fff;
 }
 .header__logo {
     float: left;
@@ -16,6 +15,11 @@
     width: 69%;
     white-space: nowrap;
 }
+.user_name{
+    font-size: 14px;
+    margin: 16px 0 0 20px;
+    color: #fff;
+}
 .menu{
     position: absolute;
     list-style: none;
@@ -23,9 +27,10 @@
     margin: 0;
     background: #fff;
     width: 100%;
-    bottom: -64px;
+    bottom: -82px;
     border: 1px solid lightgray;
     padding: 13px;
     border-radius: 3px;
     display: none;
+    z-index: 1;
 }

@@ -1,6 +1,6 @@
 .im_page_wrap {
     background: #fff;
-    max-width: 1010px;
+    max-width: 1200px;
     min-width: 300px;
     margin: 0 auto;
     -webkit-box-shadow: 0px 1px 0 #dfe5ec;
@@ -158,9 +158,11 @@
   .role_list{
     list-style: none;
     max-width: 212px;
-    position: relative;
   }
   .role_item{
+    position: relative;
+  }
+  .role_item_name{
     border-bottom: 1px solid lightgray;
   }
   .react-contextmenu{

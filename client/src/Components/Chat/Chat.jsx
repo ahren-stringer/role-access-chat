@@ -4,6 +4,7 @@ import { socket } from '../../App';
 import Preloader from '../Preloader/Preloader';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Button } from '@material-ui/core';
 function Chat(props) {
     debugger
     console.log(props.onlineGroupUsers)
@@ -44,7 +45,7 @@ function Chat(props) {
             </div>
         </div>
             : <div className='im_history_selected_wrap'>
-                <div className="im_history_wrap nano has-scrollbar active-scrollbar" style={{ height: '370px' }}>
+                <div className="im_history_wrap nano has-scrollbar active-scrollbar">
                     <div className='im_history_scrollable_wrap nano-content' style={{ marginRight: '-17px' }}>
                         <div className=''>
                             <div className='im_history im_history_selectable'>
@@ -78,15 +79,10 @@ function Chat(props) {
                                                         </div>
                                                         {props.messages.map(item => <div class="im_message_body">
 
-                                                            <span class="im_message_author_wrap">
-                                                                <span class="copyonly">[<span>{item.createdAt}</span>] </span><a class="im_message_author user_color_5">{item.user.name}</a><span class="copyonly">:</span><span class="im_message_author_admin" style={{ display: 'none' }}></span>
-                                                            </span>
+                                                               <span className='message_name'>{item.user.name}</span>
 
-                                                            <div my-message-body="historyMessage">
-                                                                <div class="im_message_text" dir="auto">{item.text}</div>
-                                                                {/* <div class="im_message_media" style="display: none;"></div>
-                                                                <div class="im_message_sign" style="display: none;"></div>
-                                                                <div class="im_message_keyboard" style="display: none;"></div> */}
+                                                            <div className="historyMessage">
+                                                                <div class="im_message_text" dir="auto">{item.text}</div>                  
                                                             </div>
 
                                                         </div>)}
@@ -109,13 +105,16 @@ function Chat(props) {
 
                     </div>
                 </div>
-                <div className=''>
                     {/* {Acces(rights.canWrite) ? */}<div> 
-                        <button onClick={sendMessage}>Отправить</button>
                         <textarea name="" id="" cols="30" rows="10"
                             value={text}
-                            onChange={(e) => { setText(e.target.value) }}></textarea>
-                    </div>
+                            onChange={(e) => { setText(e.target.value) }}
+                            className='textarea'
+                            ></textarea>
+                            <Button variant="contained" color="primary">
+        Primary
+      </Button>
+                    <button onClick={sendMessage}>Отправить</button>
                     {/* :<div>У вас отключена возможность писать в этом чате</div>} */}
                 </div>
             </div>

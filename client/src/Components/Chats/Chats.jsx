@@ -9,7 +9,6 @@ import Search from './Search';
 import SingleChat from './SingleChat';
 
 function Chats(props) {
-debugger
     let [group,setGroup]=useState(props.selectedGroup)
     useEffect(async()=>{
         // setGroup(props.selectedGroup)
@@ -20,6 +19,13 @@ debugger
             localStorage.setItem('right_keys',JSON.stringify(req.data[props.selectedGroup.name]))
         }
     },[props.selectedGroup])
+    // useEffect(async () => {
+    //     let res=[];
+    //     if (props.selectedGroup) res = await axios.get('http://localhost:8001/roles_simple/' + props.selectedGroup._id)
+    //     debugger
+    //     props.setSimpleRoles(res.data)
+    //     // localStorage.setItem('simpleRoles',JSON.stringify(res.data))
+    // }, [])
     useEffect(async () => {
         let role = await axios.get('http://localhost:8001/role_define/' + props.name + '/' + props.match.params.groupId);
         // props.defineRole(role.data.role)
@@ -32,7 +38,7 @@ debugger
     return (
         <div className='im_dialogs_col_wrap noselect'>
 
-            <Search />
+            {/* <Search /> */}
 
             <div className='im_dialogs_col' style={{ height: '100vh' }}>
                 <div className='im_dialogs_wrap nano has-scrollbar active-scrollbar'>
@@ -54,6 +60,7 @@ debugger
                                     !JSON.parse(localStorage.getItem('role')) ? null :
                                         JSON.parse(localStorage.getItem('role')).role === 'admin'
                                         ||JSON.parse(localStorage.getItem('role')).role === 'owner'
+                                        ||JSON.parse(localStorage.getItem('role')).role === 'moderator'
                                             ? <NavLink to='/create_chanel'>Создать чат</NavLink>
                                             // <CreateChanel selectedGroup={props.selectedGroup}
                                             //     SetRightsForm={props.SetRightsForm}
@@ -77,7 +84,8 @@ debugger
                                                 title='Пригласить визитеров'
                                                 selectedGroup={props.selectedGroup}
                                                 role={"moderator"}
-                                                chanels={props.chanels} />
+                                                chanels={props.chanels}
+                                                toggleAddUsersForm={props.toggleAddUsersForm} />
                                             : null}
                             </div>
                         </div>
@@ -90,6 +98,7 @@ debugger
                                         name={item.name}
                                         SetRightsForm={props.SetRightsForm}
                                         setSelectedChanel={props.setSelectedChanel}
+                                        author={props.author}
                                     />)}
                         </ul>
 

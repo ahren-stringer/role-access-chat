@@ -11,6 +11,10 @@ const chanelSchema = mongoose.Schema({
     canSendFile: { type: mongoose.Schema.Types.ObjectId, ref: "Right" },
 
     lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
+    invitedCanSee:{
+        type: Boolean,
+        default: false
+    },
 }, {
     timestamps: true
 });

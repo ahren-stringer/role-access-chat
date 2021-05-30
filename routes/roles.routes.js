@@ -41,6 +41,18 @@ router.get('/roles_all/:groupId', async (req, res) => {
         res.status(500).json({ message: 'Пользователь не найден' })
     }
 })
+router.get('/roles_simple/:groupId', async (req, res) => {
+    try {
+        let roles = await Users_GroupRole.find({
+            group_id: req.params.groupId,
+            $or: [{ role: 'moderator' },{ role: 'partner' }, { role: 'invited' }],
+        })
+        console.log(roles)
+        res.json(roles)
+    } catch (e) {
+        res.status(500).json({ message: 'Пользователь не найден' })
+    }
+})
 router.put('/roles_update/:user_name/:groupId', async (req, res) => {
     try {
         let roles = await Users_GroupRole.updateOne({

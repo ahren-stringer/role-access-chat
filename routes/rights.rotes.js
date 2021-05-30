@@ -7,6 +7,7 @@ router.put('/right/update/:rightId', async (req, res) => {
     try {
         let right;
         if (req.body.prevelegion) {
+            // обозначаем список
             right=await Right.findByIdAndUpdate(
                 req.params.rightId,
                 {
@@ -15,7 +16,11 @@ router.put('/right/update/:rightId', async (req, res) => {
                     whitelisted: req.body.whitelisted
                 }
             );
+        } else if (req.body.same){
+            // доббавляем в существующий список
+            right=await Right.findByIdAndUpdate(req.params.rightId, { $push: { list: req.body.list } });
         } else {
+            // меняем список
             right=await Right.findByIdAndUpdate(req.params.rightId, { list: req.body.list });
         }
         res.json(right)

@@ -4,16 +4,33 @@ import Preloader from '../Preloader/Preloader';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import RightsSetingForm from './RightsSetingForm';
+import SingleRightSettings from './SingleRightSettings';
 
 function GroupSetingForm(props) {
     let [roled, setRoled] = useState(null)
+    let [roledSimple, setRoledSimple] = useState(null)
 
+    let chanel;
+    if (props.rightsSetingForm === 'existing_chanel') {
+        debugger
+        chanel = props.selectedChanel
+    }
     useEffect(async () => {
-        let res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
-        setRoled(res.data)
+        let res
+        if (props.groupForm) {
+            res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
+            setRoled(res.data)
+        }
+        if (props.rightsSetingForm) {
+            res = await axios.get('http://localhost:8001/roles_simple/' + props.selectedGroup._id)
+            debugger
+            // props.setSimpleRoles(res.data)
+            setRoledSimple(res.data)
+        }
     }, [])
 
-    let toggleMenu=(e)=>{
+    let toggleMenu = (e) => {
         debugger
         e.target.nextElementSibling.classList.toggle('open_menu')
     }
@@ -25,151 +42,222 @@ function GroupSetingForm(props) {
         setRoled(res.data)
     }
     let deleteUser = async (name) => {
-        if(JSON.parse(localStorage.getItem('role')).role === 'admin'
-        ||JSON.parse(localStorage.getItem('role')).role === 'owner'){
-        await axios.delete('http://localhost:8001/group_delete_user/' + name + '/' + props.selectedGroup._id,
-        {
-            headers: {
-                'Role-Access': 'Access '+ JSON.parse(localStorage.getItem('role')).role_key
-            }
-        }
-        )
-        let res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
-        setRoled(res.data)
+        if (JSON.parse(localStorage.getItem('role')).role === 'admin'
+            || JSON.parse(localStorage.getItem('role')).role === 'owner') {
+            await axios.delete('http://localhost:8001/group_delete_user/' + name + '/' + props.selectedGroup._id,
+                {
+                    headers: {
+                        'Role-Access': 'Access ' + JSON.parse(localStorage.getItem('role')).role_key
+                    }
+                }
+            )
+            let res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
+            setRoled(res.data)
         }
     }
+    debugger
     return <div style={{ height: '100vh' }}>
-        <span onClick={() => { props.SetRightsForm(false) }}>Закрыть</span>
-        <h3>Роли</h3>
-        {!roled ? <Preloader /> : <div>
-            <h4>Администраторы</h4>
-            <ul className='role_list'>
-                {roled
-                    .filter(item => item.role === 'admin' || item.role === 'owner')
-                    .map(item => <li className='role_item'>
-                        <ContextMenuTrigger holdToDisplay={1} id="same_unique_identifier">
-                            {item.user_name} - {item.role}
-                        </ContextMenuTrigger>
+        <span onClick={() => { props.setGroupSettingsForm(false) }}>Закрыть</span>
+        {!roled ? null : <div>
+            <h3>Роли</h3>
+            <div>
+                <h4>Владелец</h4>
+                <ul className='role_list'>
+                    {roled
+                        .filter(item => item.role === 'owner')
+                        .map(item => <li className='role_item'>
+                            <div className='role_item_name'>
+                                {item.user_name}
+                            </div>
+                        </li>
+                        )}
+                </ul>
+                <h4>Администраторы</h4>
+                <ul className='role_list'>
+                    {roled
+                        .filter(item => item.role === 'admin')
+                        .map(item => <li className='role_item'>
+                            <div className='role_item_name'
+                                onClick={(e) => {
+                                    if (JSON.parse(localStorage.getItem('role')).role === 'owner') toggleMenu(e)
+                                }}
+                            >
+                                {item.user_name}
+                            </div>
 
-                        <ContextMenu id="same_unique_identifier">
-                            <MenuItem data={{ foo: 'bar' }} onClick={() => { console.log(';;;;;;;;') }}>
-                                Назначить модератором
-                        </MenuItem>
-                            <MenuItem data={{ foo: 'bar' }} >
-                                Назначить обычным пользователем
-                        </MenuItem>
-                            <MenuItem divider />
-                            <MenuItem data={{ foo: 'bar' }} >
-                                Удалить из Группы
-                        </MenuItem>
-                        </ContextMenu>
-                    </li>
-                    )}
-            </ul>
-            <h4>Модераторы</h4>
-            <ul className='role_list'>
-                {roled
-                    .filter(item => item.role === 'moderator')
-                    .map(item => <li className='role_item'>
-                        <ContextMenuTrigger holdToDisplay={1} id="same_unique_identifier">
-                            {item.user_name}
-                        </ContextMenuTrigger>
+                            <div className='react-contextmenu'>
 
-                        <ContextMenu id="same_unique_identifier">
-                            <MenuItem data={{ foo: 'bar' }} onClick={() => { console.log(';;;;;;;;') }}>
-                                Назначить модератором
-                        </MenuItem>
-                            <MenuItem data={{ foo: 'bar' }} >
-                                Назначить обычным пользователем
-                        </MenuItem>
-                            <MenuItem divider />
-                            <MenuItem data={{ foo: 'bar' }} >
-                                Удалить из Группы
-                        </MenuItem>
-                        </ContextMenu>
-                    </li>
-                    )}
-            </ul>
-            <h4>Пользователи</h4>
-            <ul className='role_list'>
-                {roled
-                    .filter(item => item.role === 'partner' )
-                    .map(item => <li>
-                        <div className='role_item' 
-                        onClick={(e)=>{toggleMenu(e)}}
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'moderator') }}>
+                                    Назначить модератором
+                                </div>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'partner') }}>
+                                    Назначить обычным пользователем
+                                </div>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { deleteUser(item.user_name) }}>
+                                    Удалить из Группы
+                                </div>
+                            </div>
+                        </li>
+                        )}
+                </ul>
+                <h4>Модераторы</h4>
+                <ul className='role_list'>
+                    {roled
+                        .filter(item => item.role === 'moderator')
+                        .map(item => <li className='role_item'>
+                            <div className='role_item_name'
+                                onClick={(e) => {
+                                    if (JSON.parse(localStorage.getItem('role')).role === 'owner'
+                                        || JSON.parse(localStorage.getItem('role')).role === 'admin') toggleMenu(e)
+                                }}
+                            >
+                                {item.user_name}
+                            </div>
+
+                            <div className='react-contextmenu'>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'admin') }}>
+                                    Назначить администратором
+                                </div>
+
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'partner') }}>
+                                    Назначить обычным пользователем
+                                </div>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { deleteUser(item.user_name) }}>
+                                    Удалить из Группы
+                                </div>
+                            </div>
+                        </li>
+                        )}
+                </ul>
+                <h4>Пользователи</h4>
+                <ul className='role_list'>
+                    {roled
+                        .filter(item => item.role === 'partner')
+                        .map(item => <li className='role_item'>
+                            <div className='role_item_name'
+                                onClick={(e) => {
+                                    if (JSON.parse(localStorage.getItem('role')).role === 'owner'
+                                        || JSON.parse(localStorage.getItem('role')).role === 'admin') toggleMenu(e)
+                                }}
+                            >
+                                {item.user_name}
+                            </div>
+
+                            <div className='react-contextmenu'>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'admin') }}>
+                                    Назначить администратором
+                                </div>
+
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'moderator') }}>
+                                    Назначить модератором
+                                </div>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { deleteUser(item.user_name) }}>
+                                    Удалить из Группы
+                                </div>
+                            </div>
+
+                        </li>
+                        )}
+                </ul>
+                <h4>Лист ожидания</h4>
+                <ul className='role_list'>
+                    {roled
+                        .filter(item => item.role === 'invited')
+                        .map(item => <li className='role_item'>
+                            <div className='role_item_name'
+                                onClick={(e) => {
+                                    if (JSON.parse(localStorage.getItem('role')).role === 'owner'
+                                        || JSON.parse(localStorage.getItem('role')).role === 'admin') toggleMenu(e)
+                                }}
+                            >
+                                {item.user_name}
+                            </div>
+
+                            <div className='react-contextmenu'>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'admin') }}>
+                                    Назначить администратором
+                                </div>
+
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'moderator') }}>
+                                    Назначить модератором
+                                </div>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'partner') }}>
+                                    Назначить обычным пользователем
+                                </div>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { deleteUser(item.user_name) }}>
+                                    Удалить из Группы
+                                </div>
+                            </div>
+                        </li>
+                        )}
+                </ul>
+            </div>
+        </div>
+        }
+        {
+            !roledSimple ? null : <div>
+                <h3>Права достуа</h3>
+                <ul className='role_list'>
+                    {roledSimple.map(item => <li className='role_item'>
+                        <div className='role_item_name'
+                            onClick={(e) => {
+                                if (JSON.parse(localStorage.getItem('role')).role === 'owner'
+                                    || JSON.parse(localStorage.getItem('role')).role === 'admin') toggleMenu(e)
+                            }}
                         >
                             {item.user_name}
                         </div>
 
-
                         <div className='react-contextmenu'>
                             <div className='react-contextmenu-item'
-                            onClick={() => {changeRole(item.user_name, 'moderator')}}>
-                                Назначить модератором
+                                onClick={(e) => { toggleMenu(e) }}>
+                                Право на посещение
                                 </div>
 
-                            <div className='react-contextmenu-item'>
-                                Назначить обычным пользователем
+                            <div className='react-contextmenu'>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'admin') }}>
+                                    Создать белый список
                                 </div>
+
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'moderator') }}>
+                                    Создать черный список
+                                </div>
+
+                            </div>
                             <div className='react-contextmenu-item'
-                            onClick={() => {deleteUser(item.user_name)}}>
-                                Удалить из Группы
+                                onClick={() => { changeRole(item.user_name, 'moderator') }}>
+                                Право на отправку
                                 </div>
+                            {/* <div className='react-contextmenu-item'
+                                    onClick={() => { changeRole(item.user_name, 'partner') }}>
+                                    Назначить обычным пользователем
+                                </div>
+                                <div className='react-contextmenu-item'
+                                    onClick={() => { deleteUser(item.user_name) }}>
+                                    Удалить из Группы
+                                </div> */}
                         </div>
-
-
-                    </li>
-                    )}
-            </ul>
-            <h4>Лист ожидания</h4>
-            <ul className='role_list'>
-                {roled
-                    .filter(item => item.role === 'invited')
-                    .map(item => <li className='role_item'>
-                        <ContextMenuTrigger holdToDisplay={1} id="same_unique_identifier">
-                            {item.user_name}
-                        </ContextMenuTrigger>
-
-                        <ContextMenu id="same_unique_identifier">
-                            <MenuItem data={{ foo: 'bar' }} onClick={() => { console.log(';;;;;;;;') }}>
-                                Назначить модератором
-                        </MenuItem>
-                            <MenuItem data={{ foo: 'bar' }} >
-                                Назначить обычным пользователем
-                        </MenuItem>
-                            <MenuItem divider />
-                            <MenuItem data={{ foo: 'bar' }} >
-                                Удалить из Группы
-                        </MenuItem>
-                        </ContextMenu>
-                    </li>
-                    )}
-            </ul>
-        </div>
+                    </li>)}
+                </ul>
+            </div>
         }
-        {/* <SingleGroupSettings
-                title='Назначить администраоров'
-                role='admin'
-                userId={props.author}
-                name={props.name}
-                group={props.selectedGroup}
-                />
-                <SingleGroupSettings
-                title='Назначить модераторов'
-                role='moderator'
-                group={props.selectedGroup}
-                userId={props.author}
-                name={props.name}
-                />
-                <SingleGroupSettings
-                title='Назначить простым пользователем'
-                role='partner'
-                userId={props.author}
-                group={props.selectedGroup}
-                name={props.name}
-                /> */}
 
-    </div>
+    </div >
 }
 let mapStateToProps = (state) => {
     return {

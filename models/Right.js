@@ -17,6 +17,7 @@ const schema = new mongoose.Schema({
         default: null
     },
     list:{type:Array,default:[]},
+    hightRoleList:{type:Array,default:[]},
 }, {
     timestamps: true
 });

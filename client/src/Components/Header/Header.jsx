@@ -19,10 +19,10 @@ function Header(props) {
                     <li>
                     <NavLink to='/create_group'>Создать группу</NavLink>
                     </li>
+                    <li>
+                    <span onClick={()=>{props.logout()}}>Выйти</span>
+                    </li>
                 </ul>
-            </div>
-            <div className={s.header__main}>
-                <span onClick={()=>{props.logout()}}>Выйти</span>
             </div>
         </header>
     </div>
