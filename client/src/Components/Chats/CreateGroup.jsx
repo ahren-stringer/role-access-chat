@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { groupAPI } from '../../DAL/api';
 
 function CreateGroup(props) {
 
@@ -37,7 +38,7 @@ function CreateGroup(props) {
     }
     let createNewGroup = async () => {
         debugger
-        await axios.post('http://localhost:8001/groups', {
+        await groupAPI.createGroup({
             name: groupName,
             author: props.author,
             partners: partnerArr,

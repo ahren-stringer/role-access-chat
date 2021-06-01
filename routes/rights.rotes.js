@@ -3,7 +3,7 @@ const { Router } = express;
 const router = Router()
 import Right from '../models/Right.js'
 
-router.put('/right/update/:rightId', async (req, res) => {
+router.put('/right/update/:groupId/:rightId', async (req, res) => {
     try {
         let right;
         if (req.body.prevelegion) {
@@ -28,7 +28,7 @@ router.put('/right/update/:rightId', async (req, res) => {
         res.status(500).json({ message: 'Пользователь не найден' })
     }
 })
-router.put('/right/remove_user/:rightId', async (req, res) => {
+router.put('/right/remove_user/:groupId/:rightId', async (req, res) => {
     try {
         let right=await Right.findByIdAndUpdate(
                 req.params.rightId,

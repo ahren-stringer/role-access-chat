@@ -7,7 +7,7 @@ import Right from '../models/Right.js'
 import jwt from 'jsonwebtoken'
 import Users_GroupRole from '../models/Users_GroupRoles.js'
 
-router.post('/chanels', async (req, res) => {
+router.post('/chanels/:groupId', async (req, res) => {
     try {
         let chanelObj = new Chanel({
             name: req.body.name,
@@ -102,7 +102,7 @@ router.get('/single_chanel/:id', async (req, res) => {
     let group = await Chanel.findById(req.params.id).populate(['author', 'group', "canSee", 'canWrite', 'canSeeHistory', 'canSendFile', 'canAddUsers', 'canDeleteUsers']);
     res.json(group)
 })
-router.put('/invited_can_see/:id', async (req, res) => {
+router.put('/invited_can_see/:groupId/:id', async (req, res) => {
 
     let group = await Chanel.findOneAndUpdate(
         { _id: req.params.id },
@@ -112,7 +112,7 @@ router.put('/invited_can_see/:id', async (req, res) => {
     res.json(group)
 })
 
-router.put('/chanel_rename/:chanelId', async (req, res) => {
+router.put('/chanel_rename/:groupId/:chanelId', async (req, res) => {
     try {
         await Chanel.updateOne(
             { _id: req.params.chanelId },

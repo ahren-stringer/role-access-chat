@@ -2,6 +2,7 @@ import { SetRightsForm } from '../../redux/groupsReduser'
 import { connect } from 'react-redux';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { groupAPI, rolesAPI } from '../../DAL/api';
 
 function GroupSetingForm(props) {
     let [roled, setRoled] = useState(null)
@@ -17,14 +18,12 @@ function GroupSetingForm(props) {
     useEffect(async () => {
         let res
         if (props.groupForm) {
-            res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
-            setRoled(res.data)
+            res = await rolesAPI.getAllRoles(props.selectedGroup._id)
+            setRoled(res)
         }
         if (props.rightsSetingForm) {
-            res = await axios.get('http://localhost:8001/roles_simple/' + props.selectedGroup._id)
-            debugger
-            // props.setSimpleRoles(res.data)
-            setRoledSimple(res.data)
+            res = rolesAPI.getSimpleRoles(props.selectedGroup._id)
+            setRoledSimple(res)
         }
     }, [])
 
@@ -35,27 +34,20 @@ function GroupSetingForm(props) {
 
     let changeRole = async (name, role) => {
         debugger
-        await axios.put('http://localhost:8001/roles_update/' + name + '/' + props.selectedGroup._id, { role })
-        let res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
-        setRoled(res.data)
+        await rolesAPI.changeRole(name,props.selectedGroup._id, { role })
+        let res = await rolesAPI.getAllRoles(props.selectedGroup._id)
+        setRoled(res)
     }
     let deleteUser = async (name) => {
         if (JSON.parse(localStorage.getItem('role')).role === 'admin'
             || JSON.parse(localStorage.getItem('role')).role === 'owner') {
-            await axios.delete('http://localhost:8001/group_delete_user/' + name + '/' + props.selectedGroup._id,
-                {
-                    headers: {
-                        'Authorization': 'Access ' + JSON.parse(localStorage.getItem('userData')).token,
-                        'Group': props.selectedGroup._id
-                    }
-                }
-            )
+            await groupAPI.deleteUser(name,props.selectedGroup._id)
             let res = await axios.get('http://localhost:8001/roles_all/' + props.selectedGroup._id)
-            setRoled(res.data)
+            setRoled(res)
         }
     }
     let renameGroup = async (newName) => {
-        await axios.put('http://localhost:8001/group_rename/' + props.selectedGroup._id, { name: newName })
+        await groupAPI.renameGroup(props.selectedGroup._id, { name: newName })
         setRename(!rename)
     }
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { chatAPI } from '../../DAL/api';
 import './Chats.css';
 
 function CreateChanel(props) {
@@ -19,7 +20,7 @@ function CreateChanel(props) {
     // let [createForm, setCreateForm] = useState(false)
     let [text, setText] = useState('');
     let Chanel = async () => {
-        let chanel = await axios.post('http://localhost:8001/chanels', {
+        let chanel = await chatAPI.createChanel(props.selectedGroup._id, {
             name: text,
             author: props.author,
             group: props.selectedGroup._id,

@@ -21,7 +21,7 @@ router.put('/frendship/:inviteId', async (req, res) => {
             { _id: req.params.inviteId },
             { waiting: req.body.waiting }
         )
-        res.json('Кто прочитал, тот лох')
+        res.json('Отправлено')
     } catch (e) {
         res.status(500).json({ message: 'Пользователь не найден' })
     }

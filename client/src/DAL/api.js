@@ -5,22 +5,74 @@ export let baseURL='http://localhost:8001/';
 
 let instance=axios.create({
     baseURL:baseURL,
+    headers:{
+        "Authorization":'Bearer'+JSON.parse(localStorage.getItem('userData')).token
+    }
 })
 
-export let imgURL=(destination,filename)=>{
-    return `${baseURL}publication_image/${destination}${filename}`
+export let fileURL=(destination,filename)=>{
+    return `${baseURL}file/${destination}${filename}`
 }
 
-export let blogAPI={
-    setPosts(limit,skip){
-        return instance.get(`posts/all/${limit}/${limit*skip}`).then(res => res.data)
+export let groupAPI={
+    createGroup(reqData){
+        return instance.post(`groups`,reqData).then(res => res.data)
     },
-    setCategoryPosts(category,limit,skip){
-        return instance.get(`posts/categories/${category}/${limit}/${limit*skip}`).then(res => res.data)
+    getGroups(userId){
+        return instance.get(`groups/${userId}`).then(res => res.data)
     },
-    getSinglePost(postName){
-        return instance.get(`single_post/${postName}`).then(res => res.data)
-    }
+    addUser(groupId,reqData){
+        return instance.put(`group_add_user/${groupId}`,reqData).then(res => res.data)
+    },
+    deleteUser(userId,groupId){
+        return instance.put(`group_delete_user/${userId}/${groupId}`).then(res => res.data)
+    },
+    renameGroup(groupId,reqData){
+        return instance.put(`group_rename/${groupId}`,reqData).then(res => res.data)
+    },
+}
+export let rolesAPI = {
+    defineRole(user,group) {
+        return instance.get(`role_define/${user}/${group}`)
+        .then(response => response.data)
+    },
+    getAllRoles(group) {
+        return instance.get(`roles_all/${group}`)
+        .then(response => response.data)
+    },
+    getSimpleRoles(group) {
+        return instance.get(`roles_simple/${group}`)
+        .then(response => response.data)
+    },
+    changeRole(user,group,reqData) {
+        return instance.put(`roles_update/${user}/${group}`,reqData)
+        .then(response => response.data)
+    },
+}
+export let chatAPI = {
+    createChanel(groupId,reqData) {
+        return instance.post(`chanels/${groupId}`,reqData).then(response => response.data)
+    },
+    getChanels(user,groupName,groupId) {
+        return instance.get(`/chanels/${user}/${groupName}/${groupId}`).then(response => response.data)
+    },
+    // selectedChanel(user,groupName,groupId) {
+    //     return instance.get(`/chanels/${user}/${groupName}/${groupId}`).then(response => response.data)
+    // },
+    invited_can_see(groupId,chanelId,reqData){
+        return instance.put(`/invited_can_see/${groupId}/${chanelId}`,reqData).then(response => response.data)
+    },
+    renameChanel(groupId,chanelId,reqData){
+        return instance.put(`/chanel_rename/${groupId}/${chanelId}`,reqData).then(response => response.data)
+    },
+}
+export let messagesAPI = {
+    sendMesage(chanelId,reqData) {
+        return instance.post("/messages/"+chanelId, reqData).then(response => response.data)
+    },
+    getMessages(chanelId) {
+        return instance.get("/messages/"+chanelId).then(response => response.data)
+    },
 }
 export let SearchAPI = {
     getSearchPage(search,limit,skip) {
@@ -33,123 +85,57 @@ export let SearchAPI = {
                return response.data})
     },
 }
-
-export let comentsAPI = {
-    sendComent(formData, post,userId ) {
-        debugger
-        return instance.post(`/coment`,{...formData, author: userId, post})
-            .then(response => response.data)
+export let rightsAPI = {
+    addToList(grouplId,rightId,reqData) {
+        return instance.put(`right/update/${grouplId}/${rightId}`,reqData)
+        .then(response => response.data)
     },
-
-    getComents(postId,limit,skip) {
-        return instance.get(`/coments/some/${postId}/${limit}/${skip}`)
-            .then(response => {debugger
-                return response.data})
-    },
-}
-
-export let authAPI={
-    login(formData){
-        return instance.post('/login', { ...formData }).then(res => res.data)
-    },
-    register(registerData){
-        let formData = new FormData();
-        // for (let key in registerData) {
-        //     formData.append(key, registerData[key]);
-        // } 
-        formData.append("email", registerData.email);
-        formData.append("name", registerData.name);
-        formData.append("password", registerData.password);
-        formData.append("avatar", registerData.file);
-        debugger   
-        return instance.post('/register', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-        })
-        .then(res => res.data)
-    },
-}
-export let publicationAPI = {
-    setImg(file,date) {
-        const formData = new FormData();
-        formData.append('myfile', file);
-        formData.append('date', date);
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        };
-        return instance.post("/images", formData, config).then(response => response.data)
-    },
-    sendPost(file,title,content,arr,userId,subtitle,contentText) {
-    const formData = new FormData();
-        formData.append('myfile', file);
-        formData.append('title',title);
-        formData.append('content', content);
-        formData.append('categories',arr)
-        formData.append('userId', userId)
-        formData.append('subtitle', subtitle)
-        // formData.append('text', contentText)
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        };
-        return instance.post("/posts", formData, config).then(response => response.data)
-    },
-    getCategories() {
-        return instance.get(`category`)
+    removeFromList(grouplId,rightId,reqData) {
+        return instance.put(`right/remove_user/${grouplId}/${rightId}`,reqData)
         .then(response => response.data)
     },
 }
-export let imagesAPI = {
-    deleteImg(filename) {
-        return instance.delete(`image/${filename}`)
+export let frendshipAPI = {
+    makeInvite(reqData) {
+        return instance.post(`make_invite`,reqData)
         .then(response => response.data)
     },
-    deleteAllImages(date) {
-        return instance.delete(`images/${date}`)
+    frendship(reqData,inviteId) {
+        return instance.put(`frendship/${inviteId}`,reqData)
         .then(response => response.data)
     },
-}
-export let homeAPI = {
-    getCategories() {
-        return instance.get(`category/random`)
+    friends(userId) {
+        return instance.get(`friends/${userId}`)
         .then(response => response.data)
     },
-    getPosts() {
-        return instance.get(`posts_latests`)
+    invites(userId) {
+        return instance.get(`invites/${userId}`)
         .then(response => response.data)
     },
-}
-export let categoriesAPI = {
-    getCategories() {
-        return instance.get(`category`)
-        .then(response => response.data)
-    },
-    getSomeCategories() {
-        return instance.get(`category/some`)
+    waitings(userId) {
+        return instance.get(`waitings/${userId}`)
         .then(response => response.data)
     },
 }
-export let profileAPI={
-    getProfile(userId){
-        return instance.get(`user/`+userId).then(res => res.data)
-    },
-    getPosts(id){
-        return instance.get(`posts/author/${id}`)
-        .then(res => res.data)
-    },
-}
-export let chanelsAPI={
-    getUsers(){
-        return instance.get(`users`).then(res => res.data)
-    },
-    getUser(name){
-        return instance.get(`user/${name}`).then(res => res.data)
-    },
-    getPosts(name){
-        return instance.get(`chanel_posts/${name}`).then(res => res.data)
-    },
-}
+// export let authAPI={
+//     login(formData){
+//         return instance.post('/login', { ...formData }).then(res => res.data)
+//     },
+//     register(registerData){
+//         let formData = new FormData();
+//         // for (let key in registerData) {
+//         //     formData.append(key, registerData[key]);
+//         // } 
+//         formData.append("email", registerData.email);
+//         formData.append("name", registerData.name);
+//         formData.append("password", registerData.password);
+//         formData.append("avatar", registerData.file);
+//         debugger   
+//         return instance.post('/register', formData, {
+//             headers: {
+//               'Content-Type': 'multipart/form-data'
+//             }
+//         })
+//         .then(res => res.data)
+//     },
+// }

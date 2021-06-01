@@ -5,12 +5,13 @@ import { NavLink } from 'react-router-dom';
 import Preloader from '../Preloader/Preloader';
 import './Chats.css';
 import { setGroups, SetRightsForm, setSelectedGroup, defineRole } from '../../redux/groupsReduser'
+import { groupAPI } from '../../DAL/api';
 
 
 function Groups(props) {
     useEffect(async () => {
-        let req = await axios.get('http://localhost:8001/groups/' + props.name);
-        props.setGroups(req.data)
+        let req = await groupAPI.getGroups(props.name)
+        props.setGroups(req)
     }, [])
     // let [groups,setGroups]=useState(null);
     return (

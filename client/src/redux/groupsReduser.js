@@ -9,6 +9,8 @@ const SET_SELECTED_CHANEL = 'groupsReuser/SET_SELECTED_CHANEL';
 const GROUP_FORM = 'groupsReuser/GROUP_FORM';
 const ROLE = 'groupsReuser/ROLE';
 const ADD_USERS_FORM = 'groupsReuser/ADD_USERS_FORM';
+const HISTORY_POPUP = 'groupsReuser/HISTORY_POPUP';
+const SET_HISTORY = 'groupsReuser/SET_HISTORY';
 
 let init = {
     selected: false,
@@ -21,7 +23,9 @@ let init = {
     groupForm: null,
     role: null,
     addUsersForm: false,
-    SimpleRoles: null
+    SimpleRoles: null,
+    history: null,
+    historyPopup: false,
 };
 
 const groupsReuser = (state = init, action) => {
@@ -46,6 +50,10 @@ const groupsReuser = (state = init, action) => {
             return { ...state, addUsersForm: action.addUsersForm }
         case "lll":
             return { ...state, SimpleRoles: action.SimpleRoles }
+        case HISTORY_POPUP:
+            return { ...state, historyPopup: action.historyPopup }
+        case SET_HISTORY:
+            return { ...state, history: action.history }
         case SET_ONLINE_GROUP_USERS:
             // let prev = state.onlineGroupUsers;
             // let act = action.onlineGroupUsers;
@@ -103,4 +111,7 @@ export const setGroupSettingsForm = (groupForm) => ({ type: GROUP_FORM, groupFor
 export const defineRole = (role) => ({ type: ROLE, role });
 export const toggleAddUsersForm = (addUsersForm) => ({ type: ADD_USERS_FORM, addUsersForm });
 export const setSimpleRoles = (SimpleRoles) => ({ type: "lll", SimpleRoles });
+export const setHistory = (history) => ({ type: SET_HISTORY, history });
+export const setHistoryPopup = (historyPopup) => ({ type: HISTORY_POPUP, historyPopup });
+
 export default groupsReuser

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { SetRightsForm, setSimpleRoles } from '../../redux/groupsReduser'
 import { connect } from 'react-redux';
 import SingleRightSettings from "./SingleRightSettings";
+import { rightsAPI } from "../../DAL/api";
 function RightsMenu(props) {
 
     let toggleMenu = (e) => {
@@ -14,20 +15,20 @@ function RightsMenu(props) {
         e.target.nextElementSibling.classList.toggle('open_menu')
     }
     // let arr = chanel.canSee.list;
-    let sendList = (rightId, name, whitelisted) => {
+    let sendList = async (rightId, name, whitelisted) => {
         if (!props.right.prevelegion) {
             debugger
-            axios.put('http://localhost:8001/right/update/' + rightId, {
+            await rightsAPI.addToList(props.group._id,rightId, {
                 list: name, prevelegion: true, whitelisted
             })
         } else {
-            axios.put('http://localhost:8001/right/update/' + rightId, {
+            await rightsAPI.addToList(props.group._id,rightId, {
                 list: name, same: whitelisted == props.right.whitelisted
             })
         }
     }
-    let removeFromList = (rightId, name) => {
-        axios.put('http://localhost:8001/right/remove_user/' + rightId, {
+    let removeFromList = async (rightId, name) => {
+        await rightsAPI.removeFromList(props.group._id,rightId, {
             user_name: name
         })
     }

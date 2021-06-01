@@ -3,7 +3,7 @@ const { Router } = express;
 const router = Router()
 import Message from '../models/Message.js'
 import File from '../models/File.js'
-import access from '../middlewares/right_access.middleware.js'
+import {roleCheck,rightCheck} from '../middlewares/right_access.middleware.js'
 import multer from 'multer';
 import path from "path";
 
@@ -60,7 +60,9 @@ router.post('/messages', obj
     // }
 )
 
-router.get('/messages/:chat', access, (req, res) => {
+router.get('/messages/:chat', 
+// access, 
+(req, res) => {
 
     Message.find({ chat: req.params.chat })
         .populate(['chat', 'user','files'])

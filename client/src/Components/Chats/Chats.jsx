@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { chatAPI, rolesAPI } from '../../DAL/api';
 import Preloader from '../Preloader/Preloader';
 import AddUsersForm from './AddUsersForm';
 import './Chats.css';
@@ -11,30 +12,18 @@ import SingleChat from './SingleChat';
 function Chats(props) {
     let [group,setGroup]=useState(props.selectedGroup)
     useEffect(async()=>{
-        // setGroup(props.selectedGroup)
-
         if (props.selectedGroup){
-            let req = await axios.get('http://localhost:8001/chanels/' +props.name+'/'+props.selectedGroup.name+'/'+ props.match.params.groupId);
+            let req = await chatAPI.getChanel(props.name,props.selectedGroup.name,props.match.params.groupId);
             props.setChanels(req.data.chanels)
             localStorage.setItem('right_keys',JSON.stringify(req.data[props.selectedGroup.name]))
         }
     },[props.selectedGroup])
-    // useEffect(async () => {
-    //     let res=[];
-    //     if (props.selectedGroup) res = await axios.get('http://localhost:8001/roles_simple/' + props.selectedGroup._id)
-    //     debugger
-    //     props.setSimpleRoles(res.data)
-    //     // localStorage.setItem('simpleRoles',JSON.stringify(res.data))
-    // }, [])
-    useEffect(async () => {
-        let role = await axios.get('http://localhost:8001/role_define/' + props.name + '/' + props.match.params.groupId);
-        // props.defineRole(role.data.role)
-        localStorage.setItem('role', JSON.stringify(role.data))
 
-        // let req = await axios.get('http://localhost:8001/chanels/' +props.name+'/'+group.name+'/'+ props.match.params.groupId);
-        // props.setChanels(req.data.chanels)
+    useEffect(async () => {
+        let role = await rolesAPI.defineRole(props.name,props.match.params.groupId);
+        localStorage.setItem('role', JSON.stringify(role.data))
     }, [props.match.params.groupId])
-    // let [groups,setGroups]=useState(null);
+
     return (
         <div className='im_dialogs_col_wrap noselect'>
 

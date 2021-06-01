@@ -6,6 +6,7 @@ import { setMessages,pushMessage } from '../../redux/messagesReduser'
 import { setSelectedGroup, setSelected, setOnlineGroupUsers, setSelectedChanel } from '../../redux/groupsReduser'
 import { withRouter } from 'react-router';
 import { socket } from '../../App';
+import { messagesAPI } from '../../DAL/api';
 function ChatContainer(props) {
 
     // let Acces = (right) => {
@@ -55,13 +56,8 @@ function ChatContainer(props) {
                 //     props.setOnlineGroupUsers([user])
                 //     console.log(props.onlineGroupUsers)
                 // });
-                let MesReq = await axios.get('http://localhost:8001/messages/' + chanelId,
-                {
-                    headers: {
-                        'Right-Access': 'Access '+ JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee
-                    }
-                });
-                props.setMessages(MesReq.data)
+                let MesReq = await messagesAPI.getMessages(chanelId);
+                props.setMessages(MesReq)
             }
         }
     }, [props.match.params.chanelId])

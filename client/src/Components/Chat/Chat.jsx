@@ -2,6 +2,7 @@ import './Chat.css';
 import { useState } from 'react';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
+import { messagesAPI } from '../../DAL/api';
 
 function Chat(props) {
     debugger
@@ -15,19 +16,12 @@ function Chat(props) {
         formData.append('text',text)
         formData.append('user', props.author)
         formData.append('chat', props.selectedChanel._id)
-        filesArr.forEach(function(file, i) {
+        filesArr.forEach(function(file) {
             formData.append('files', file);
         });
-        // formData.append('files', filesArr);
-        debugger
-        let message = await axios.post('http://localhost:8001/messages', formData)
-        // {
-        //     text,
-        //     user: props.author,
-        //     chat: props.selectedChanel,
-        //     // onlineGroupUsers: props.onlineGroupUsers
-        // })
-        props.pushMessage(message.data)
+
+        let message = await messagesAPI.sendMessage(props.selectedChanel._id, formData)
+        props.pushMessage(message)
         // for (let user of props.onlineGroupUsers) {
 
         //     socket.emit("send message", {

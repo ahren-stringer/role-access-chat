@@ -8,6 +8,7 @@ import { SetRightsForm, setSimpleRoles } from '../../redux/groupsReduser'
 import { connect } from 'react-redux';
 import SingleRightSettings from "./SingleRightSettings";
 import RightsMenu from "./RightsMenu";
+import { chatAPI, rolesAPI } from "../../DAL/api";
 function RightsSetingForm(props) {
     let [rename, setRename] = useState(false)
     let [chanelName, setChanelName] = useState(props.selectedChanel.name);
@@ -20,34 +21,21 @@ function RightsSetingForm(props) {
     }
     let [ICS, setICS] = useState(chanel.invitedCanSee)
     useEffect(async () => {
-        let res = await axios.get('http://localhost:8001/roles_simple/' + props.selectedGroup._id)
+        let res = await rolesAPI.getSimpleRoles(props.selectedGroup._id)
         debugger
-        props.setSimpleRoles(res.data)
+        props.setSimpleRoles(res)
     }, [])
     let toggleMenu = (e) => {
         debugger
         e.target.nextElementSibling.classList.toggle('open_menu')
     }
-    // let arr = chanel.canSee.list;
-    let sendList = (rightId, name, whitelisted) => {
-        if (!chanel.canSee.prevelegion) {
-            debugger
-            axios.put('http://localhost:8001/right/update/' + rightId, {
-                list: name, prevelegion: true, whitelisted
-            })
-        } else {
-            axios.put('http://localhost:8001/right/update/' + rightId, {
-                list: name, same: whitelisted == chanel.canSee.whitelisted
-            })
-        }
-    }
-    let invitedCanSee = (can) => {
-        axios.put('http://localhost:8001/invited_can_see/' + chanel._id, { invitedCanSee: can })
+    let invitedCanSee = async(can) => {
+        await chatAPI.invited_can_see(props.selectedGroup._id,chanel._id, { invitedCanSee: can })
         setICS(can)
     }
 
     let renameChanel = async (newName) => {
-        await axios.put('http://localhost:8001/chanel_rename/' + props.selectedChanel._id, { name: newName })
+        await chatAPI.renameChanel(props.selectedGroup._id,props.selectedChanel._id, { name: newName })
         setRename(!rename)
     }
 

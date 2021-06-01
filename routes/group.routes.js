@@ -4,7 +4,7 @@ const router = Router()
 import Dialog from '../models/Dialog.js'
 import Group from '../models/Group.js'
 import Users_GroupRole from '../models/Users_GroupRoles.js'
-import access from '../middlewares/right_access.middleware.js'
+import {roleCheck,rightCheck} from '../middlewares/right_access.middleware.js'
 import Right from '../models/Right.js'
 
 router.post('/groups', async (req, res) => {
