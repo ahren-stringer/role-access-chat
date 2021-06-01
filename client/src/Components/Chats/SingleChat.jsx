@@ -10,17 +10,15 @@ function SingleChat(props) {
         <li className='im_dialog_wrap'>
             <a className='im_dialog'>
                 <div className='im_dialog_meta pull-right text-right'>
-                    <div className='im_dialog_date'>
+                    {/* <div className='im_dialog_date'>
                         12:31 AM
                                     </div>
                     <span className='im_dialog_badge badge im_dialog_badge_muted'>
                         1
-                                    </span>
+                                    </span> */}
                 </div>
                 <div className='im_dialog_photo pull-left peer_photo_init'>
-                    <span className='peer_initials nocopy im_dialog_photo user_bgcolor_5'>
-                        PM
-                                    </span>
+                    <span className='peer_initials nocopy im_dialog_photo user_bgcolor_5'> </span>
                 </div>
                 <div className='im_dialog_message_wrap'>
                     <div className='im_dialog_peer'>

@@ -2,63 +2,68 @@ import express from 'express';
 const { Router } = express;
 const router = Router()
 import Message from '../models/Message.js'
+import File from '../models/File.js'
 import access from '../middlewares/right_access.middleware.js'
+import multer from 'multer';
+import path from "path";
 
-router.post('/messages', async (req, res) => {
-    try {
-        let postData={
-            text:req.body.text,
-            chat: req.body.chat,
-            user: req.body.user
-        };
-        let message= new Message(postData);
-        await message.save()
-        // for (let oUser of req.body.onlineGroupUsers){
-        //     io.to(oUser.userId).emit("chat message",message)
-        // }
-        let m=await Message.findById(message._id).populate(['chat', 'user'])
-        res.json( m)
-        // .then((obj) => {
-        //   obj.populate(
-        //     "dialog",
-        //     (err, message) => {
-        //       if (err) {
-        //         return res.status(500).json({
-        //           status: "error",
-        //           message: err,
-        //         });
-        //       }
-  
-        //       Dialog.findOneAndUpdate(
-        //         { _id: postData.dialog },
-        //         { lastMessage: message._id },
-        //         { upsert: true },
-        //         function (err) {
-        //           if (err) {
-        //             return res.status(500).json({
-        //               status: "error",
-        //               message: err,
-        //             });
-        //           }
-        //         }
-        //       );
-  
-        //       res.json(message);
-        //     }
-        //   );
-        // })
-        // .catch((reason) => {
-        //   res.json(reason);
-        // });
-    } catch (e) {
-        res.status(500).json({ message: 'Пользователь не найден' })
+const storage = multer.diskStorage({
+    destination: "./public/files/",
+    filename: function (req, file, cb) {
+        cb(null, "FILE-" + Date.now() + file.originalname);
     }
-})
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 100000000 },
+}).array("files");
+
+const obj = (req, res) => {
+    upload(req, res, async() => {
+        // console.log("Request ---", req.body);
+        // console.log("Request file ---", req.files);
+        let filesArr = req.files.map(item => new File({ file: item }))
+        console.log(filesArr)
+        let message = new Message({
+            text: req.body.text,
+            chat: req.body.chat,
+            user: req.body.user,
+            files:filesArr
+        });
+        await File.insertMany(filesArr)
+        await message.save(message)
+        let m = await Message.findById(message._id).populate(['chat', 'user','files'])
+        res.json(m)
+        // const categories = req.
+        //  new PostCategory({ img: req.file, category });
+        // categories.save().then(() => {
+        //     res.send({ message: "uploaded successfully" })
+        // })
+    });
+}
+
+router.post('/messages', obj
+    // async (req, res) => {
+    //     try {
+    //         let postData={
+    //             text:req.body.text,
+    //             chat: req.body.chat,
+    //             user: req.body.user
+    //         };
+    //         let message= new Message(postData);
+    //         let m=await Message.findById(message._id).populate(['chat', 'user'])
+    //         res.json( m)
+    //     } catch (e) {
+    //         res.status(500).json({ message: 'Пользователь не найден' })
+    //     }
+    // }
+)
 
 router.get('/messages/:chat', access, (req, res) => {
 
     Message.find({ chat: req.params.chat })
-        .populate(['chat','user'])
+        .populate(['chat', 'user','files'])
         .exec((err, messages) => {
             if (err) return res.status(404).json({ message: "Сообщения не найдены" })
             return res.json(messages)
@@ -68,8 +73,8 @@ router.get('/messages/:chat', access, (req, res) => {
 
 router.delete('/messages/:id', async (req, res) => {
     try {
-        await Message.findByIdAndRemove({_id:req.params.id});
-        res.json({message: "Сообщение удалено"})
+        await Message.findByIdAndRemove({ _id: req.params.id });
+        res.json({ message: "Сообщение удалено" })
     } catch (e) {
         res.status(500).json({ message: 'Сообщение не найдено' })
     }

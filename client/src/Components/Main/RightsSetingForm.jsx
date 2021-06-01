@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import SingleRightSettings from "./SingleRightSettings";
 import RightsMenu from "./RightsMenu";
 function RightsSetingForm(props) {
+    let [rename, setRename] = useState(false)
+    let [chanelName, setChanelName] = useState(props.selectedChanel.name);
 
     let chanel;
 
@@ -43,9 +45,31 @@ function RightsSetingForm(props) {
         axios.put('http://localhost:8001/invited_can_see/' + chanel._id, { invitedCanSee: can })
         setICS(can)
     }
+
+    let renameChanel = async (newName) => {
+        await axios.put('http://localhost:8001/chanel_rename/' + props.selectedChanel._id, { name: newName })
+        setRename(!rename)
+    }
+
     return <div style={{ height: '100vh' }}>
         <span onClick={() => { props.SetRightsForm(false) }}>Закрыть</span>
         <h3>Права достуа</h3>
+        <div>
+            <span>Чат под названием:</span>
+        {
+            (!rename)
+                ? <span>
+                    <span onDoubleClick={() => { setRename(!rename) }}>{props.selectedChanel.name}</span>
+                </span>
+                : <span>
+                    <input autoFocus={true} onBlur={() => {
+                        renameChanel(chanelName)
+                    }}
+                        onChange={(e) => { setChanelName(e.target.value) }}
+                        value={chanelName} />
+                </span>
+        }
+        </div>
         <div>
             {!ICS
                 ? <div onClick={() => { invitedCanSee(true) }}>Разрешить просматривать сообщения приглашенным пользователям</div>
@@ -72,59 +96,30 @@ function RightsSetingForm(props) {
                         right={chanel.canSee}
                         group={props.selectedGroup}
                     />
-                        {/* <div className='react-contextmenu-item'
-                            onClick={(e) => { toggleMenu(e) }}>
-                            Право на посещение
-                                </div>
-                        {!chanel.canSee.prevelegion ? <div className='react-contextmenu'>
-                            <div className='react-contextmenu-item'
-                                onClick={() => { sendList(chanel.canSee._id, item.user_name, true) }}>
-                                Создать белый список
-                                </div>
-
-                            <div className='react-contextmenu-item'
-                                onClick={() => { sendList(chanel.canSee._id, item.user_name, false) }}>
-                                Создать черный список
-                                </div>
-                        </div>
-                            : chanel.canSee.whitelisted
-                                ? <div className='react-contextmenu'>
-                                    <div className='react-contextmenu-item'
-                                        onClick={() => { sendList(chanel.canSee._id, item.user_name, true) }}>
-                                        Добавить в белый список
-                            </div>
-
-                                    <div className='react-contextmenu-item'
-                                        onClick={() => { sendList(chanel.canSee._id, item.user_name, false) }}>
-                                        Создать черный список
-                            </div>
-                                </div>
-                                : <div className='react-contextmenu'>
-                                    <div className='react-contextmenu-item'
-                                        onClick={() => { sendList(chanel.canSee._id, item.user_name, true) }}>
-                                        Создать белый список
-                        </div>
-
-                                    <div className='react-contextmenu-item'
-                                        onClick={() => { sendList(chanel.canSee._id, item.user_name, false) }}>
-                                        Добавить в черный список
-                        </div>
-                                </div>
-
-                        } */}
-
-                        <div className='react-contextmenu-item'
-                            onClick={() => { }}>
-                            Право на отправку
-                                </div>
-                        {/* <div className='react-contextmenu-item'
-                                    onClick={() => { changeRole(item.user_name, 'partner') }}>
-                                    Назначить обычным пользователем
-                                </div>
-                                <div className='react-contextmenu-item'
-                                    onClick={() => { deleteUser(item.user_name) }}>
-                                    Удалить из Группы
-                                </div> */}
+                    <RightsMenu
+                        rightId={chanel.canWrite._id}
+                        user_name={item.user_name}
+                        rightTitle='Право на отправку'
+                        chanel={chanel}
+                        right={chanel.canWrite}
+                        group={props.selectedGroup}
+                    />
+                    <RightsMenu
+                        rightId={chanel.canSendFile._id}
+                        user_name={item.user_name}
+                        rightTitle='Право на отправку файлов'
+                        chanel={chanel}
+                        right={chanel.canSendFile}
+                        group={props.selectedGroup}
+                    />
+                    <RightsMenu
+                        rightId={chanel.canSeeHistory._id}
+                        user_name={item.user_name}
+                        rightTitle='Право на просмотр истории'
+                        chanel={chanel}
+                        right={chanel.canSeeHistory}
+                        group={props.selectedGroup}
+                    />
                     </div>
                 </li>
             )}

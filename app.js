@@ -10,10 +10,15 @@ import chanels from './routes/chanels.routes.js'
 import rights from './routes/rights.rotes.js'
 import roles from './routes/roles.routes.js'
 import frendship from './routes/frendship.routes.js'
+import files from './routes/files.routes.js'
+import history from './routes/history.routes.js'
 import httpServer from "http"
 import * as socket from "socket.io"
 import Group from './models/Group.js'
-import { group } from 'console'
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+export const __dirname = path.dirname(__filename);
 // import updateLastSeen from  './middlewares/updateLastSeen.js'
 // import checkAuth from  './middlewares/checkAuth.js'
 // import category from  './routes/category.routes.js'
@@ -55,7 +60,10 @@ app.use('', rights)
 app.use('', roles)
 //     Дружба
 app.use('', frendship)
-
+//     Файлы
+app.use('', files)
+//     История
+app.use('', history)
 // usernames which are currently connected to the chat
 var usernames = {};
 

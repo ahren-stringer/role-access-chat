@@ -15,7 +15,7 @@ function Groups(props) {
     // let [groups,setGroups]=useState(null);
     return (
         <div className='im_groups_col_wrap noselect'>
-            <div>Группы</div>
+            <div className='group_logo'>Группы</div>
             <ul className='nav nav-pills nav-stacked'>
                 {!props.groups ? <Preloader />
                     : props.groups.map(item =>

@@ -28,4 +28,15 @@ router.put('/right/update/:rightId', async (req, res) => {
         res.status(500).json({ message: 'Пользователь не найден' })
     }
 })
+router.put('/right/remove_user/:rightId', async (req, res) => {
+    try {
+        let right=await Right.findByIdAndUpdate(
+                req.params.rightId,
+                {$pull: {list: req.body.user_name},}
+            );
+        res.json(right)
+    } catch (e) {
+        res.status(500).json({ message: 'Пользователь не найден' })
+    }
+})
 export default router

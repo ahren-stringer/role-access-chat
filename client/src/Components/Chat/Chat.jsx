@@ -1,38 +1,44 @@
 import './Chat.css';
-import { io } from "socket.io-client";
-import { socket } from '../../App';
-import Preloader from '../Preloader/Preloader';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
+
 function Chat(props) {
     debugger
     console.log(props.onlineGroupUsers)
     let [text, setText] = useState('');
     let rights = props.selectedChanel.rights;
-    // let  [messages, setMessages]=useState(props.messages);
-    // useEffect(()=>{
-    //     setMessages(props.messages)
-    // },[props.messages])
-    let sendMessage = async () => {
-        let message = await axios.post('http://localhost:8001/messages', {
-            text,
-            user: props.author,
-            chat: props.selectedChanel,
-            // onlineGroupUsers: props.onlineGroupUsers
-        })
-        props.pushMessage(message.data)
-        for (let user of props.onlineGroupUsers) {
+    let [filesArr, setFilesArr] = useState([]);
 
-            socket.emit("send message", {
-                content: {
-                    chanel:props.selectedChanel,
-                    group:props.selectedGroup,
-                    message:message.data
-                },
-                to: user.userID,
-            });
-        }
+    let sendMessage = async () => {
+        let formData=new FormData();
+        formData.append('text',text)
+        formData.append('user', props.author)
+        formData.append('chat', props.selectedChanel._id)
+        filesArr.forEach(function(file, i) {
+            formData.append('files', file);
+        });
+        // formData.append('files', filesArr);
+        debugger
+        let message = await axios.post('http://localhost:8001/messages', formData)
+        // {
+        //     text,
+        //     user: props.author,
+        //     chat: props.selectedChanel,
+        //     // onlineGroupUsers: props.onlineGroupUsers
+        // })
+        props.pushMessage(message.data)
+        // for (let user of props.onlineGroupUsers) {
+
+        //     socket.emit("send message", {
+        //         content: {
+        //             chanel: props.selectedChanel,
+        //             group: props.selectedGroup,
+        //             message: message.data
+        //         },
+        //         to: user.userID,
+        //     });
+        // }
         // socket.on("chat message", ({ content, from }) => {
         //     console.log(content, from)
         // });
@@ -71,19 +77,31 @@ function Chat(props) {
                                                                 <span class="im_message_date_text nocopy"></span>
                                                             </span>
                                                         </div>
-                                                        <div>
+                                                        {/* <div>
                                                             {!props.selectedChanel
                                                                 ? <Preloader />
                                                                 : props.selectedChanel.name
                                                             }
-                                                        </div>
+                                                        </div> */}
                                                         {props.messages.map(item => <div class="im_message_body">
 
-                                                               <span className='message_name'>{item.user.name}</span>
+                                                            <span className='message_name'>{item.user.name}</span>
 
                                                             <div className="historyMessage">
-                                                                <div class="im_message_text" dir="auto">{item.text}</div>                  
+                                                                <div class="im_message_text" dir="auto">{item.text}</div>
                                                             </div>
+                                                            {
+                                                                item.files.length===0? null
+                                                                : <div>
+                                                                    {item.files.map(item=><div>
+                                                                    <a href={'http://localhost:8001/file/'+item.file.destination+item.file.filename}
+                                                                    download
+                                                                    >
+                                                                        {item.file.originalname}
+                                                                    </a>
+                                                                    </div>)}
+                                                                </div> 
+                                                            }
 
                                                         </div>)}
 
@@ -105,16 +123,38 @@ function Chat(props) {
 
                     </div>
                 </div>
-                    {/* {Acces(rights.canWrite) ? */}<div> 
-                        <textarea name="" id="" cols="30" rows="10"
-                            value={text}
-                            onChange={(e) => { setText(e.target.value) }}
-                            className='textarea'
-                            ></textarea>
-                            <Button variant="contained" color="primary">
-        Primary
-      </Button>
-                    <button onClick={sendMessage}>Отправить</button>
+                {/* {Acces(rights.canWrite) ? */}
+                <div className='files_list'>
+                {
+                    filesArr.length==0? null
+                    :filesArr.map(item=><div>{item.name}</div>)
+                }
+                </div>
+                <div className='send_message_form'>
+                    <textarea name="" id="" cols="30" rows="10"
+                        value={text}
+                        onChange={(e) => { setText(e.target.value) }}
+                        className='textarea'
+                    ></textarea>
+                    {/* <span className='send_btn' >
+                        <div> */}
+                            <Button variant="contained" color="primary" className='send_btn' onClick={sendMessage}>
+                                Отправить
+                            </Button>
+                        {/* </div>
+                        <div> */}
+                            <input type='file' id="file" className="inputfile" name="file"
+                            multiple
+                                onChange={(e) => { 
+                                    console.log(e.target.files[0])
+                                    setFilesArr([...filesArr,e.target.files[0]]) 
+                                }}
+                                // className='send_btn'
+                            ></input>
+                            <label for="file">Выберите изображение</label>
+                        {/* </div>
+                    </span> */}
+                    {/* <button onClick={sendMessage}>Отправить</button> */}
                     {/* :<div>У вас отключена возможность писать в этом чате</div>} */}
                 </div>
             </div>

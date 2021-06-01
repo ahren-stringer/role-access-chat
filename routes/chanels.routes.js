@@ -21,7 +21,7 @@ router.post('/chanels', async (req, res) => {
             group_id: req.body.group,
             $or: [{ role: 'owner' }, { role: 'admin' }],
         })
-        hightRoleList=hightRoleList.map(item=>item.user_name)
+        hightRoleList = hightRoleList.map(item => item.user_name)
         arr.push({ ...req.body.canSee, chanel_id: chanel._id, hightRoleList })
         arr.push({ ...req.body.canWrite, chanel_id: chanel._id, hightRoleList })
         arr.push({ ...req.body.canSeeHistory, chanel_id: chanel._id, hightRoleList })
@@ -105,11 +105,23 @@ router.get('/single_chanel/:id', async (req, res) => {
 router.put('/invited_can_see/:id', async (req, res) => {
 
     let group = await Chanel.findOneAndUpdate(
-        {_id:req.params.id},
-        {invitedCanSee: req.body.invitedCanSee}
-        )
+        { _id: req.params.id },
+        { invitedCanSee: req.body.invitedCanSee }
+    )
 
     res.json(group)
+})
+
+router.put('/chanel_rename/:chanelId', async (req, res) => {
+    try {
+        await Chanel.updateOne(
+            { _id: req.params.chanelId },
+            { name: req.body.name }
+        );
+        res.json({ message: "Название изменено" })
+    } catch (e) {
+        res.status(500).json({ message: 'Пользователь не найден' })
+    }
 })
 
 router.delete('/dialogs/:id', async (req, res) => {

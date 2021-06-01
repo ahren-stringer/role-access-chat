@@ -22,18 +22,25 @@
     position: relative;
 }
 .im_history_wrap{
-    height: 370px !important;
+    height: 275px !important;
     width: 500px !important;
     margin: 0 auto;
 }
 /* Лист сообщений */
+
 .im_history {
     padding: 0;
     position: relative;
 }
+.files_list{
+    height: 150px;
+    border: 1px solid;
+}
 .textarea{
     height: 100px;
     width: 470px;
+    border: 2px solid lightgray;
+    border-radius: 5px;
 }
 .im_message_body{
     margin-bottom: 20px;
@@ -44,4 +51,46 @@
 .message_name{
     color: #3a6d99;
     font-weight: 700;
+}
+.send_btn{
+    float: right;
+}
+.send_message_form{
+    width: 606px;
+    margin: 0 auto;
+}
+
+.inputfile,
+.add-content-img {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.add_title_img{
+    margin: 27px 0;
+    margin-left: 10px
+}
+.inputfile + label,
+.add-content-img+label {
+    display: inline-block;
+    cursor: pointer;
+}
+.inputfile + label{
+    font-size: 1.25em;
+    font-weight: 700;
+    background: #11ABB0;
+    display: inline-block;
+    text-decoration: none;
+    letter-spacing: 0;
+    color: #fff;
+    padding: 12px 24px;
+    margin-bottom: 18px;
+    border: none;
+    cursor: pointer;
+    height: auto;
+    transition: all .2s ease-in-out;
+    border-radius: 3px
 }

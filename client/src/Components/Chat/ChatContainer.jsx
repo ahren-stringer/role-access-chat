@@ -69,7 +69,7 @@ function ChatContainer(props) {
     if (!props.selectedChanel) {
         return (
             <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
-                Выберите чат для общения
+                {/* Выберите чат для общения */}
             </div>
         )
     }

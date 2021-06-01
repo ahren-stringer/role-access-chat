@@ -6,15 +6,12 @@ export default (req, res, next) => {
   }
 
   try {
-    // console.log(req.headers)
     let allow;
-    if(req.headers['role-access']){
-      allow = req.headers['role-access'].split(' ')[1] // "Access Alow?"
-      // console.log(allow)
+    if(req.headers['group']){
+      allow = req.headers['group']
     }
     if(req.headers['right-access']){
       allow = req.headers['right-access'].split(' ')[1] // "Access Alow?"
-      // console.log(allow)
     }
     if (!allow) {
       console.log('Недостаточно прав')

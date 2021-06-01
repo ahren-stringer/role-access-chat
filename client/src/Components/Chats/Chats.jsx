@@ -39,7 +39,7 @@ function Chats(props) {
         <div className='im_dialogs_col_wrap noselect'>
 
             {/* <Search /> */}
-
+            <div className='group_logo'>Чаты</div>
             <div className='im_dialogs_col' style={{ height: '100vh' }}>
                 <div className='im_dialogs_wrap nano has-scrollbar active-scrollbar'>
 

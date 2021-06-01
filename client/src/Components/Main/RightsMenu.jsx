@@ -26,11 +26,21 @@ function RightsMenu(props) {
             })
         }
     }
+    let removeFromList = (rightId, name) => {
+        axios.put('http://localhost:8001/right/remove_user/' + rightId, {
+            user_name: name
+        })
+    }
+
     return <div>
         <div className='react-contextmenu-item'
-            onClick={(e) => { toggleMenu(e) }}>
+            onClick={(e) => { toggleMenu(e) }}
+            style={!props.right.prevelegion ? {}
+                : props.right.whitelisted && props.right.list.some(item => item == props.user_name) ? { backgroundColor: 'green' }
+                    : props.right.blacklisted && props.right.list.some(item => item == props.user_name) ? { backgroundColor: 'red' }
+                        : {}}>
             {props.rightTitle}
-                                </div>
+        </div>
         {
             !props.right.prevelegion ? <div className='react-contextmenu'>
                 <div className='react-contextmenu-item'
@@ -45,10 +55,17 @@ function RightsMenu(props) {
             </div>
                 : props.right.whitelisted
                     ? <div className='react-contextmenu'>
-                        <div className='react-contextmenu-item'
-                            onClick={() => { sendList(props.rightId, props.user_name, true) }}>
-                            Добавить в белый список
+                        {!props.right.list.some(item => item == props.user_name)
+                            ? <div className='react-contextmenu-item'
+                                onClick={() => { sendList(props.rightId, props.user_name, true) }}
+                            >
+                                Добавить в белый список
                             </div>
+                            : <div className='react-contextmenu-item'
+                                onClick={() => { removeFromList(props.rightId, props.user_name) }}
+                            >
+                                Удалить из белого списка
+                            </div>}
 
                         <div className='react-contextmenu-item'
                             onClick={() => { sendList(props.rightId, props.user_name, false) }}>
@@ -61,10 +78,17 @@ function RightsMenu(props) {
                             Создать белый список
                         </div>
 
-                        <div className='react-contextmenu-item'
-                            onClick={() => { sendList(props.rightId, props.user_name, false) }}>
-                            Добавить в черный список
-                        </div>
+                        {!props.right.list.some(item => item == props.user_name)
+                            ? <div className='react-contextmenu-item'
+                                onClick={() => { sendList(props.rightId, props.user_name, true) }}
+                            >
+                                Добавить в черный список
+                            </div>
+                            : <div className='react-contextmenu-item'
+                                onClick={() => { removeFromList(props.rightId, props.user_name) }}
+                            >
+                                Удалить из черного списка
+                            </div>}
                     </div>
 
         }

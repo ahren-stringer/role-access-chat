@@ -1,15 +1,13 @@
 import { SetRightsForm } from '../../redux/groupsReduser'
 import { connect } from 'react-redux';
-import Preloader from '../Preloader/Preloader';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
-import RightsSetingForm from './RightsSetingForm';
-import SingleRightSettings from './SingleRightSettings';
 
 function GroupSetingForm(props) {
     let [roled, setRoled] = useState(null)
     let [roledSimple, setRoledSimple] = useState(null)
+    let [rename, setRename] = useState(false)
+    let [groupName, setGroupName] = useState(props.selectedGroup.name);
 
     let chanel;
     if (props.rightsSetingForm === 'existing_chanel') {
@@ -47,7 +45,8 @@ function GroupSetingForm(props) {
             await axios.delete('http://localhost:8001/group_delete_user/' + name + '/' + props.selectedGroup._id,
                 {
                     headers: {
-                        'Role-Access': 'Access ' + JSON.parse(localStorage.getItem('role')).role_key
+                        'Authorization': 'Access ' + JSON.parse(localStorage.getItem('userData')).token,
+                        'Group': props.selectedGroup._id
                     }
                 }
             )
@@ -55,9 +54,29 @@ function GroupSetingForm(props) {
             setRoled(res.data)
         }
     }
-    debugger
+    let renameGroup = async (newName) => {
+        await axios.put('http://localhost:8001/group_rename/' + props.selectedGroup._id, { name: newName })
+        setRename(!rename)
+    }
+
     return <div style={{ height: '100vh' }}>
         <span onClick={() => { props.setGroupSettingsForm(false) }}>Закрыть</span>
+        <div>
+            <span>Группа под названием:</span>
+        {
+            (!rename)
+                ? <span>
+                    <span onDoubleClick={() => { setRename(!rename) }}>{props.selectedGroup.name}</span>
+                </span>
+                : <span>
+                    <input autoFocus={true} onBlur={() => {
+                        renameGroup(groupName)
+                    }}
+                        onChange={(e) => { setGroupName(e.target.value) }}
+                        value={groupName} />
+                </span>
+        }
+        </div>
         {!roled ? null : <div>
             <h3>Роли</h3>
             <div>

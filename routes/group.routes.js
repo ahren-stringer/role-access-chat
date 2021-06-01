@@ -55,7 +55,9 @@ router.delete('/dialogs/:id', async (req, res) => {
         res.status(500).json({ message: 'Пользователь не найден' })
     }
 })
-router.put('/group_add_user/:groupId',access, async (req, res) => {
+router.put('/group_add_user/:groupId',
+// access, 
+async (req, res) => {
     try {
         await Group.updateOne({ _id: req.params.groupId },
             {
@@ -67,6 +69,19 @@ router.put('/group_add_user/:groupId',access, async (req, res) => {
         res.status(500).json({ message: 'Пользователь не найден' })
     }
 })
+
+router.put('/group_rename/:groupId', async (req, res) => {
+    try {
+        await Group.updateOne(
+            { _id: req.params.groupId },
+            {name: req.body.name  }
+            );
+        res.json({ message: "Название изменено" })
+    } catch (e) {
+        res.status(500).json({ message: 'Пользователь не найден' })
+    }
+})
+
 router.delete('/group_delete_user/:userName/:groupId',
 // access,
  async (req, res) => {

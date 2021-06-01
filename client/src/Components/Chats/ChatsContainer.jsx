@@ -9,7 +9,9 @@ import { withRouter } from 'react-router';
 
 function ChatsContainer(props) {
     if (props.match.params.groupId) {return <Chats {...props} />}
-    else {return <div>Выберете группу</div>}
+    else {return <div>
+        {/* Выберете группу */}
+        </div>}
 
     // if (!props.groups) return <Preloader/>
     return <Chats {...props} />
