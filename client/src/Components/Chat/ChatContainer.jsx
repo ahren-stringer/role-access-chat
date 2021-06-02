@@ -9,13 +9,15 @@ import { socket } from '../../App';
 import { messagesAPI } from '../../DAL/api';
 function ChatContainer(props) {
 
-    // let Acces = (right) => {
-    //     let inList;
-    //     inList = right.list.some(item => item == props.name) || props.selectedGroup.author.name==props.name
-    //     debugger
-    //     if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return true
-    //     return false
-    // }
+    let Acces = (right) => {
+        let inList;
+        inList = right.list.some(item => item == props.name)
+        debugger
+        if (props.selectedGroup.author.name==props.name) return true
+        if (right.hightRoleList.some(item => item == props.name)) return true
+        if ((right.whitelisted && inList) || (!right.whitelisted && !inList)) return true
+        if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
+    }
     let [accesed, setAccesed] = useState(null);
     useEffect(async () => {
         let chanelId = props.match.params.chanelId;
@@ -25,10 +27,10 @@ function ChatContainer(props) {
             let ChatReq = await axios.get('http://localhost:8001/single_chanel/' + chanelId);
             props.setSelectedChanel(ChatReq.data)
             console.log('ChatReq.data', ChatReq.data)
-            // let a = Acces(ChatReq.data.canSee)
-            // setAccesed(Acces(ChatReq.data.canSee))
-            setAccesed(JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee)
-
+            let a = Acces(ChatReq.data.canSee)
+            setAccesed(Acces(ChatReq.data.canSee))
+            // setAccesed(JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee)
+debugger
             if (JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee) {
 
                 !ChatReq.data.canSee.prevelegion
@@ -70,11 +72,13 @@ function ChatContainer(props) {
         )
     }
 
-    if (props.selectedChanel && !accesed) return (
+    if (props.selectedChanel && !accesed) {
+        debugger
+        return (
         <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
             Вы не можете посещать данный канал
         </div>
-    )
+    )}
     return <Chat {...props} />
 }
 let mapStateToProps = (state) => {

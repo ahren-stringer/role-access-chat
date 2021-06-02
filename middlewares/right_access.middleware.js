@@ -1,16 +1,18 @@
 import Users_GroupRole from '../models/Users_GroupRoles.js'
 import Right from '../models/Right.js'
 import User from '../models/User.js'
-export let roleCheck = async (req, res, next) => {
+export let defineRole = async (req, res, next) => {
   try {
-    let user= await User.findById(req.user.id)
-    let role = await Users_GroupRole.find({
+    let user= await User.findById(req.user.userId)
+    let role = await Users_GroupRole.findOne({
       user_name: user.name,
       group_id: req.params.groupId
     })
 
-    req.role=role
-
+    req.role=role.role
+    req.user=user
+    console.log(req.role)
+    console.log(req.user)
     next()
 
   } catch (e) {

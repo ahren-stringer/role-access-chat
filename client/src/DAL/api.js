@@ -6,7 +6,7 @@ export let baseURL='http://localhost:8001/';
 let instance=axios.create({
     baseURL:baseURL,
     headers:{
-        "Authorization":'Bearer'+JSON.parse(localStorage.getItem('userData')).token
+        "Authorization":'Bearer '+JSON.parse(localStorage.getItem('userData')).token
     }
 })
 
@@ -54,7 +54,7 @@ export let chatAPI = {
         return instance.post(`chanels/${groupId}`,reqData).then(response => response.data)
     },
     getChanels(user,groupName,groupId) {
-        return instance.get(`/chanels/${user}/${groupName}/${groupId}`).then(response => response.data)
+        return instance.get(`/chanels/${user}/${groupName}/${groupId}`)
     },
     // selectedChanel(user,groupName,groupId) {
     //     return instance.get(`/chanels/${user}/${groupName}/${groupId}`).then(response => response.data)

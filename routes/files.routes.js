@@ -3,6 +3,9 @@ const { Router } = express;
 const router = Router()
 import path from 'path';
 import {__dirname} from '../app.js'
+import {defineRole,rightCheck} from '../middlewares/right_access.middleware.js'
+import auth from '../middlewares/auth.middleware.js'
+import roleCheck from '../middlewares/roleCheck.js'
 
 router.get('/file/public/:destination/:filename', async (req, res) => {
     try {

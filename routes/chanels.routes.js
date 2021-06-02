@@ -6,29 +6,34 @@ import Chanel from '../models/Chanel.js'
 import Right from '../models/Right.js'
 import jwt from 'jsonwebtoken'
 import Users_GroupRole from '../models/Users_GroupRoles.js'
+import {defineRole,rightCheck} from '../middlewares/right_access.middleware.js'
+import auth from '../middlewares/auth.middleware.js'
+import roleCheck from '../middlewares/roleCheck.js'
 
-router.post('/chanels/:groupId', async (req, res) => {
+router.post('/chanels/:groupId',auth,defineRole, async (req, res) => {
     try {
+        if(!roleCheck(req.role,['owner','admin','moderator'])) return res.status(401).json({ message: 'Недостаточно прав' })
         let chanelObj = new Chanel({
             name: req.body.name,
             author: req.body.author,
             group: req.body.group,
         });
         let chanel = await chanelObj.save();
-        console.log(chanel)
+        // console.log(chanel)
         let arr = [];
         let hightRoleList = await Users_GroupRole.find({
             group_id: req.body.group,
             $or: [{ role: 'owner' }, { role: 'admin' }],
         })
         hightRoleList = hightRoleList.map(item => item.user_name)
+        if (req.role=='moderator') hightRoleList.push(req.user.name)
         arr.push({ ...req.body.canSee, chanel_id: chanel._id, hightRoleList })
         arr.push({ ...req.body.canWrite, chanel_id: chanel._id, hightRoleList })
         arr.push({ ...req.body.canSeeHistory, chanel_id: chanel._id, hightRoleList })
         arr.push({ ...req.body.canSendFile, chanel_id: chanel._id, hightRoleList })
         let savedArr = []
         for (let item of arr) {
-            console.log(item)
+            // console.log(item)
             let r = new Right(item)
             let right = await r.save()
             savedArr.push(right)
@@ -46,7 +51,7 @@ router.post('/chanels/:groupId', async (req, res) => {
     }
 })
 
-router.get('/chanels/:user/:groupName/:id', async (req, res) => {
+router.get('/chanels/:user/:groupName/:id',auth, async (req, res) => {
     try {
         let chanels = await Chanel
             .find({ group: req.params.id })
@@ -97,12 +102,12 @@ router.get('/chanels/:user/:groupName/:id', async (req, res) => {
 //     }
 //     return res.json(group)
 // });
-router.get('/single_chanel/:id', async (req, res) => {
+router.get('/single_chanel/:id',auth,rightCheck, async (req, res) => {
 
     let group = await Chanel.findById(req.params.id).populate(['author', 'group', "canSee", 'canWrite', 'canSeeHistory', 'canSendFile', 'canAddUsers', 'canDeleteUsers']);
     res.json(group)
 })
-router.put('/invited_can_see/:groupId/:id', async (req, res) => {
+router.put('/invited_can_see/:groupId/:id',auth,defineRole, async (req, res) => {
 
     let group = await Chanel.findOneAndUpdate(
         { _id: req.params.id },
@@ -112,7 +117,7 @@ router.put('/invited_can_see/:groupId/:id', async (req, res) => {
     res.json(group)
 })
 
-router.put('/chanel_rename/:groupId/:chanelId', async (req, res) => {
+router.put('/chanel_rename/:groupId/:chanelId',auth,defineRole, async (req, res) => {
     try {
         await Chanel.updateOne(
             { _id: req.params.chanelId },

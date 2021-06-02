@@ -2,6 +2,9 @@ import express from 'express';
 const { Router } = express;
 const router = Router()
 import Right from '../models/Right.js'
+import {defineRole,rightCheck} from '../middlewares/right_access.middleware.js'
+import auth from '../middlewares/auth.middleware.js'
+import roleCheck from '../middlewares/roleCheck.js'
 
 router.put('/right/update/:groupId/:rightId', async (req, res) => {
     try {

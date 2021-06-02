@@ -1,19 +1,19 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { chatAPI, rolesAPI } from '../../DAL/api';
 import Preloader from '../Preloader/Preloader';
 import AddUsersForm from './AddUsersForm';
 import './Chats.css';
 import CreateChanel from './CreateChanel';
 import Search from './Search';
 import SingleChat from './SingleChat';
+import { chatAPI, rolesAPI } from '../../DAL/api';
 
 function Chats(props) {
     let [group,setGroup]=useState(props.selectedGroup)
     useEffect(async()=>{
         if (props.selectedGroup){
-            let req = await chatAPI.getChanel(props.name,props.selectedGroup.name,props.match.params.groupId);
+            let req = await chatAPI.getChanels(props.name,props.selectedGroup.name,props.match.params.groupId);
             props.setChanels(req.data.chanels)
             localStorage.setItem('right_keys',JSON.stringify(req.data[props.selectedGroup.name]))
         }
@@ -21,9 +21,17 @@ function Chats(props) {
 
     useEffect(async () => {
         let role = await rolesAPI.defineRole(props.name,props.match.params.groupId);
-        localStorage.setItem('role', JSON.stringify(role.data))
+        localStorage.setItem('role', JSON.stringify(role))
     }, [props.match.params.groupId])
+    useEffect(async () => {
+        let role = await axios.get('http://localhost:8001/role_define/' + props.name + '/' + props.match.params.groupId);
+        // props.defineRole(role.data.role)
+        localStorage.setItem('role', JSON.stringify(role.data))
 
+        // let req = await axios.get('http://localhost:8001/chanels/' +props.name+'/'+group.name+'/'+ props.match.params.groupId);
+        // props.setChanels(req.data.chanels)
+    }, [props.match.params.groupId])
+    // let [groups,setGroups]=useState(null);
     return (
         <div className='im_dialogs_col_wrap noselect'>
 
@@ -35,15 +43,13 @@ function Chats(props) {
                     <div className='im_dialogs_scrollable_wrap nano-content' style={{ right: '-17px' }}>
 
                         <div>
-                            <div>
+                            {/* <div>
 
                                 {!JSON.parse(localStorage.getItem('role')) ? null :
                                     JSON.parse(localStorage.getItem('role')).role === 'admin'
                                     ||JSON.parse(localStorage.getItem('role')).role === 'owner'
                                         ? <div onClick={() => { props.setGroupSettingsForm(true) }}>Настроить должности</div>
-                                        : null}
-
-                                {/* <CreateGroup author={props.author} name={props.name} /> */}
+                                        : null} */}
 
                                 {!props.selectedGroup ? <Preloader /> :
                                     !JSON.parse(localStorage.getItem('role')) ? null :
@@ -58,7 +64,7 @@ function Chats(props) {
                                             // />
                                             : null}
 
-                                {!JSON.parse(localStorage.getItem('role')) ? null :
+                              {/*   {!JSON.parse(localStorage.getItem('role')) ? null :
                                     JSON.parse(localStorage.getItem('role')).role === 'admin'
                                     ||JSON.parse(localStorage.getItem('role')).role === 'owner'
                                         ? <AddUsersForm
@@ -76,7 +82,7 @@ function Chats(props) {
                                                 chanels={props.chanels}
                                                 toggleAddUsersForm={props.toggleAddUsersForm} />
                                             : null}
-                            </div>
+                            </div> */}
                         </div>
                         <ul className='nav nav-pills nav-stacked'>
                             {!props.chanels ? <Preloader />

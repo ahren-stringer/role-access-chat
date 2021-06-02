@@ -249,6 +249,7 @@ a.im_dialog .im_short_message_text {
     line-height: 40px;
     font-size: 16px;
     border-bottom: 1px solid;
+    position: relative;
 }
 
     .create_group {
@@ -258,4 +259,21 @@ a.im_dialog .im_short_message_text {
     .group_logo{
         font-size: 16px;
         padding: 11px 0 10px 10px;
+    }
+    .group-contextmenu{
+        background: #fff;
+    border: 1px solid lightgray;
+    padding: 13px;
+    border-radius: 3px;
+    position: absolute;
+    top: 2px;
+    left: 117px;
+    font-size: 14px;
+    line-height: 19px;
+    width: 200px;
+    display: none;
+    z-index: 1;
+    }
+    .group-contextmenu-item{
+        margin-bottom: 7px;
     }

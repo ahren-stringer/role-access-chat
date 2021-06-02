@@ -3,7 +3,9 @@ const { Router } = express;
 const router = Router()
 import Message from '../models/Message.js'
 import File from '../models/File.js'
-import {roleCheck,rightCheck} from '../middlewares/right_access.middleware.js'
+import {defineRole,rightCheck} from '../middlewares/right_access.middleware.js'
+import auth from '../middlewares/auth.middleware.js'
+import roleCheck from '../middlewares/roleCheck.js'
 import multer from 'multer';
 import path from "path";
 

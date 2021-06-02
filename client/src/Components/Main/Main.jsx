@@ -72,7 +72,7 @@ function Main(props) {
         await groupAPI.addUser(props.selectedGroup._id, body)
         props.toggleAddUsersForm(!props.addUsersForm)
     }
-    debugger
+
     return <div>
         <div className='Header'>
             <Header />
