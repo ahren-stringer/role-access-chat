@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Preloader from '../Preloader/Preloader';
 import './Chats.css';
-import { setGroups, SetRightsForm, setSelectedGroup, defineRole,setGroupSettingsForm,toggleAddUsersForm } from '../../redux/groupsReduser'
+import { setGroups, SetRightsForm, setSelectedGroup, defineRole, setGroupSettingsForm, toggleAddUsersForm } from '../../redux/groupsReduser'
 import { groupAPI } from '../../DAL/api';
 import AddUsersForm from './AddUsersForm';
 
@@ -15,7 +15,6 @@ function Groups(props) {
         props.setGroups(req)
     }, [])
     let toggleMenu = (e) => {
-        debugger
         e.preventDefault()
         e.target.nextElementSibling.classList.toggle('open_menu')
     }
@@ -36,14 +35,14 @@ function Groups(props) {
                                 onClick={() => {
                                     props.setSelectedGroup(item)
                                 }}
-                                >
-                                    <div onContextMenu={(e)=>{toggleMenu(e)}}>
-                                        {item.name}
-                                        </div>
-                                
+                            >
+                                <div onContextMenu={(e) => { toggleMenu(e) }}>
+                                    {item.name}
+                                </div>
+
                                 <div className='group-contextmenu'>
                                     <div className='group-contextmenu-item'
-                                    onClick={(e)=>{e.target.parentNode.classList.toggle('open_menu')}}>
+                                        onClick={(e) => { e.target.parentNode.classList.toggle('open_menu') }}>
                                         {!JSON.parse(localStorage.getItem('role')) ? null :
                                             JSON.parse(localStorage.getItem('role')).role === 'admin'
                                                 || JSON.parse(localStorage.getItem('role')).role === 'owner'
@@ -62,7 +61,7 @@ function Groups(props) {
                                                 : null} 
                                     </div>*/}
                                     <div className='group-contextmenu-item'
-                                    onClick={(e)=>{e.target.parentNode.classList.toggle('open_menu')}}>
+                                        onClick={(e) => { e.target.parentNode.classList.toggle('open_menu') }}>
                                         {!JSON.parse(localStorage.getItem('role')) ? null :
                                             JSON.parse(localStorage.getItem('role')).role === 'admin'
                                                 || JSON.parse(localStorage.getItem('role')).role === 'owner'
@@ -100,4 +99,4 @@ let mapStateToProps = (state) => {
         // rightsSetingForm: state.groups.rightsSetingForm
     }
 }
-export default connect(mapStateToProps, { setGroups, SetRightsForm, setSelectedGroup, defineRole,setGroupSettingsForm,toggleAddUsersForm })(Groups);
+export default connect(mapStateToProps, { setGroups, SetRightsForm, setSelectedGroup, defineRole, setGroupSettingsForm, toggleAddUsersForm })(Groups);

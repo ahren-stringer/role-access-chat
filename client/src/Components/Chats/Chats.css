@@ -80,6 +80,11 @@ input[type=search] {
 .im_dialogs_scrollable_wrap .im_dialog_wrap {
     margin-top: 0;
 }
+.im_dialog_wrap{
+    height: 40px;
+    border-bottom: 1px solid lightgrey;
+    position: relative;
+}
 .nav-stacked>li+li {
     margin-top: 2px;
     margin-left: 0;
@@ -248,13 +253,14 @@ a.im_dialog .im_short_message_text {
     height: 40px;
     line-height: 40px;
     font-size: 16px;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid lightgrey;
     position: relative;
 }
 
     .create_group {
-        width: 90%;
+        width: 30%;
         float: left;
+        margin: 10px 30px;
     }
     .group_logo{
         font-size: 16px;
@@ -276,4 +282,21 @@ a.im_dialog .im_short_message_text {
     }
     .group-contextmenu-item{
         margin-bottom: 7px;
+    }
+    .create_chanel_form{
+        float: left;
+        margin: 9px 30px;
+    }
+    .create_chanel_title{
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    .chanel_btn{
+        display: block;
+    margin-top: 10px;
+    }
+    .im_dialog_message_wrap{
+        position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
     }

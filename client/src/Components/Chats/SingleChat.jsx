@@ -8,7 +8,7 @@ function SingleChat(props) {
     }
     return <NavLink to={'/chat/' + props.groupId + '/' + props.chanel._id} activeClassName='active_chat' onClick={selectChat}>
         <li className='im_dialog_wrap'>
-            <a className='im_dialog'>
+            {/* <a className='im_dialog'> */}
                 <div className='im_dialog_meta pull-right text-right'>
                     {/* <div className='im_dialog_date'>
                         12:31 AM
@@ -17,9 +17,9 @@ function SingleChat(props) {
                         1
                                     </span> */}
                 </div>
-                <div className='im_dialog_photo pull-left peer_photo_init'>
+                {/* <div className='im_dialog_photo pull-left peer_photo_init'>
                     <span className='peer_initials nocopy im_dialog_photo user_bgcolor_5'> </span>
-                </div>
+                </div> */}
                 <div className='im_dialog_message_wrap'>
                     <div className='im_dialog_peer'>
                         <span className=''>
@@ -58,7 +58,7 @@ function SingleChat(props) {
                         </div>
                     </div>
                 </div>
-            </a>
+            {/* </a> */}
         </li>
     </NavLink>
 }

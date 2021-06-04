@@ -12,7 +12,6 @@ function ChatContainer(props) {
     let Acces = (right) => {
         let inList;
         inList = right.list.some(item => item == props.name)
-        debugger
         if (props.selectedGroup.author.name==props.name) return true
         if (right.hightRoleList.some(item => item == props.name)) return true
         if ((right.whitelisted && inList) || (!right.whitelisted && !inList)) return true
@@ -30,7 +29,6 @@ function ChatContainer(props) {
             let a = Acces(ChatReq.data.canSee)
             setAccesed(Acces(ChatReq.data.canSee))
             // setAccesed(JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee)
-debugger
             if (JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee) {
 
                 !ChatReq.data.canSee.prevelegion
@@ -67,7 +65,7 @@ debugger
     if (!props.selectedChanel) {
         return (
             <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
-                {/* Выберите чат для общения */}
+                Выберите чат для общения
             </div>
         )
     }

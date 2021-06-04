@@ -45,7 +45,7 @@ const obj = (req, res) => {
     });
 }
 
-router.post('/messages', obj
+router.post('/messages/:chanelId', obj
     // async (req, res) => {
     //     try {
     //         let postData={
@@ -62,8 +62,8 @@ router.post('/messages', obj
     // }
 )
 
-router.get('/messages/:chat', 
-// access, 
+router.get('/messages/:type/:chat', 
+// auth,rightCheck, 
 (req, res) => {
 
     Message.find({ chat: req.params.chat })

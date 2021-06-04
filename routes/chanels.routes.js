@@ -10,9 +10,11 @@ import {defineRole,rightCheck} from '../middlewares/right_access.middleware.js'
 import auth from '../middlewares/auth.middleware.js'
 import roleCheck from '../middlewares/roleCheck.js'
 
-router.post('/chanels/:groupId',auth,defineRole, async (req, res) => {
+router.post('/chanels/:groupId',
+// ,auth,defineRole,
+ async (req, res) => {
     try {
-        if(!roleCheck(req.role,['owner','admin','moderator'])) return res.status(401).json({ message: 'Недостаточно прав' })
+        // if(!roleCheck(req.role,['owner','admin','moderator'])) return res.status(401).json({ message: 'Недостаточно прав' })
         let chanelObj = new Chanel({
             name: req.body.name,
             author: req.body.author,
@@ -51,7 +53,7 @@ router.post('/chanels/:groupId',auth,defineRole, async (req, res) => {
     }
 })
 
-router.get('/chanels/:user/:groupName/:id',auth, async (req, res) => {
+router.get('/chanels/:user/:groupName/:id',auth,rightCheck, async (req, res) => {
     try {
         let chanels = await Chanel
             .find({ group: req.params.id })
@@ -102,7 +104,9 @@ router.get('/chanels/:user/:groupName/:id',auth, async (req, res) => {
 //     }
 //     return res.json(group)
 // });
-router.get('/single_chanel/:id',auth,rightCheck, async (req, res) => {
+router.get('/single_chanel/:id',
+// auth,rightCheck,
+ async (req, res) => {
 
     let group = await Chanel.findById(req.params.id).populate(['author', 'group', "canSee", 'canWrite', 'canSeeHistory', 'canSendFile', 'canAddUsers', 'canDeleteUsers']);
     res.json(group)

@@ -114,4 +114,25 @@ export const setSimpleRoles = (SimpleRoles) => ({ type: "lll", SimpleRoles });
 export const setHistory = (history) => ({ type: SET_HISTORY, history });
 export const setHistoryPopup = (historyPopup) => ({ type: HISTORY_POPUP, historyPopup });
 
+// export const Acces = (right,group,name) =>
+//     async (dispatch) => {
+//         let inList;
+//     inList = right.list.some(item => item == name)
+//     debugger
+//     if (group.author.name==name) return true
+//     if (right.hightRoleList.some(item => item == name)) return true
+//     if ((right.whitelisted && inList) || (!right.whitelisted && !inList)) return true
+//     if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
+//     }
+
+// export let Acces = (right,group,name) => {
+//     let inList;
+//     inList = right.list.some(item => item == name)
+//     debugger
+//     if (group.author.name==name) return true
+//     if (right.hightRoleList.some(item => item == name)) return true
+//     if ((right.whitelisted && inList) || (!right.whitelisted && !inList)) return true
+//     if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
+// }
+
 export default groupsReuser

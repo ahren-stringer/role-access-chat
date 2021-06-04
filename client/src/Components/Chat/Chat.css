@@ -22,7 +22,7 @@
     position: relative;
 }
 .im_history_wrap{
-    height: 275px !important;
+    height: 345px    !important;
     width: 500px !important;
     margin: 0 auto;
 }
@@ -33,8 +33,11 @@
     position: relative;
 }
 .files_list{
-    height: 150px;
-    border: 1px solid;
+    height: 98px;
+    border-top: 1px solid lightgray;
+    /* width: 470px; */
+    margin-bottom: 15px;
+    padding-top: 6px;
 }
 .textarea{
     height: 100px;
@@ -80,17 +83,32 @@
 }
 .inputfile + label{
     font-size: 1.25em;
-    font-weight: 700;
-    background: #11ABB0;
+    background: lightseagreen;
     display: inline-block;
     text-decoration: none;
     letter-spacing: 0;
     color: #fff;
-    padding: 12px 24px;
-    margin-bottom: 18px;
+    padding: 9px 12px;
+    text-align: center;
+    margin-top: 10px;
     border: none;
     cursor: pointer;
     height: auto;
     transition: all .2s ease-in-out;
     border-radius: 3px
+}
+.fileArr{
+position: relative;
+}
+.fileIcon{
+    color: lightsteelblue;
+    font-size: 30px;
+}
+.filename{
+    font-weight: 700;
+    /* padding-bottom: 3px; */
+    position: absolute;
+    top: 8px;
+    color: #5682a3;
+    font-size: 13px;
 }

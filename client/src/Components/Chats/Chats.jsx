@@ -10,33 +10,41 @@ import SingleChat from './SingleChat';
 import { chatAPI, rolesAPI } from '../../DAL/api';
 
 function Chats(props) {
-    let [group,setGroup]=useState(props.selectedGroup)
-    useEffect(async()=>{
-        if (props.selectedGroup){
-            let req = await chatAPI.getChanels(props.name,props.selectedGroup.name,props.match.params.groupId);
+    let [group, setGroup] = useState(props.selectedGroup)
+    useEffect(async () => {
+        if (props.selectedGroup) {
+            let req = await chatAPI.getChanels(props.name, props.selectedGroup.name, props.match.params.groupId);
             props.setChanels(req.data.chanels)
-            localStorage.setItem('right_keys',JSON.stringify(req.data[props.selectedGroup.name]))
+            localStorage.setItem('right_keys', JSON.stringify(req.data[props.selectedGroup.name]))
         }
-    },[props.selectedGroup])
+    }, [props.selectedGroup])
 
     useEffect(async () => {
-        let role = await rolesAPI.defineRole(props.name,props.match.params.groupId);
+        let role = await rolesAPI.defineRole(props.name, props.match.params.groupId);
         localStorage.setItem('role', JSON.stringify(role))
     }, [props.match.params.groupId])
     useEffect(async () => {
         let role = await axios.get('http://localhost:8001/role_define/' + props.name + '/' + props.match.params.groupId);
-        // props.defineRole(role.data.role)
         localStorage.setItem('role', JSON.stringify(role.data))
-
-        // let req = await axios.get('http://localhost:8001/chanels/' +props.name+'/'+group.name+'/'+ props.match.params.groupId);
-        // props.setChanels(req.data.chanels)
     }, [props.match.params.groupId])
-    // let [groups,setGroups]=useState(null);
+    let toggleMenu = (e) => {
+        e.preventDefault()
+        e.target.nextElementSibling.classList.toggle('open_menu')
+    }
     return (
         <div className='im_dialogs_col_wrap noselect'>
 
             {/* <Search /> */}
-            <div className='group_logo'>Чаты</div>
+            <div className='group_logo' onClick={(e)=>{toggleMenu(e)}}>Чаты</div>
+            <div className='group-contextmenu'>
+                {!props.selectedGroup ? <Preloader /> :
+                    !JSON.parse(localStorage.getItem('role')) ? null :
+                        JSON.parse(localStorage.getItem('role')).role === 'admin'
+                            || JSON.parse(localStorage.getItem('role')).role === 'owner'
+                            || JSON.parse(localStorage.getItem('role')).role === 'moderator'
+                            ? <NavLink to='/create_chanel'>Создать чат</NavLink>
+                            : null}
+            </div>
             <div className='im_dialogs_col' style={{ height: '100vh' }}>
                 <div className='im_dialogs_wrap nano has-scrollbar active-scrollbar'>
 
@@ -51,7 +59,7 @@ function Chats(props) {
                                         ? <div onClick={() => { props.setGroupSettingsForm(true) }}>Настроить должности</div>
                                         : null} */}
 
-                                {!props.selectedGroup ? <Preloader /> :
+                            {/* {!props.selectedGroup ? <Preloader /> :
                                     !JSON.parse(localStorage.getItem('role')) ? null :
                                         JSON.parse(localStorage.getItem('role')).role === 'admin'
                                         ||JSON.parse(localStorage.getItem('role')).role === 'owner'
@@ -62,9 +70,9 @@ function Chats(props) {
                                             //     author={props.author}
                                             // //    rightsSetingForm={props.rightsSetingForm}
                                             // />
-                                            : null}
+                                            : null} */}
 
-                              {/*   {!JSON.parse(localStorage.getItem('role')) ? null :
+                            {/*   {!JSON.parse(localStorage.getItem('role')) ? null :
                                     JSON.parse(localStorage.getItem('role')).role === 'admin'
                                     ||JSON.parse(localStorage.getItem('role')).role === 'owner'
                                         ? <AddUsersForm

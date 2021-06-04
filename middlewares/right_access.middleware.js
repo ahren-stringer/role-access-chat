@@ -22,16 +22,16 @@ export let defineRole = async (req, res, next) => {
 }
 export let rightCheck = async (req, res, next) => {
   try {
-    let user= await User.findById(req.user.id)
-    let role = await Right.find({
+    let user= await User.findById(req.user.userId)
+    let right = await Right.find({
       type: req.params.type,
       chanel_id: req.params.chanelId
     })
     if (
-      !role.previlegion
-      ||role.whitelisted && role.list.some(item => item == props.user_name)
-      ||role.blacklisted && !role.list.some(item => item == props.user_name)
-      ||role.whitelisted && hightRolelist.some(item => item == props.user_name)
+      !right.previlegion
+      ||right.whitelisted && right.list.some(item => item == props.user_name)
+      ||!right.whitelisted && !right.list.some(item => item == props.user_name)
+      ||right.whitelisted && hightRolelist.some(item => item == props.user_name)
       ){
         next()
       }

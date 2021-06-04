@@ -56,9 +56,9 @@ export let chatAPI = {
     getChanels(user,groupName,groupId) {
         return instance.get(`/chanels/${user}/${groupName}/${groupId}`)
     },
-    // selectedChanel(user,groupName,groupId) {
-    //     return instance.get(`/chanels/${user}/${groupName}/${groupId}`).then(response => response.data)
-    // },
+    selectedChanel(user,groupName,groupId) {
+        return instance.get(`/chanels/${user}/${groupName}/${groupId}`).then(response => response.data)
+    },
     invited_can_see(groupId,chanelId,reqData){
         return instance.put(`/invited_can_see/${groupId}/${chanelId}`,reqData).then(response => response.data)
     },
@@ -67,11 +67,13 @@ export let chatAPI = {
     },
 }
 export let messagesAPI = {
-    sendMesage(chanelId,reqData) {
+    sendMessage(chanelId,reqData) {
         return instance.post("/messages/"+chanelId, reqData).then(response => response.data)
     },
     getMessages(chanelId) {
-        return instance.get("/messages/"+chanelId).then(response => response.data)
+        return instance.get("/messages/"+'canSee/'+chanelId).then(response =>{ 
+            return response.data
+            })
     },
 }
 export let SearchAPI = {

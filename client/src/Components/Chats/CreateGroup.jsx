@@ -1,3 +1,4 @@
+import { Button, Input } from '@material-ui/core';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { groupAPI } from '../../DAL/api';
@@ -55,7 +56,8 @@ function CreateGroup(props) {
         <div className='create_group'>
 
                 <label for='group_name'>Название группы</label>
-                <input id='group_name' onChange={(e) => { setGroupName(e.target.value) }} value={groupName}></input>
+                <Input id='group_name' onChange={(e) => { setGroupName(e.target.value) }} value={groupName}/>
+                {/* <input id='group_name' onChange={(e) => { setGroupName(e.target.value) }} value={groupName}></input> */}
                 <div>
                     <div>
                         <h2>Выберете участников</h2>
@@ -78,13 +80,22 @@ function CreateGroup(props) {
                                     }
                                     )}
                                 </ul>
-                                <button disabled={partnerArr.length === 0 ? true : false}
+                                {/* <button disabled={partnerArr.length === 0 ? true : false}
                                     onClick={() => {
                                         debugger
                                         createNewGroup()
                                     }}>
                                     Создать группу
-                                </button>
+                                </button> */}
+                                <Button className='chanel_btn' 
+                                variant="contained" 
+                                color="primary"
+                                disabled={partnerArr.length === 0 ? true : false}
+                                    onClick={() => {
+                                        debugger
+                                        createNewGroup()
+                                    }}
+                                >Создать</Button>
                             </div>}
                     </div>
                 </div>

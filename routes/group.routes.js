@@ -72,7 +72,7 @@ async (req, res) => {
     }
 })
 
-router.put('/group_rename/:groupId', async (req, res) => {
+router.put('/group_rename/:groupId',auth,defineRole, async (req, res) => {
     try {
         await Group.updateOne(
             { _id: req.params.groupId },
@@ -85,9 +85,10 @@ router.put('/group_rename/:groupId', async (req, res) => {
 })
 
 router.delete('/group_delete_user/:userName/:groupId',
-// access,
+auth,defineRole,
  async (req, res) => {
     try {
+        if(!roleCheck(req.role,['owner','admin'])) return res.status(401).json({ message: 'Недостаточно прав' })
         // if(req.user.role!=='admin' || req.user.role!=='owner'){
         //     res.json({ message: 'Недостаточно прав' })
         //     return

@@ -3,20 +3,20 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
 import { messagesAPI } from '../../DAL/api';
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 
 function Chat(props) {
-    debugger
     console.log(props.onlineGroupUsers)
     let [text, setText] = useState('');
     let rights = props.selectedChanel.rights;
     let [filesArr, setFilesArr] = useState([]);
 
     let sendMessage = async () => {
-        let formData=new FormData();
-        formData.append('text',text)
+        let formData = new FormData();
+        formData.append('text', text)
         formData.append('user', props.author)
         formData.append('chat', props.selectedChanel._id)
-        filesArr.forEach(function(file) {
+        filesArr.forEach(function (file) {
             formData.append('files', file);
         });
 
@@ -85,16 +85,16 @@ function Chat(props) {
                                                                 <div class="im_message_text" dir="auto">{item.text}</div>
                                                             </div>
                                                             {
-                                                                item.files.length===0? null
-                                                                : <div>
-                                                                    {item.files.map(item=><div>
-                                                                    <a href={'http://localhost:8001/file/'+item.file.destination+item.file.filename}
-                                                                    download
-                                                                    >
-                                                                        {item.file.originalname}
-                                                                    </a>
-                                                                    </div>)}
-                                                                </div> 
+                                                                item.files.length === 0 ? null
+                                                                    : <div>
+                                                                        {item.files.map(item => <div>
+                                                                            <a href={'http://localhost:8001/file/' + item.file.destination + item.file.filename}
+                                                                                download
+                                                                            >
+                                                                                {item.file.originalname}
+                                                                            </a>
+                                                                        </div>)}
+                                                                    </div>
                                                             }
 
                                                         </div>)}
@@ -117,40 +117,43 @@ function Chat(props) {
 
                     </div>
                 </div>
-                {/* {Acces(rights.canWrite) ? */}
-                <div className='files_list'>
-                {
-                    filesArr.length==0? null
-                    :filesArr.map(item=><div>{item.name}</div>)
-                }
-                </div>
+                {/* {props.Acces(props.selectedChanel.canWrite,props.selectedGroup,props.name) ? */}
+                {/* <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '129px', paddingBottom: '229px', borderTop: '1px solid' }}>Вы не можете отправлять сообщения</div> */}
                 <div className='send_message_form'>
+                    <div className='files_list'>
+                        {
+                            filesArr.length == 0 ? null
+                                : filesArr.map(item => <div className='fileArr'>
+                                    <InsertDriveFileIcon className='fileIcon' />
+                                    <span className='filename'>{item.name}</span>
+                                </div>)
+                        }
+                    </div>
                     <textarea name="" id="" cols="30" rows="10"
                         value={text}
                         onChange={(e) => { setText(e.target.value) }}
                         className='textarea'
                     ></textarea>
-                    {/* <span className='send_btn' >
-                        <div> */}
+                    <div className='send_btn'>
+                        <div>
                             <Button variant="contained" color="primary" className='send_btn' onClick={sendMessage}>
                                 Отправить
                             </Button>
-                        {/* </div>
-                        <div> */}
+                        </div>
+                        <div>
                             <input type='file' id="file" className="inputfile" name="file"
-                            multiple
-                                onChange={(e) => { 
+                                multiple
+                                onChange={(e) => {
                                     console.log(e.target.files[0])
-                                    setFilesArr([...filesArr,e.target.files[0]]) 
+                                    setFilesArr([...filesArr, e.target.files[0]])
                                 }}
-                                // className='send_btn'
+                            // className='send_btn'
                             ></input>
-                            <label for="file">Выберите изображение</label>
-                        {/* </div>
-                    </span> */}
-                    {/* <button onClick={sendMessage}>Отправить</button> */}
-                    {/* :<div>У вас отключена возможность писать в этом чате</div>} */}
+                            <label for="file">Прикрепить <br /> файл</label>
+                        </div>
+                    </div>
                 </div>
+        {/* // :null} */}
             </div>
         }
     </div>

@@ -29,39 +29,44 @@ function RightsSetingForm(props) {
         debugger
         e.target.nextElementSibling.classList.toggle('open_menu')
     }
-    let invitedCanSee = async(can) => {
-        await chatAPI.invited_can_see(props.selectedGroup._id,chanel._id, { invitedCanSee: can })
+    let invitedCanSee = async (can) => {
+        await chatAPI.invited_can_see(props.selectedGroup._id, chanel._id, { invitedCanSee: can })
         setICS(can)
     }
 
     let renameChanel = async (newName) => {
-        await chatAPI.renameChanel(props.selectedGroup._id,props.selectedChanel._id, { name: newName })
+        await chatAPI.renameChanel(props.selectedGroup._id, props.selectedChanel._id, { name: newName })
         setRename(!rename)
     }
 
     return <div style={{ height: '100vh' }}>
-        <span onClick={() => { props.SetRightsForm(false) }}>Закрыть</span>
+        <div style={{ margin: '10px' }}>
+            <span onClick={() => { props.SetRightsForm(false) }}
+                className='close'
+            >Закрыть</span>
+        </div>
+        <div className='settings'>
         <h3>Права достуа</h3>
         <div>
             <span>Чат под названием:</span>
-        {
-            (!rename)
-                ? <span>
-                    <span onDoubleClick={() => { setRename(!rename) }}>{props.selectedChanel.name}</span>
-                </span>
-                : <span>
-                    <input autoFocus={true} onBlur={() => {
-                        renameChanel(chanelName)
-                    }}
-                        onChange={(e) => { setChanelName(e.target.value) }}
-                        value={chanelName} />
-                </span>
-        }
+            {
+                (!rename)
+                    ? <span>
+                        <span onDoubleClick={() => { setRename(!rename) }}>{props.selectedChanel.name}</span>
+                    </span>
+                    : <span>
+                        <input autoFocus={true} onBlur={() => {
+                            renameChanel(chanelName)
+                        }}
+                            onChange={(e) => { setChanelName(e.target.value) }}
+                            value={chanelName} />
+                    </span>
+            }
         </div>
         <div>
             {!ICS
-                ? <div onClick={() => { invitedCanSee(true) }}>Разрешить просматривать сообщения приглашенным пользователям</div>
-                : <div onClick={() => { invitedCanSee(false) }}>Запретить просматривать сообщения приглашенным пользователям</div>
+                ? <div style={{cursor:'pointer'}} onClick={() => { invitedCanSee(true) }}>Разрешить просматривать сообщения приглашенным пользователям</div>
+                : <div style={{cursor:'pointer'}} onClick={() => { invitedCanSee(false) }}>Запретить просматривать сообщения приглашенным пользователям</div>
             }
         </div>
         {!props.SimpleRoles ? null : <ul className='role_list'>
@@ -70,48 +75,42 @@ function RightsSetingForm(props) {
                     <div className='role_item_name'
                         onClick={(e) => {
                             if (JSON.parse(localStorage.getItem('role')).role === 'owner'
-                                || JSON.parse(localStorage.getItem('role')).role === 'admin') toggleMenu(e)
+                                || JSON.parse(localStorage.getItem('role')).role === 'admin'
+                                || JSON.parse(localStorage.getItem('role')).role === 'moderator') toggleMenu(e)
                         }}
                     >
                         {item.user_name}
                     </div>
                     <div className='react-contextmenu'>
-                    <RightsMenu
-                        rightId={chanel.canSee._id}
-                        user_name={item.user_name}
-                        rightTitle='Право на посещение'
-                        chanel={chanel}
-                        right={chanel.canSee}
-                        group={props.selectedGroup}
-                    />
-                    <RightsMenu
-                        rightId={chanel.canWrite._id}
-                        user_name={item.user_name}
-                        rightTitle='Право на отправку'
-                        chanel={chanel}
-                        right={chanel.canWrite}
-                        group={props.selectedGroup}
-                    />
-                    <RightsMenu
-                        rightId={chanel.canSendFile._id}
-                        user_name={item.user_name}
-                        rightTitle='Право на отправку файлов'
-                        chanel={chanel}
-                        right={chanel.canSendFile}
-                        group={props.selectedGroup}
-                    />
-                    <RightsMenu
-                        rightId={chanel.canSeeHistory._id}
-                        user_name={item.user_name}
-                        rightTitle='Право на просмотр истории'
-                        chanel={chanel}
-                        right={chanel.canSeeHistory}
-                        group={props.selectedGroup}
-                    />
+                        <RightsMenu
+                            rightId={chanel.canSee._id}
+                            user_name={item.user_name}
+                            rightTitle='Право на посещение'
+                            chanel={chanel}
+                            right={chanel.canSee}
+                            group={props.selectedGroup}
+                        />
+                        <RightsMenu
+                            rightId={chanel.canWrite._id}
+                            user_name={item.user_name}
+                            rightTitle='Право на отправку'
+                            chanel={chanel}
+                            right={chanel.canWrite}
+                            group={props.selectedGroup}
+                        />
+                        <RightsMenu
+                            rightId={chanel.canSendFile._id}
+                            user_name={item.user_name}
+                            rightTitle='Право на отправку файлов'
+                            chanel={chanel}
+                            right={chanel.canSendFile}
+                            group={props.selectedGroup}
+                        />
                     </div>
                 </li>
             )}
         </ul>}
+        </div>
         {/* <ul>
             <SingleRightSettings
                 title='Участники, которым разрешено посещать канал'

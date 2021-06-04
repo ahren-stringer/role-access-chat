@@ -1,3 +1,4 @@
+import { Button, Input } from '@material-ui/core';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { chatAPI } from '../../DAL/api';
@@ -43,16 +44,21 @@ function CreateChanel(props) {
     };
     return (
         
-        <div>
-            <div 
+        <div className='create_chanel_form'>
+            <div className='create_chanel_title'
             // onClick={() => { setCreateForm(!createForm) }}
             >Создать Канал</div>
             {/* {!createForm ? null :  */}
             <div>
-                <input value={text}
-                    onChange={(e) => { setText(e.target.value) }}></input>
-                <button onClick={Chanel}>Создать</button>
-                <div onClick={() => { props.SetRightsForm('new_chanel') }}>Настроить права доступа</div>
+            <Input value={text}
+                    onChange={(e) => { setText(e.target.value) }} 
+                    inputProps={{ 'aria-label': 'description' }} 
+                    />
+                {/* <input value={text}
+                    onChange={(e) => { setText(e.target.value) }}></input> */}
+                    <Button onClick={Chanel} className='chanel_btn' variant="contained" color="primary">Создать</Button>
+                {/* <button onClick={Chanel}>Создать</button> */}
+                {/* <div onClick={() => { props.SetRightsForm('new_chanel') }}>Настроить права доступа</div> */}
             </div>
             {/* } */}
         </div>

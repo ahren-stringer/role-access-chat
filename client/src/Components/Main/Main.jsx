@@ -37,15 +37,12 @@ function Main(props) {
             group_id: props.selectedGroup._id
         }
         if (partnerArr.some(item => item === name)) {
-            debugger
             let index = partnerArr.indexOf(name);
             partnerArr.splice(index, 1);
-            debugger
             setPartner(partnerArr)
             setRoles(roles.splice(index, 1))
             e.target.style.backgroundColor = ''
         } else {
-            debugger
             setPartner([...partnerArr, name])
             setRoles([...roles, role])
             e.target.style.backgroundColor = 'blueviolet'
