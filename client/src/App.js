@@ -10,6 +10,17 @@ import { setOnlineGroupUsers, deleteOnlineGroupUsers } from './redux/groupsRedus
 import { pushMessage } from './redux/messagesReduser'
 export const socket = io('http://localhost:8001', { autoConnect: false });
 
+export let Acces = (right,name) => {
+  let inList;
+  inList = right.list.some(item => item == name)
+  // if (props.selectedGroup.author.name==props.name) return true
+  if (right.whitelisted==null && inList) return true
+  if (right.hightRoleList.some(item => item == name)) return true
+  if (right.whitelisted==null && !inList) return false
+  if ((right.whitelisted && inList) || (!right.whitelisted && !inList)) return true
+  if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
+}
+
 function App(props) {
   socket.on('test comand', data => {
     console.log("connected: " + JSON.stringify(data))

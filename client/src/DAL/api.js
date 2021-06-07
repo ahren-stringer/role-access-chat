@@ -65,6 +65,9 @@ export let chatAPI = {
     renameChanel(groupId,chanelId,reqData){
         return instance.put(`/chanel_rename/${groupId}/${chanelId}`,reqData).then(response => response.data)
     },
+    deleteChanel(chanelId){
+        return instance.delete(`/delete_chanel/${chanelId}`).then(response => response.data)
+    },
 }
 export let messagesAPI = {
     sendMessage(chanelId,reqData) {

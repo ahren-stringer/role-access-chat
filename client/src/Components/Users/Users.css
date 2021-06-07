@@ -1,0 +1,18 @@
+.form_wrapp{
+    width: 500px;
+    margin: 30px 20px;
+}
+.text-search{
+    height: 32px;
+    border: none;
+    border-bottom: 1px solid;
+    margin-right: 10px;
+}
+.text-search{
+    list-style: none;
+    border: 1px solid lightgray;
+    width: 183px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+}

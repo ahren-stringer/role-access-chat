@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Button } from '@material-ui/core';
 import { messagesAPI } from '../../DAL/api';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import {Acces, socket} from '../../App'
 
 function Chat(props) {
     console.log(props.onlineGroupUsers)
@@ -22,20 +23,20 @@ function Chat(props) {
 
         let message = await messagesAPI.sendMessage(props.selectedChanel._id, formData)
         props.pushMessage(message)
-        // for (let user of props.onlineGroupUsers) {
+        for (let user of props.onlineGroupUsers) {
 
-        //     socket.emit("send message", {
-        //         content: {
-        //             chanel: props.selectedChanel,
-        //             group: props.selectedGroup,
-        //             message: message.data
-        //         },
-        //         to: user.userID,
-        //     });
-        // }
-        // socket.on("chat message", ({ content, from }) => {
-        //     console.log(content, from)
-        // });
+            socket.emit("send message", {
+                content: {
+                    chanel: props.selectedChanel,
+                    group: props.selectedGroup,
+                    message: message
+                },
+                to: user.userID,
+            });
+        }
+        socket.on("chat message", ({ content, from }) => {
+            console.log(content, from)
+        });
 
     };
     return <div className='im_history_col_wrap noselect im_history_loaded'>
@@ -118,8 +119,9 @@ function Chat(props) {
                     </div>
                 </div>
                 {/* {props.Acces(props.selectedChanel.canWrite,props.selectedGroup,props.name) ? */}
-                {/* <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '129px', paddingBottom: '229px', borderTop: '1px solid' }}>Вы не можете отправлять сообщения</div> */}
-                <div className='send_message_form'>
+                {!Acces(props.selectedChanel.canWrite, props.name)
+                ?<div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '129px', paddingBottom: '229px', borderTop: '1px solid' }}>Вы не можете отправлять сообщения</div>
+                :<div className='send_message_form'>
                     <div className='files_list'>
                         {
                             filesArr.length == 0 ? null
@@ -140,7 +142,7 @@ function Chat(props) {
                                 Отправить
                             </Button>
                         </div>
-                        <div>
+                        {!Acces(props.selectedChanel.canSendFile, props.name)?null:<div>
                             <input type='file' id="file" className="inputfile" name="file"
                                 multiple
                                 onChange={(e) => {
@@ -150,9 +152,9 @@ function Chat(props) {
                             // className='send_btn'
                             ></input>
                             <label for="file">Прикрепить <br /> файл</label>
-                        </div>
+                        </div>}
                     </div>
-                </div>
+                </div>}
         {/* // :null} */}
             </div>
         }

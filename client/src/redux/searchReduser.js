@@ -76,6 +76,7 @@ export const searchThunk = (search, requestNumber, userId) =>
         dispatch(toggleList(true))
         dispatch(loadList(true))
         let req
+        debugger
         if (search) req = await SearchAPI.getSearchList(search,userId)
         dispatch(setReqNumber(+requestNumber + 1))
         dispatch(setSearched({ requestNumber, request: req }))

@@ -7,16 +7,10 @@ import { setSelectedGroup, setSelected, setOnlineGroupUsers, setSelectedChanel }
 import { withRouter } from 'react-router';
 import { socket } from '../../App';
 import { messagesAPI } from '../../DAL/api';
+import {Acces} from '../../App'
+
 function ChatContainer(props) {
 
-    let Acces = (right) => {
-        let inList;
-        inList = right.list.some(item => item == props.name)
-        if (props.selectedGroup.author.name==props.name) return true
-        if (right.hightRoleList.some(item => item == props.name)) return true
-        if ((right.whitelisted && inList) || (!right.whitelisted && !inList)) return true
-        if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
-    }
     let [accesed, setAccesed] = useState(null);
     useEffect(async () => {
         let chanelId = props.match.params.chanelId;
@@ -26,8 +20,8 @@ function ChatContainer(props) {
             let ChatReq = await axios.get('http://localhost:8001/single_chanel/' + chanelId);
             props.setSelectedChanel(ChatReq.data)
             console.log('ChatReq.data', ChatReq.data)
-            let a = Acces(ChatReq.data.canSee)
-            setAccesed(Acces(ChatReq.data.canSee))
+            let a = Acces(ChatReq.data.canSee, props.name)
+            setAccesed(Acces(ChatReq.data.canSee, props.name))
             // setAccesed(JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee)
             if (JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee) {
 

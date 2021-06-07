@@ -1,4 +1,4 @@
-import { AppBar, Box, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
+import { AppBar, Box, Button, Input, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
 import axios from 'axios';
 import React from 'react';
 import { useEffect, useState } from 'react';
@@ -43,7 +43,9 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
+        width: '500px',
+        marginTop: '30px',
+        // backgroundColor: theme.palette.background.paper,
     },
 }));
 
@@ -82,10 +84,15 @@ function UsersList(props) {
         })
     }
     return <div style={{ height: '100vh' }}>
+        <div className='form_wrapp'>
         <form action="#" className='searching-form'>
-            <h3>Найти и отправить инвайт</h3>
+            <h3>Найти и отправить приглошение</h3>
             <input className="text-search" type="text" value={props.newSearchText}
-                onChange={() => { props.searchThunk(searchInput.current.value, props.requestNumber,props.author) }}
+                onChange={(e) => { 
+                    debugger
+                    e.preventDefault()
+                    props.searchThunk(searchInput.current.value, props.requestNumber,props.author) 
+                }}
                 ref={searchInput}
                 name="s"
                 placeholder="Искать здесь..." />
@@ -95,9 +102,11 @@ function UsersList(props) {
                         props.CloseListThunk()
                         props.SearchChange('')
                     }}>
-                        <input type="submit" className="submit-search" value="" />
+                        <Button variant="contained" color="primary">Найти</Button>
+                        {/* <input type="submit" className="submit-search" value="" /> */}
                     </NavLink>
-                    : <input type="submit" disabled='true' className="submit-search" value="" />
+                    : <Button disabled='true' variant="contained" color="primary">Найти</Button>
+                    // <input type="submit" disabled='true' className="submit-search" value="" />
             }
             {props.isListLoading ? <div className='preloader'>
                 <Preloader />
@@ -137,7 +146,7 @@ function UsersList(props) {
             }
         </form>
         <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position="static" color='black' backdtound='#fff' boxShadow='none' style={{ boxShadow:'none'}}>
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
                     <Tab label="Контакты" {...a11yProps(0)} />
                     <Tab label="Приглошения" {...a11yProps(1)} />
@@ -174,7 +183,7 @@ function UsersList(props) {
                                 <button onClick={()=>{stopWait(item._id,false)}}>Принять</button>
                                 <button 
                                 // onClick={()=>{stopWait(item._id,false)}}
-                                >Пошел нахуй</button>
+                                >Отклонить</button>
                             </div>
                         )
                 }
@@ -190,6 +199,7 @@ function UsersList(props) {
                         )
                 }
       </TabPanel>
+        </div>
         </div>
     </div>
 }

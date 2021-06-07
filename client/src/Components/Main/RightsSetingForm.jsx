@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import SingleRightSettings from "./SingleRightSettings";
 import RightsMenu from "./RightsMenu";
 import { chatAPI, rolesAPI } from "../../DAL/api";
+import { Button } from "@material-ui/core";
 function RightsSetingForm(props) {
     let [rename, setRename] = useState(false)
     let [chanelName, setChanelName] = useState(props.selectedChanel.name);
@@ -110,37 +111,15 @@ function RightsSetingForm(props) {
                 </li>
             )}
         </ul>}
+        <Button style={{
+                background: 'red',
+                color: 'white',
+                fontWeight: '700',
+                marginTop: '120px',
+        }}
+        onClick={()=>{chatAPI.deleteChanel(props.selectedChanel._id)}}
+        >Удалить чат</Button>
         </div>
-        {/* <ul>
-            <SingleRightSettings
-                title='Участники, которым разрешено посещать канал'
-                right={chanel.canSee}
-                group={props.selectedGroup}
-                setSimpleRoles={props.setSimpleRoles}
-                SimpleRoles={props.SimpleRoles}
-            />
-            <SingleRightSettings
-                title='Участники, которым отпровлять сообщения'
-                right={chanel.canWrite}
-                group={props.selectedGroup}
-                setSimpleRoles={props.setSimpleRoles}
-                SimpleRoles={props.SimpleRoles}
-            />
-            <SingleRightSettings
-                title='Участники, которым разрешено смотреть историю'
-                right={chanel.canSeeHistory}
-                group={props.selectedGroup}
-                setSimpleRoles={props.setSimpleRoles}
-                SimpleRoles={props.SimpleRoles}
-            />
-            <SingleRightSettings
-                title='Участники, которым разрешено отправлять файлы'
-                right={chanel.canSendFile}
-                group={props.selectedGroup}
-                setSimpleRoles={props.setSimpleRoles}
-                SimpleRoles={props.SimpleRoles}
-            />
-        </ul> */}
     </div>
 }
 let mapStateToProps = (state) => {

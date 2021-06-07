@@ -10,11 +10,17 @@ function CreateChanel(props) {
     for (let partner of props.selectedGroup.partners) {
         namesInGroups.push(partner)
     }
-    function Right(type,list) {
+    //  simpl
+    // useEffect(async () => {
+    //     let req = await axios.get('http://localhost:8001/friends/' + props.author);
+    //     setUsersList(req.data)
+    // }, [])
+
+    function Right(type) {
         this.type=type;
         this.prevelegion = false;
         this.listType = null;
-        this.list = list;
+        // this.list = list;
         this.group_id=props.selectedGroup._id;
         // this.hightRoleList:{type:Array,default:[]},
     }
@@ -25,10 +31,10 @@ function CreateChanel(props) {
             name: text,
             author: props.author,
             group: props.selectedGroup._id,
-            canSee: new Right('canSee',[]),
-            canWrite: new Right('canWrite',[]),
-            canSeeHistory: new Right('canSeeHistory',[]),
-            canSendFile: new Right('canSendFile',[]),
+            canSee: new Right('canSee'),
+            canWrite: new Right('canWrite'),
+            canSeeHistory: new Right('canSeeHistory'),
+            canSendFile: new Right('canSendFile'),
         })
         // for (let user of props.onlineGroupUsers) {
 
@@ -47,7 +53,7 @@ function CreateChanel(props) {
         <div className='create_chanel_form'>
             <div className='create_chanel_title'
             // onClick={() => { setCreateForm(!createForm) }}
-            >Создать Канал</div>
+            >Создать Чат</div>
             {/* {!createForm ? null :  */}
             <div>
             <Input value={text}
