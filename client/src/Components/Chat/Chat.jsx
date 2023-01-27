@@ -1,38 +1,36 @@
 import './Chat.css';
-import { io } from "socket.io-client";
-import { socket } from '../../App';
-import Preloader from '../Preloader/Preloader';
 import { useState } from 'react';
 import axios from 'axios';
+import { Button } from '@material-ui/core';
+import { messagesAPI } from '../../DAL/api';
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import {Acces, socket} from '../../App'
+
 function Chat(props) {
     console.log(props.onlineGroupUsers)
     let [text, setText] = useState('');
     let rights = props.selectedChanel.rights;
-
-    let Acces = (right) => {
-        let inList, listType;
-        for (let list in right) {
-            if (right[list]) {
-                debugger
-                inList = right[list].some(item => item == props.name)
-                listType = list
-            }
-        }
-        if ((listType == 'blacklist' && inList) || (listType == 'whitelist' && !inList)) return false
-        if ((listType == 'whitelist' && inList) || (listType == 'blacklist' && !inList)) return true
-    }
+    let [filesArr, setFilesArr] = useState([]);
 
     let sendMessage = async () => {
-        let message = await axios.post('http://localhost:8001/messages', {
-            text,
-            user: props.author,
-            chat: props.selectedChanel,
-            // onlineGroupUsers: props.onlineGroupUsers
-        })
+        let formData = new FormData();
+        formData.append('text', text)
+        formData.append('user', props.author)
+        formData.append('chat', props.selectedChanel._id)
+        filesArr.forEach(function (file) {
+            formData.append('files', file);
+        });
+
+        let message = await messagesAPI.sendMessage(props.selectedChanel._id, formData)
+        props.pushMessage(message)
         for (let user of props.onlineGroupUsers) {
 
-            socket.emit("chat message", {
-                content: message,
+            socket.emit("send message", {
+                content: {
+                    chanel: props.selectedChanel,
+                    group: props.selectedGroup,
+                    message: message
+                },
                 to: user.userID,
             });
         }
@@ -48,7 +46,7 @@ function Chat(props) {
             </div>
         </div>
             : <div className='im_history_selected_wrap'>
-                <div className="im_history_wrap nano has-scrollbar active-scrollbar" style={{ height: '370px' }}>
+                <div className="im_history_wrap nano has-scrollbar active-scrollbar">
                     <div className='im_history_scrollable_wrap nano-content' style={{ marginRight: '-17px' }}>
                         <div className=''>
                             <div className='im_history im_history_selectable'>
@@ -74,24 +72,31 @@ function Chat(props) {
                                                                 <span class="im_message_date_text nocopy"></span>
                                                             </span>
                                                         </div>
-                                                        <div>
+                                                        {/* <div>
                                                             {!props.selectedChanel
                                                                 ? <Preloader />
                                                                 : props.selectedChanel.name
                                                             }
-                                                        </div>
+                                                        </div> */}
                                                         {props.messages.map(item => <div class="im_message_body">
 
-                                                            <span class="im_message_author_wrap">
-                                                                <span class="copyonly">[<span>{item.createdAt}</span>] </span><a class="im_message_author user_color_5">{item.user.name}</a><span class="copyonly">:</span><span class="im_message_author_admin" style={{ display: 'none' }}></span>
-                                                            </span>
+                                                            <span className='message_name'>{item.user.name}</span>
 
-                                                            <div my-message-body="historyMessage">
+                                                            <div className="historyMessage">
                                                                 <div class="im_message_text" dir="auto">{item.text}</div>
-                                                                {/* <div class="im_message_media" style="display: none;"></div>
-                                                                <div class="im_message_sign" style="display: none;"></div>
-                                                                <div class="im_message_keyboard" style="display: none;"></div> */}
                                                             </div>
+                                                            {
+                                                                item.files.length === 0 ? null
+                                                                    : <div>
+                                                                        {item.files.map(item => <div>
+                                                                            <a href={'http://localhost:8001/file/' + item.file.destination + item.file.filename}
+                                                                                download
+                                                                            >
+                                                                                {item.file.originalname}
+                                                                            </a>
+                                                                        </div>)}
+                                                                    </div>
+                                                            }
 
                                                         </div>)}
 
@@ -113,15 +118,44 @@ function Chat(props) {
 
                     </div>
                 </div>
-                <div className=''>
-                    {Acces(rights.canWrite) ? <div>
-                        <button onClick={sendMessage}>Отправить</button>
-                        <textarea name="" id="" cols="30" rows="10"
-                            value={text}
-                            onChange={(e) => { setText(e.target.value) }}></textarea>
+                {/* {props.Acces(props.selectedChanel.canWrite,props.selectedGroup,props.name) ? */}
+                {!Acces(props.selectedChanel.canWrite, props.name)
+                ?<div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '129px', paddingBottom: '229px', borderTop: '1px solid' }}>Вы не можете отправлять сообщения</div>
+                :<div className='send_message_form'>
+                    <div className='files_list'>
+                        {
+                            filesArr.length == 0 ? null
+                                : filesArr.map(item => <div className='fileArr'>
+                                    <InsertDriveFileIcon className='fileIcon' />
+                                    <span className='filename'>{item.name}</span>
+                                </div>)
+                        }
                     </div>
-                    :<div>У вас отключена возможность писать в этом чате</div>}
-                </div>
+                    <textarea name="" id="" cols="30" rows="10"
+                        value={text}
+                        onChange={(e) => { setText(e.target.value) }}
+                        className='textarea'
+                    ></textarea>
+                    <div className='send_btn'>
+                        <div>
+                            <Button variant="contained" color="primary" className='send_btn' onClick={sendMessage}>
+                                Отправить
+                            </Button>
+                        </div>
+                        {!Acces(props.selectedChanel.canSendFile, props.name)?null:<div>
+                            <input type='file' id="file" className="inputfile" name="file"
+                                multiple
+                                onChange={(e) => {
+                                    console.log(e.target.files[0])
+                                    setFilesArr([...filesArr, e.target.files[0]])
+                                }}
+                            // className='send_btn'
+                            ></input>
+                            <label for="file">Прикрепить <br /> файл</label>
+                        </div>}
+                    </div>
+                </div>}
+        {/* // :null} */}
             </div>
         }
     </div>

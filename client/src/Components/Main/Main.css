@@ -1,6 +1,6 @@
 .im_page_wrap {
     background: #fff;
-    max-width: 1010px;
+    max-width: 1200px;
     min-width: 300px;
     margin: 0 auto;
     -webkit-box-shadow: 0px 1px 0 #dfe5ec;
@@ -93,7 +93,7 @@
     background: #06D85F;
   } */
   
-  .overlay {
+  .add_users_form, .overlay {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -141,7 +141,59 @@
     max-height: 30%;
     overflow: auto;
   }
-  
+  .user_list{
+    list-style: none;
+    padding: 0;
+  }
+  .user_item{
+    cursor: pointer;
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid lightgrey;
+  }
+  .chosen_item{
+    background-color: blueviolet;
+  }
+  .role_list{
+    list-style: none;
+    max-width: 212px;
+  }
+  .role_item{
+    position: relative;
+  }
+  .role_item_name{
+    border-bottom: 1px solid lightgray;
+  }
+  .react-contextmenu{
+    background: #fff;
+    border: 1px solid lightgray;
+    padding: 13px;
+    border-radius: 3px;
+    
+    position: absolute;
+    top: 2px;
+    left: 217px;
+    width: 100%;
+    display: none;
+  }
+  .react-contextmenu-item{
+    margin-bottom: 7px;
+    cursor: pointer;
+  }
+  .open_menu{
+    display: block !important;
+  }
+  .close{
+    border: 2px solid lightgrey;
+    border-radius: 5px;
+    margin: 16px;
+    cursor: pointer;
+  }
+  .settings {
+    margin: 30px 24px;
+    width: 500px;
+}
   @media screen and (max-width: 700px){
     .box{
       width: 70%;

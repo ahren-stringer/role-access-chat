@@ -6,6 +6,11 @@ const DELETE_ONLINE_GROUP_USER = 'groupsReuser/DELETE_ONLINE_GROUP_USER';
 const SET_RIGHTS_FORM = 'groupsReuser/SET_RIGHTS_FORM';
 const SET_CHANELS = 'groupsReuser/SET_CHANELS';
 const SET_SELECTED_CHANEL = 'groupsReuser/SET_SELECTED_CHANEL';
+const GROUP_FORM = 'groupsReuser/GROUP_FORM';
+const ROLE = 'groupsReuser/ROLE';
+const ADD_USERS_FORM = 'groupsReuser/ADD_USERS_FORM';
+const HISTORY_POPUP = 'groupsReuser/HISTORY_POPUP';
+const SET_HISTORY = 'groupsReuser/SET_HISTORY';
 
 let init = {
     selected: false,
@@ -15,14 +20,12 @@ let init = {
     onlineGroupUsers: [],
     chanels: null,
     rightsSetingForm: null,
-    rights: {
-        whitelist: [],
-        canWrite: [],
-        canSeeHistory: [],
-        canSendFile: [],
-        canAddUsers: [],
-        canDeleteUsers: [],
-    },
+    groupForm: null,
+    role: null,
+    addUsersForm: false,
+    SimpleRoles: null,
+    history: null,
+    historyPopup: false,
 };
 
 const groupsReuser = (state = init, action) => {
@@ -41,6 +44,16 @@ const groupsReuser = (state = init, action) => {
             return { ...state, rightsSetingForm: action.rightsSetingForm }
         case SET_CHANELS:
             return { ...state, chanels: action.chanels }
+        case GROUP_FORM:
+            return { ...state, groupForm: action.groupForm }
+        case ADD_USERS_FORM:
+            return { ...state, addUsersForm: action.addUsersForm }
+        case "lll":
+            return { ...state, SimpleRoles: action.SimpleRoles }
+        case HISTORY_POPUP:
+            return { ...state, historyPopup: action.historyPopup }
+        case SET_HISTORY:
+            return { ...state, history: action.history }
         case SET_ONLINE_GROUP_USERS:
             // let prev = state.onlineGroupUsers;
             // let act = action.onlineGroupUsers;
@@ -67,6 +80,20 @@ const groupsReuser = (state = init, action) => {
                 ...state,
                 onlineGroupUsers: arr
             }
+        case ROLE:
+            // let role;
+            // outer:for (let key in action.group){
+            //     if(typeof action.group[key]==='object'){
+            //         for(let i=0;i<action.group[key].length;i++){
+            //             if (action.group[key][i]==action.name){
+            //                 debugger
+            //                 role=key
+            //                 break outer
+            //             }
+            //         }
+            //     }
+            // }
+            return { ...state, role: action.role }
         default:
             return state
     }
@@ -80,5 +107,32 @@ export const deleteOnlineGroupUsers = (disconnectedGroupUser) => ({ type: DELETE
 export const SetRightsForm = (rightsSetingForm) => ({ type: SET_RIGHTS_FORM, rightsSetingForm });
 export const setChanels = (chanels) => ({ type: SET_CHANELS, chanels });
 export const setSelectedChanel = (selectedChanel) => ({ type: SET_SELECTED_CHANEL, selectedChanel });
+export const setGroupSettingsForm = (groupForm) => ({ type: GROUP_FORM, groupForm });
+export const defineRole = (role) => ({ type: ROLE, role });
+export const toggleAddUsersForm = (addUsersForm) => ({ type: ADD_USERS_FORM, addUsersForm });
+export const setSimpleRoles = (SimpleRoles) => ({ type: "lll", SimpleRoles });
+export const setHistory = (history) => ({ type: SET_HISTORY, history });
+export const setHistoryPopup = (historyPopup) => ({ type: HISTORY_POPUP, historyPopup });
+
+// export const Acces = (right,group,name) =>
+//     async (dispatch) => {
+//         let inList;
+//     inList = right.list.some(item => item == name)
+//     debugger
+//     if (group.author.name==name) return true
+//     if (right.hightRoleList.some(item => item == name)) return true
+//     if ((right.whitelisted && inList) || (!right.whitelisted && !inList)) return true
+//     if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
+//     }
+
+// export let Acces = (right,group,name) => {
+//     let inList;
+//     inList = right.list.some(item => item == name)
+//     debugger
+//     if (group.author.name==name) return true
+//     if (right.hightRoleList.some(item => item == name)) return true
+//     if ((right.whitelisted && inList) || (!right.whitelisted && !inList)) return true
+//     if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
+// }
 
 export default groupsReuser

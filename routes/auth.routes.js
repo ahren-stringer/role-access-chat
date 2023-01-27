@@ -77,7 +77,7 @@ router.post(
             }
 
             const token = jwt.sign({ userId: user.id },
-                'TopSecret', { expiresIn: '24h' }
+                'TopSecret', { expiresIn: '240000000000' }
             )
             console.log(user)
             res.json({

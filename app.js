@@ -7,10 +7,18 @@ import users from './routes/users.routes.js'
 import dialogs from './routes/dialogs.routes.js'
 import groups from './routes/group.routes.js'
 import chanels from './routes/chanels.routes.js'
+import rights from './routes/rights.rotes.js'
+import roles from './routes/roles.routes.js'
+import frendship from './routes/frendship.routes.js'
+import files from './routes/files.routes.js'
+import history from './routes/history.routes.js'
 import httpServer from "http"
 import * as socket from "socket.io"
 import Group from './models/Group.js'
-import { group } from 'console'
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+export const __dirname = path.dirname(__filename);
 // import updateLastSeen from  './middlewares/updateLastSeen.js'
 // import checkAuth from  './middlewares/checkAuth.js'
 // import category from  './routes/category.routes.js'
@@ -46,7 +54,16 @@ app.use('', dialogs)
 app.use('', groups)
 //     Каналы
 app.use('', chanels)
-
+//     Каналы
+app.use('', rights)
+//     Роли
+app.use('', roles)
+//     Дружба
+app.use('', frendship)
+//     Файлы
+app.use('', files)
+//     История
+app.use('', history)
 // usernames which are currently connected to the chat
 var usernames = {};
 
@@ -56,14 +73,14 @@ var rooms = ['first', 'room2', 'room3'];
 io.on('connection', async (socket) => {
   socket.emit("test comand", '1111111111111');
   console.log('jjjjjjjjj')
-  await socket.on('userId', async (Id) => {
-    console.log(Id)
+  await socket.on('userId', async (name) => {
+    console.log(name)
     let groups = await Group.find().populate(['author']);
     let arr = [];
     for (let group of groups) {
-      if (group.author._id == Id) arr.push(group)
+      if (group.author.name == name) arr.push(group)
       for (let partner of group.partners) {
-        if (partner.id === Id) arr.push(group)
+        if (partner === name) arr.push(group)
       }
     }
     // let groupsNames=arr.map(item=>item.name);
@@ -71,7 +88,7 @@ io.on('connection', async (socket) => {
     for (let group of arr) {
       namesInGroups.push(group.author.name)
       for (let partner of group.partners) {
-        namesInGroups.push(partner.name)
+        namesInGroups.push(partner)
       }
     }
     console.log(Array.from(new Set(namesInGroups)))
@@ -98,17 +115,17 @@ io.on('connection', async (socket) => {
     // socket.emit("groups", arr);
   })
   socket.on('selectChat', (list) => {
-    let WLusers;
-    if (list.type == 'whitelist') {
-      WLusers = list.users
-    } else {
-      let WLusers = [list.group.author.name,
-      ...list.group.partners.map(item => item.name)];
-    }
+    // let WLusers;
+    // if (list.type == 'whitelist') {
+    //   WLusers = list.users
+    // } else {
+    //   WLusers = [list.group.author.name,
+    //   ...list.group.partners.map(item => item.name)];
+    // }
     // console.log('whitelist', whitelist)
     const users = [];
     for (let [id, socket] of io.of("/").sockets) {
-      for (let name of WLusers) {
+      for (let name of list.users) {
         if (socket.username === name) {
           users.push({
             userID: id,
@@ -133,13 +150,15 @@ io.on('connection', async (socket) => {
       },
     });
   });
-  socket.on("chat message", ({ content, to }) => {
-    socket.to(to).emit("chat message", {
+  socket.on("send message", ({ content, to }) => {
+    console.log(content)
+    socket.to(to).emit("send message to all", {
       content,
-      from: {
-        username: socket.username,
-        userId: socket.id
-      },
+      from: 'ssssss'
+      // {
+      //   username: socket.username,
+      //   userId: socket.id
+      // },
     });
   });
   socket.on('disconnect', function () {
@@ -202,7 +221,6 @@ mongoose.connect(connection_url, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true
-
 })
 
 mongoose.connection.on('error', err => {

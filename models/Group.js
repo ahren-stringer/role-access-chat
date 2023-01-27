@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const dialogSchema = mongoose.Schema({
     name: {type: String, require :true},
     author: {type:mongoose.Schema.Types.ObjectId,ref:"User"},
-    partners: {type:Array},
+    partners: {type:Array, default:[]},
     //[{type:mongoose.Schema.Types.ObjectId,ref:"User"}],
     // chanels:{
     //     type: Array,

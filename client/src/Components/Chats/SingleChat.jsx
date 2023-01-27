@@ -6,37 +6,39 @@ import { NavLink } from 'react-router-dom';
 function SingleChat(props) {
     let selectChat = () => {
     }
-    return <NavLink to={'/chat/'+props.groupId+'/'+props.chanel._id} activeClassName='active_chat' onClick={selectChat}>
-         <li className='im_dialog_wrap'>
-        <a className='im_dialog'>
-            <div className='im_dialog_meta pull-right text-right'>
-                <div className='im_dialog_date'>
-                    12:31 AM
+    return <NavLink to={'/chat/' + props.groupId + '/' + props.chanel._id} activeClassName='active_chat' onClick={selectChat}>
+        <li className='im_dialog_wrap'>
+            {/* <a className='im_dialog'> */}
+                <div className='im_dialog_meta pull-right text-right'>
+                    {/* <div className='im_dialog_date'>
+                        12:31 AM
                                     </div>
-                <span className='im_dialog_badge badge im_dialog_badge_muted'>
-                    1
-                                    </span>
-            </div>
-            <div className='im_dialog_photo pull-left peer_photo_init'>
-                <span className='peer_initials nocopy im_dialog_photo user_bgcolor_5'>
-                    PM
-                                    </span>
-            </div>
-            <div className='im_dialog_message_wrap'>
-                <div className='im_dialog_peer'>
-                    <span className=''>
-                        {props.chanel.name}
-                    </span>
+                    <span className='im_dialog_badge badge im_dialog_badge_muted'>
+                        1
+                                    </span> */}
                 </div>
-                <div onClick={() => {
-                    props.setSelectedChanel(props.chanel)
-                    props.SetRightsForm('existing_chanel') 
-                    }}>
-                    Настроить права доступа
-                </div>
-                <div>
-                    <div className="im_dialog_message">
-                        {/* <span>
+                {/* <div className='im_dialog_photo pull-left peer_photo_init'>
+                    <span className='peer_initials nocopy im_dialog_photo user_bgcolor_5'> </span>
+                </div> */}
+                <div className='im_dialog_message_wrap'>
+                    <div className='im_dialog_peer'>
+                        <span className=''>
+                            {props.chanel.name}
+                        </span>
+                    </div>
+                    {JSON.parse(localStorage.getItem('role')).role === 'admin'
+                        || JSON.parse(localStorage.getItem('role')).role === 'owner'
+                        || JSON.parse(localStorage.getItem('role')).role === 'moderator' && props.chanel.author._id == props.author
+                        ? <div onClick={() => {
+                            props.setSelectedChanel(props.chanel)
+                            props.SetRightsForm('existing_chanel')
+                        }}>
+                            Настроить
+                        </div>
+                        : null}
+                    <div>
+                        <div className="im_dialog_message">
+                            {/* <span>
                             <span>
                                 <span className='im_dialog_chat_from_wrap'>
                                     <span className='im_dialog_chat_from'>
@@ -53,11 +55,11 @@ function SingleChat(props) {
                                 а, да это просто задание такое))
                                                 </span>
                         </span> */}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </a>
-    </li>
+            {/* </a> */}
+        </li>
     </NavLink>
 }
 

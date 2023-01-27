@@ -2,25 +2,16 @@ import Chat from './Chat';
 import { connect } from 'react-redux';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { setMessages } from '../../redux/messagesReduser'
+import { setMessages,pushMessage } from '../../redux/messagesReduser'
 import { setSelectedGroup, setSelected, setOnlineGroupUsers, setSelectedChanel } from '../../redux/groupsReduser'
 import { withRouter } from 'react-router';
 import { socket } from '../../App';
+import { messagesAPI } from '../../DAL/api';
+import {Acces} from '../../App'
+
 function ChatContainer(props) {
-    let Acces = (right) => {
-        let inList, listType;
-        for (let list in right) {
-            if (right[list]) {
-                debugger
-                inList = right[list].some(item => item == props.name)
-                listType = list
-            }
-        }
-        debugger
-        if ((listType == 'blacklist' && inList) || (listType == 'whitelist' && !inList)) return false
-        if ((listType == 'whitelist' && inList) || (listType == 'blacklist' && !inList)) return true
-    }
-    let [accesed,setAccesed]=useState(false);
+
+    let [accesed, setAccesed] = useState(null);
     useEffect(async () => {
         let chanelId = props.match.params.chanelId;
         if (chanelId) {
@@ -29,13 +20,20 @@ function ChatContainer(props) {
             let ChatReq = await axios.get('http://localhost:8001/single_chanel/' + chanelId);
             props.setSelectedChanel(ChatReq.data)
             console.log('ChatReq.data', ChatReq.data)
-            setAccesed(Acces(ChatReq.data.rights.users))
-            debugger
-            if (accesed) {
+            let a = Acces(ChatReq.data.canSee, props.name)
+            setAccesed(Acces(ChatReq.data.canSee, props.name))
+            // setAccesed(JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee)
+            if (JSON.parse(localStorage.getItem('right_keys'))[ChatReq.data.name].canSee) {
 
-                ChatReq.data.rights.users.whitelist 
-                ? socket.emit('selectChat', {users:ChatReq.data.rights.users.whitelist,type:'whitelist'})                
-                : socket.emit('selectChat', {users:ChatReq.data.rights.users.blacklist,type:'blacklistlist',group:props.selectedGroup})
+                !ChatReq.data.canSee.prevelegion
+                    ? socket.emit('selectChat', { users: ChatReq.data.canSee.list})
+                    : ChatReq.data.canSee.whitelisted
+                        ? socket.emit('selectChat', { users: ChatReq.data.canSee.list})
+                        : socket.emit('selectChat', {
+                            users: [props.selectedGroup.author.name,...props.selectedGroup.partners.filter(
+                                item => !ChatReq.data.canSee.list.some(list_item => list_item === item)
+                            )]
+                        })
 
                 socket.on("users", (users) => {
                     users.forEach((user) => {
@@ -47,13 +45,13 @@ function ChatContainer(props) {
                     console.log('Пользователи получены')
 
                 });
-                socket.on("user connected", (user) => {
-                    console.log(user, 'conected');
-                    props.setOnlineGroupUsers([user])
-                    console.log(props.onlineGroupUsers)
-                });
-                let MesReq = await axios.get('http://localhost:8001/messages/' + chanelId);
-                props.setMessages(MesReq.data)
+                // socket.on("user connected", (user) => {
+                //     console.log(user, 'conected');
+                //     props.setOnlineGroupUsers([user])
+                //     console.log(props.onlineGroupUsers)
+                // });
+                let MesReq = await messagesAPI.getMessages(chanelId);
+                props.setMessages(MesReq)
             }
         }
     }, [props.match.params.chanelId])
@@ -65,12 +63,14 @@ function ChatContainer(props) {
             </div>
         )
     }
-    debugger
-    if (props.selectedChanel&&!accesed) return (
+
+    if (props.selectedChanel && !accesed) {
+        debugger
+        return (
         <div className='im_history_not_selected vertical-aligned' style={{ paddingTop: '229px', paddingBottom: '229px' }}>
             Вы не можете посещать данный канал
         </div>
-    )
+    )}
     return <Chat {...props} />
 }
 let mapStateToProps = (state) => {
@@ -84,4 +84,4 @@ let mapStateToProps = (state) => {
         selectedChanel: state.groups.selectedChanel,
     }
 }
-export default connect(mapStateToProps, { setMessages, setSelectedGroup, setSelected, setOnlineGroupUsers, setSelectedChanel })(withRouter(ChatContainer));
+export default connect(mapStateToProps, { setMessages, setSelectedGroup, setSelected, setOnlineGroupUsers, setSelectedChanel,pushMessage })(withRouter(ChatContainer));

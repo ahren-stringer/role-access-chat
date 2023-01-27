@@ -1,14 +1,25 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter, Route, Router, withRouter } from 'react-router-dom';
+import { BrowserRouter} from 'react-router-dom';
 import './App.css';
 import { useRotes } from './HOC/routes';
 import { setProfile, setLogin, setLoaded, setToken } from './redux/authReduser'
 import { io } from "socket.io-client";
-import {setOnlineGroupUsers,deleteOnlineGroupUsers} from './redux/groupsReduser'
+import { setOnlineGroupUsers, deleteOnlineGroupUsers } from './redux/groupsReduser'
+import { pushMessage } from './redux/messagesReduser'
 export const socket = io('http://localhost:8001', { autoConnect: false });
 
+export let Acces = (right,name) => {
+  let inList;
+  inList = right.list.some(item => item == name)
+  // if (props.selectedGroup.author.name==props.name) return true
+  if (right.whitelisted==null && inList) return true
+  if (right.hightRoleList.some(item => item == name)) return true
+  if (right.whitelisted==null && !inList) return false
+  if ((right.whitelisted && inList) || (!right.whitelisted && !inList)) return true
+  if ((!right.whitelisted && inList) || (right.whitelisted && !inList)) return false
+}
 
 function App(props) {
   socket.on('test comand', data => {
@@ -29,43 +40,52 @@ function App(props) {
       socket.auth = { username: req.data.name };
       socket.connect();
 
-      await socket.emit('userId', data.id)
+      await socket.emit('userId', req.data.name)
 
       socket.on('users in groups', (users) => {
         console.log('Пользователи со всех групп онлайн:', users)
         for (let user of users) {
 
           socket.emit("private message", {
-            content:'ffff',
+            content: 'ffff',
             to: user.userID,
           });
           // console.log('сообщение отправлено к ', user.username)
 
         }
       })
+
       socket.on("private message", ({ content, from }) => {
         console.log(from, ' connected')
-        let selectedChanel= window.selectedChanel
-        if (selectedChanel){
-          if (selectedChanel.author.name===from.username){
+        let selectedChanel = window.selectedChanel
+        if (selectedChanel) {
+          if (selectedChanel.author.name === from.username) {
             props.setOnlineGroupUsers([from])
             console.log(props.onlineGroupUsers)
           }
-          for (let partner of selectedChanel.rights.whitelist){
-            if (partner===from.username){
-              props.setOnlineGroupUsers([from])
-              console.log(props.onlineGroupUsers)
-            }
+          if (
+            !selectedChanel.canSee.prevelegion && selectedChanel.canSee.list.includes(from.username)
+            || selectedChanel.canSee.whitelisted && selectedChanel.canSee.list.includes(from.username)
+            || !selectedChanel.canSee.whitelisted && !selectedChanel.canSee.list.includes(from.username)
+          ) {
+            // for (let partner of selectedChanel.canSee.list) {
+            //   if (partner === from.username) {
+                props.setOnlineGroupUsers([from])
+                console.log(props.onlineGroupUsers)
+            //   }
+            // }
           }
+
         }
       });
-      socket.on('chat message', message=>{
+      socket.on('send message to all', message => {
         console.log(message)
+        props.pushMessage(message.content.message)
       })
       socket.on("dis", (data) => {
-        console.log(data)
+        console.log(data, 'has been disconnected')
         props.deleteOnlineGroupUsers(data)
-        
+
       });
       // await socket.on("user connected",
       //   (data) => {
@@ -128,11 +148,11 @@ let mapStateToProps = (state) => {
     token: state.auth.token,
     userId: state.auth.userId,
     selectedGroup: state.groups.selectedGroup,
-    onlineGroupUsers: state.groups.onlineGroupUsers
+    onlineGroupUsers: state.groups.onlineGroupUsers,
   }
 }
 
-export default connect(mapStateToProps, { setProfile, setLogin, setLoaded, setToken,setOnlineGroupUsers,deleteOnlineGroupUsers })(App);
+export default connect(mapStateToProps, { setProfile, setLogin, setLoaded, setToken, setOnlineGroupUsers, deleteOnlineGroupUsers,pushMessage })(App);
  // const login = useCallback(( token, id, name, email, contacts, messages, invites, groups) => {
   //   props.setProfile(token, id, name, email, contacts, messages, invites, groups)
   //   localStorage.setItem('userData', JSON.stringify({ id: id, token: token }))

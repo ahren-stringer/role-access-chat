@@ -28,10 +28,10 @@ const schema = new mongoose.Schema({
         type: Date,
         default: new Date(),
     },
+    // groups:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }]
     // contacts: [],
     // messages: [],
     // invites:[],
-    // groups:[]
 }, {
     timestamps: true
 });
